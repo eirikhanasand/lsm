@@ -1,0 +1,78 @@
+{
+    "metadata": {
+        "repoPath": {
+            "key": "npm",
+            "path": "@types/estree/-/estree-1.0.6.tgz",
+            "id": "npm:@types/estree/-/estree-1.0.6.tgz"
+        },
+        "originalRepoPath": {
+            "key": "npm",
+            "path": "@types/estree/-/estree-1.0.6.tgz",
+            "id": "npm:@types/estree/-/estree-1.0.6.tgz"
+        },
+        "name": "estree-1.0.6.tgz",
+        "modificationTime": -1,
+        "lastModified": -1,
+        "ifModifiedSince": -1,
+        "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+        "uri": "/artifactory/npm/@types/estree/-/estree-1.0.6.tgz",
+        "clientAddress": "18.214.241.149",
+        "repoType": 2
+    },
+    "headers": {
+        "x-forwarded-proto": {
+        "value": [
+            "https"
+        ]
+        },
+        "x-sigsci-mac": {
+        "value": [
+            "d43ff61987498158c40703ff35132c45"
+        ]
+        },
+        "x-sigsci-agentresponse": {
+        "value": [
+            "200"
+        ]
+        },
+        "connection": {
+        "value": [
+            "Upgrade"
+        ]
+        },
+        "x-sigsci-requestid": {
+        "value": [
+            "6783b2508645c66355612d58"
+        ]
+        },
+        "x-jfrog-override-base-url": {
+        "value": [
+            "https://trial9apndc.jfrog.io"
+        ]
+        },
+        "accept-encoding": {
+        "value": [
+            "gzip, deflate"
+        ]
+        },
+        "accept": {
+        "value": [
+            "*/*"
+        ]
+        },
+        "x-sigsci-tags": {
+        "value": [
+            "DATACENTER,site.agent-use1,site.k8s-prod-use1-natgw-a"
+        ]
+        }
+    },
+    "userContext": {
+        "id": "jfxr@extra_analysis_b46b0ea1",
+        "isToken": true
+    },
+    "repoPath": {
+        "key": "npm-cache",
+        "path": "@types/estree/-/estree-1.0.6.tgz",
+        "id": "npm-cache:@types/estree/-/estree-1.0.6.tgz"
+    }
+}
