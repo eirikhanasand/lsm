@@ -17,17 +17,17 @@ Library Safety Manager Open Source Plugin For Artifactory
 
 ## How to log into different technologies
 <!-- docker login (remember to create access token) -->
-docker login trial9apndc.jfrog.io
+docker login <trial_id>.jfrog.io
 
 <!-- npm login -->
-npm login --registry=https://trial9apndc.jfrog.io/artifactory/api/npm/npm/ --auth-type=web
+npm login --registry=https://<trial_id>.jfrog.io/artifactory/api/npm/npm/ --auth-type=web
 
 ## How to fetch package via Artifactory
 <!-- docker download "exposures" (sample) image -->
-docker pull trial9apndc.jfrog.io/docker-trial/exposures:latest
+docker pull <trial_id>.jfrog.io/docker-trial/exposures:latest
 
 <!-- npm download -->
-npm install <dependency_name> --registry https://trial9apndc.jfrog.io/artifactory/api/npm/npm/   
+npm install <dependency_name> --registry https://<trial_id>.jfrog.io/artifactory/api/npm/npm/   
 
 ## How to activate an Artifactory Worker
 1. Ensure the worker is deployed (check that the code matches the remote if you are unsure)
