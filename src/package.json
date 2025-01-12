@@ -1,0 +1,47 @@
+{
+    "name": "lsm",
+    "description": "Library Safety Manager - Stops OSV Malware from ever entering your computer",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "deploy": "jf worker deploy",
+        "undeploy": "jf worker rm \"lsm\"",
+        "test": "jest",
+        "test-docker": "docker pull trial9apndc.jfrog.io/docker-trial/exposures:latest",
+        "test-docker-dangerous": "echo 'Add a dangerous package in package.json first.'",
+        "test-npm": "npm install koa --registry https://trial9apndc.jfrog.io/artifactory/api/npm/npm/",
+        "test-npm-dangerous": "npm install hts-open-dex-react-ui@1.0.0 --registry https://trial9apndc.jfrog.io/artifactory/api/npm/npm/"
+    },
+    "license": "ISC",
+    "devDependencies": {
+        "@golevelup/ts-jest": "^0.4.0",
+        "@types/jest": "^29.5.12",
+        "jest": "^29.7.0",
+        "jest-jasmine2": "^29.7.0",
+        "jfrog-workers": "^0.4.0",
+        "ts-jest": "^29.1.2"
+    },
+    "jest": {
+        "moduleFileExtensions": [
+            "ts",
+            "js"
+        ],
+        "rootDir": ".",
+        "testEnvironment": "node",
+        "clearMocks": true,
+        "maxConcurrency": 1,
+        "testRegex": "\\.spec\\.ts$",
+        "moduleDirectories": [
+            "node_modules"
+        ],
+        "collectCoverageFrom": [
+            "**/*.ts"
+        ],
+        "coverageDirectory": "../coverage",
+        "transform": {
+            "^.+\\.(t|j)s$": "ts-jest"
+        },
+        "testRunner": "jest-jasmine2",
+        "verbose": true
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "name": "lsm",
+    "description": "Library Safety Manager - Stops OSV Malware from ever entering your computer",
+    "secrets": {},
+    "sourceCodePath": "./worker.ts",
+    "action": "BEFORE_DOWNLOAD",
+    "enabled": false,
+    "debug": true
+}

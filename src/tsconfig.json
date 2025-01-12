@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "NodeNext",
+        "declaration": true,
+        "target": "ES2024",
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": false,
+        "noFallthroughCasesInSwitch": false,
+        "allowJs": true,
+        "moduleResolution": "nodenext"
+    },
+    "include": [
+        "**/*.ts",
+        "node_modules/@types/**/*.d.ts", 
+        "../src/worker.ts", 
+        "../src/worker.spec.ts", 
+        "types.d.ts", 
+        "../src/interfaces.ts"
+    ]
+}
