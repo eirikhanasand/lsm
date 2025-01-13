@@ -11,8 +11,8 @@
         "test-docker-dangerous": "echo 'Add a dangerous package in package.json first.'",
         "test-npm": "npm install koa --registry https://trial9apndc.jfrog.io/artifactory/api/npm/npm/",
         "test-npm-dangerous": "npm install hts-open-dex-react-ui@1.0.0 --registry https://trial9apndc.jfrog.io/artifactory/api/npm/npm/",
-        "test-go": "go get Go/github.com/mattermost/mattermost/server/v8 --registry https://trial9apndc.jfrog.io/artifactory/go",
-        "test-go-dangerous": "go get github.com/mattermost/mattermost-server/v8@v10.2.0 --registry https://trial9apndc.jfrog.io/artifactory/go"
+        "test-go": "set GOPROXY=https://brukernavn:key@trial9apndc.jfrog.io/artifactory/api/go/go-test && go get github.com/mattermost/mattermost@v10.3.1",
+        "test-go-dangerous": "set GOPROXY=https://brukernavn:key@trial9apndc.jfrog.io/artifactory/api/go/go-test && go get github.com/mattermost/mattermost@v10.3.1"
     },
     "license": "ISC",
     "devDependencies": {
