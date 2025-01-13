@@ -4,6 +4,6 @@
     "secrets": {},
     "sourceCodePath": "./worker.ts",
     "action": "BEFORE_DOWNLOAD",
-    "enabled": false,
+    "enabled": true,
     "debug": true
 }
