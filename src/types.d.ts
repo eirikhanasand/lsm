@@ -56,7 +56,7 @@ type Affected = {
         purl: string
     }
     ranges?: PackageRange[]
-    versions: string[]
+    versions?: string[]
     database_specific: {
         source: string
         cwes: {

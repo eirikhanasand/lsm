@@ -129,10 +129,14 @@ function logDetails(vulnerability: Vulnerability): void {
     }
 
     // VERSIONS SECTION
-    console.log('-----------------------------');
-    console.log("Affected versions:")
-    for (const affected of vulnerability.affected) {
-        console.log(affected.versions.join(', '))
+    if ('affected' in vulnerability && Array.isArray(vulnerability.affected)) {
+        console.log('-----------------------------');
+        console.log("Affected versions:")
+        for (const affected of vulnerability.affected) {
+            if ('versions' in affected && Array.isArray(affected.versions)) {
+                console.log(affected.versions.join(', '))
+            }
+        }
     }
 
     // SPECIFICS SECTION
