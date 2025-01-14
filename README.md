@@ -15,6 +15,16 @@ Library Safety Manager Open Source Plugin For Artifactory
 -> Set repository key to whatever you want to name the repository (usually the project name). Leave all other fields empty if you dont know what to put there. Make sure not to touch the URL field unless you know its incorrect and know what to put there.
 -> Create (remote / local) repository (button with green stroke bottom right)
 
+## How to develop the worker
+1. Run `npm install` to install all development dependencies
+2. Create a `.env` file in the `src` directory
+3. Add the following credentials to the `.env` file:
+```ts
+JFROG_USERNAME=<your_jfrog_username>
+JFROG_ACCESS_TOKEN=<your_jfrog_token>
+JFROG_TRIAL_ID=<your_jfrog_trial_id>
+```
+
 ## How to log into different technologies
 <!-- docker login (remember to create access token) -->
 docker login <trial_id>.jfrog.io
