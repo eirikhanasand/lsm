@@ -6,9 +6,65 @@ const OSV_URL = "https://api.osv.dev/v1/query"
 const parseNameToNameAndVersion = /^([a-zA-Z0-9-]+)-([\d\.]+)\.tgz$/
 
 export default async function runWorker(context: PlatformContext, data: BeforeDownloadRequest): Promise<BeforeDownload> {
-    const nameAndVersion = data.metadata.name.match(parseNameToNameAndVersion)
-    if (!nameAndVersion) {
-        console.log(`DOWNLOAD STOPPED: UNABLE TO EXTRACT NAME AND VERSION - ${data.metadata.name}`)
+    const NPMtestData = {
+        "repoPath": {
+          "key": "npm",
+          "path": "@types/estree/-/estree-1.0.6.tgz",
+          "id": "npm:@types/estree/-/estree-1.0.6.tgz"
+        },
+        "originalRepoPath": {
+          "key": "npm",
+          "path": "@types/estree/-/estree-1.0.6.tgz",
+          "id": "npm:@types/estree/-/estree-1.0.6.tgz"
+        },
+        "name": "estree-1.0.6.tgz",
+        "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+        "uri": "/artifactory/npm/@types/estree/-/estree-1.0.6.tgz",
+        "clientAddress": "18.214.241.149",
+        "repoType": 2
+    }
+
+    const DOCKERtestData = {
+       "repoPath": {
+          "key": "docker",
+          "path": "library/ubuntu/latest/list.manifest.json",
+          "id": "docker:library/ubuntu/latest/list.manifest.json"
+        },
+        "originalRepoPath": {
+          "key": "docker",
+          "path": "library/ubuntu/latest/list.manifest.json",
+          "id": "docker:library/ubuntu/latest/list.manifest.json"
+        },
+        "name": "list.manifest.json",
+        "ifModifiedSince": -1,
+        "clientAddress": "88.95.182.216",
+        "repoType": 2
+    }
+
+
+    // const metadata = NPMtestData
+    // const metadata = DOCKERtestData
+    const metadata = data.metadata
+    let name: string | null = null
+    let version: string | null = null
+    let key: string = parseKey(metadata.repoPath.key)
+    
+    switch (metadata.repoPath.key) {
+        case "npm": 
+            const npmDetails = metadata.name.match(parseNameToNameAndVersion)
+            name = npmDetails[1]
+            version = npmDetails[2]
+            break
+        case "docker":
+            const dockerDetails = metadata.repoPath.path.split('/')
+            name = dockerDetails[1]
+            version = dockerDetails[2]
+            key = dockerDetails[1].includes('ubuntu') ? 'Ubuntu' : 'Debian'
+            break
+    }
+
+    if (!name || !version) {
+        console.log(`DOWNLOAD STOPPED: UNABLE TO EXTRACT NAME AND VERSION - ${metadata.name}`)
         return {
             status: DownloadStatus.DOWNLOAD_STOP,
             message: `DOWNLOAD STOPPED - Unable to extract package name and version.`,
@@ -17,10 +73,9 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         }
     }
 
-    const key = parseKey(data.metadata.repoPath.key)
-    const hashData = await checkHash(context, nameAndVersion[1], nameAndVersion[2], key)
+    const hashData = await checkHash(context, name, version, key)
     if (hashData.status !== 200) {
-        prettyLog(['DOWNLOAD STOPPED: UNABLE TO FETCH', `Name: ${nameAndVersion[1]}`, `Version: ${nameAndVersion[2]}`, `Key: ${key}`])
+        prettyLog(['DOWNLOAD STOPPED: UNABLE TO FETCH', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`])
         console.log(hashData)
         return {
             status: DownloadStatus.DOWNLOAD_STOP,
@@ -32,7 +87,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
 
     if ('vulns' in hashData.data) {
         // TITLE SECTION
-        prettyLog(['DOWNLOAD STOPPED: MALICIOUS', `Name: ${nameAndVersion[1]}`, `Version: ${nameAndVersion[2]}`, `Key: ${key}`])
+        prettyLog(['DOWNLOAD STOPPED: MALICIOUS', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`])
         console.log('-----------------------------');
         for (const vulnerability of hashData.data.vulns) {
             logDetails(vulnerability)
@@ -45,7 +100,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         }
     }
 
-    prettyLog(['DOWNLOAD CONTINUED', `Name: ${nameAndVersion[1]}`, `Version: ${nameAndVersion[2]}`, `Key: ${key}`])
+    prettyLog(['DOWNLOAD CONTINUED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`])
     
     if (JSON.stringify(hashData.data) !== '{}') {
         console.log(hashData.data)
