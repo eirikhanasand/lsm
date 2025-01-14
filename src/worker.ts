@@ -41,9 +41,45 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         "repoType": 2
     }
 
+    const PYTHONtestData = {
+        "repoPath": {
+          "key": "python",
+          "path": "c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
+          "id": "python:c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl"
+        },
+        "originalRepoPath": {
+          "key": "python",
+          "path": "c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
+          "id": "python:c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl"
+        },
+        "name": "numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
+        "ifModifiedSince": -1,
+        "clientAddress": "88.95.182.216",
+        "repoType": 2
+    }
+
+    const GOtestData = {
+        "repoPath": {
+          "key": "go",
+          "path": "github.com/mattermost/mattermost/@v/v10.3.1.info",
+          "id": "go:github.com/mattermost/mattermost/@v/v10.3.1.info"
+        },
+        "originalRepoPath": {
+          "key": "go",
+          "path": "github.com/mattermost/mattermost/@v/v10.3.1.info",
+          "id": "go:github.com/mattermost/mattermost/@v/v10.3.1.info"
+        },
+        "name": "v10.3.1.info",
+        "ifModifiedSince": -1,
+        "clientAddress": "81.167.47.252",
+        "replaceHeadRequestWithGet": true,
+        "repoType": 2
+    }
 
     // const metadata = NPMtestData
     // const metadata = DOCKERtestData
+    // const metadata = PYTHONtestData
+    // const metadata = GOtestData
     const metadata = data.metadata
     let name: string | null = null
     let version: string | null = null
