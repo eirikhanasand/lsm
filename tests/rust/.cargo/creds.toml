@@ -1,0 +1,5 @@
+
+# this is an example file, create a new one named credentials.toml and add line 4 and 5 to it (with your actual token)
+
+[registries.artifactory]
+token = "example_token"

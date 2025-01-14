@@ -10,10 +10,10 @@ ferris-says = "0.3.1"
 default = "artifactory"
 
 [registries.artifactory]
-index = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust-cargo-remote/index/"
+index = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/"
 
 [source.artifactory-remote]
-registry = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust-cargo-remote/index/"
+registry = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/"
 
 [source.crates-io]
 replace-with = "artifactory-remote"

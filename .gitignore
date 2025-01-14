@@ -5,3 +5,4 @@ workers-sample
 .jfrog
 .env
 target
+credentials.toml

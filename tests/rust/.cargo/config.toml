@@ -1,0 +1,8 @@
+[registries]
+artifactory = { index = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/" }
+
+[source.artifactory-remote]
+registry = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/"
+
+[source.crates-io]
+replace-with = "artifactory-remote"
