@@ -7,3 +7,4 @@ workers-sample
 target
 credentials.toml
 pip.conf
+pvenv
