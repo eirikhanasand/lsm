@@ -1,6 +1,13 @@
 {
     "name": "lsm",
     "description": "Library Safety Manager - Stops OSV Malware from ever entering your computer",
+    "filterCriteria": {
+        "artifactFilterCriteria": {
+            "repoKeys": [
+                "example-repo-local"
+            ]
+        }
+    },
     "secrets": {},
     "sourceCodePath": "./worker.ts",
     "action": "BEFORE_DOWNLOAD",
