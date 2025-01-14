@@ -1,0 +1,18 @@
+[package]
+name = "rust-test"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[registry]
+default = "artifactory"
+
+[registries.artifactory]
+index = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust-cargo-remote/index/"
+
+[source.artifactory-remote]
+registry = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust-cargo-remote/index/"
+
+[source.crates-io]
+replace-with = "artifactory-remote"
