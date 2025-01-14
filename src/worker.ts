@@ -97,6 +97,19 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             version = dockerDetails[2]
             key = dockerDetails[1].includes('ubuntu') ? 'Ubuntu' : 'Debian'
             break
+        case "python":
+            const pythonRegex = /\/([\w\-]+)-([\d.]+)-/
+            const pythonDetails =  metadata.repoPath.path.match(pythonRegex)
+            name = pythonDetails[1]
+            version = pythonDetails[2]
+            key = "PyPI"
+            break
+        case "go":
+            const goRegex = /\/([\w-]+)\/@v\/(v[\d.]+)/
+            const goDetails =  metadata.repoPath.path.match(goRegex)
+            name = goDetails[1]
+            version = goDetails[2]
+            key = "Go"
     }
 
     if (!name || !version) {
@@ -124,7 +137,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
     if ('vulns' in hashData.data) {
         // TITLE SECTION
         prettyLog(['DOWNLOAD STOPPED: MALICIOUS', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`])
-        console.log('-----------------------------');
+        console.log('-----------------------------')
         for (const vulnerability of hashData.data.vulns) {
             logDetails(vulnerability)
         }
@@ -221,7 +234,7 @@ function logDetails(vulnerability: Vulnerability): void {
 
     // VERSIONS SECTION
     if ('affected' in vulnerability && Array.isArray(vulnerability.affected)) {
-        console.log('-----------------------------');
+        console.log('-----------------------------')
         console.log("Affected versions:")
         for (const affected of vulnerability.affected) {
             if ('versions' in affected && Array.isArray(affected.versions)) {
@@ -231,7 +244,7 @@ function logDetails(vulnerability: Vulnerability): void {
     }
 
     // SPECIFICS SECTION
-    console.log('-----------------------------');
+    console.log('-----------------------------')
     console.log("Specifics")
     for (const detail of vulnerability.database_specific["malicious-packages-origins"]) {
         prettyLog([
