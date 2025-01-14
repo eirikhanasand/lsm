@@ -4,11 +4,53 @@
     "filterCriteria": {
         "artifactFilterCriteria": {
             "repoKeys": [
-                "example-repo-local"
+                "USE UI NOT IDE FOR THIS. THIS JSON ARRAY WILL NOT WORK"
             ]
         }
     },
     "secrets": {},
+    "unusedField": {
+        "artifactFilterCriteria": {
+            "repoKeys": [
+                "go-test",
+                "rust-cargo-local",
+                "docker",
+                "go",
+                "npm",
+                "rust-cargo-remote",
+                "maven",
+                "pypi",
+                "huggingface",
+                "gradle",
+                "debian",
+                "rpm",
+                "swift",
+                "terraform",
+                "alpine",
+                "ansible",
+                "bower",
+                "cargo",
+                "chef",
+                "cocoapods",
+                "conan",
+                "conda",
+                "cran",
+                "oci",
+                "gems",
+                "gitlfs",
+                "helm",
+                "ivy",
+                "nuget",
+                "opkg",
+                "composer",
+                "p2",
+                "pub",
+                "puppet",
+                "sbt",
+                "vcs"
+            ]
+        }
+    },
     "sourceCodePath": "./worker.ts",
     "action": "BEFORE_DOWNLOAD",
     "enabled": true,
