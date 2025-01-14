@@ -1,6 +1,11 @@
-[registries]
-artifactory = { index = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/" }
+# Makes artifactory the default registry and saves passing --registry parameter
+[registry]
+default = "artifactory"
 
+[registries.artifactory]
+index = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/"
+
+# Add these 2 sections for resolving dependencies from Artifactory
 [source.artifactory-remote]
 registry = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/"
 
