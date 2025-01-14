@@ -6,3 +6,4 @@ workers-sample
 .env
 target
 credentials.toml
+pip.conf
