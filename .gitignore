@@ -4,3 +4,4 @@ workers-sample
 .vscode
 .jfrog
 .env
+target
