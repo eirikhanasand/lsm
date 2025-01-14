@@ -3,3 +3,4 @@ node_modules
 workers-sample
 .vscode
 .jfrog
+.env
