@@ -1,22 +1,9 @@
-[registries]
-artifactory = { index = "https://trial9apndc.jfrog.io/artifactory/api/cargo/rs-cargo-local/index/" }
+[registry]
+default = "artifactory"
+global-credential-providers = ["cargo:token"]
 
-[artifactory]
-credential = { registry = "artifactory", username = "redacted", password = "redacted" }
+[registries.artifactory]
+index = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/"
 
-
-# The below was the old config, likely doesnt work either
-
-# # Makes artifactory the default registry and saves passing --registry parameter
-# [registry]
-# default = "artifactory"
-
-# [registries.artifactory]
-# index = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/"
-
-# # Add these 2 sections for resolving dependencies from Artifactory
-# [source.artifactory-remote]
-# registry = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/"
-
-# [source.crates-io]
-# replace-with = "artifactory-remote"
+[source.artifactory]
+registry = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/rust/index/"
