@@ -137,7 +137,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             const javaRegex = /^([^\/]+(?:\/[^\/]+)*)\/([^\/]+)\/([\d.]+)\/\2-[\d.]+(?:-[^\/]+)?\.[^\/]+$/
             const javaDetails = metadata.repoPath.path.match(javaRegex)
             if (Array.isArray(javaDetails) && javaDetails.length >= 3) {
-                name = javaDetails[2]
+                name = javaDetails[1].replaceAll(/\//g, '.') + ":" + javaDetails[2]
                 version = javaDetails[3]
                 key = "Maven"
             } else if (metadata.repoPath.path.startsWith('org/jfrog') && metadata.repoPath.path.endsWith('.xml')) {
