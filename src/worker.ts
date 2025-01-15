@@ -76,9 +76,30 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         "repoType": 2
     }
 
+    const GRADLEtestData = {
+        "repoPath": {
+        "key": "java-cache",
+        "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
+        "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
+        },
+        "originalRepoPath": {
+        "key": "java-cache",
+        "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
+        "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
+        },
+        "name": "kotlin-gradle-plugin-1.9.22-gradle82.jar",
+        "modificationTime": -1,
+        "lastModified": -1,
+        "ifModifiedSince": -1,
+        "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+        "uri": "/artifactory/java-cache/org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
+        "clientAddress": "127.0.0.1"
+    }
+
     // const metadata = NPMtestData
     // const metadata = DOCKERtestData
     // const metadata = PYTHONtestData
+    // const metadata = GRADLEtestData
     // const metadata = GOtestData
     const metadata = data.metadata
     let name: string | null = null
@@ -110,6 +131,14 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             name = goDetails[1]
             version = goDetails[2]
             key = "Go"
+            break
+        case "java-cache": 
+            const javaRegex = /a/
+            const javaDetails = metadata.repoPath.path.match(javaRegex)
+            name = javaDetails[1]
+            version = javaDetails[2]
+            key = "Maven"
+            break
     }
 
     if (!name || !version) {
