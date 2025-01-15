@@ -5,3 +5,5 @@ edition = "2021"
 publish = ["artifactory"]
 
 [dependencies]
+clap = "4.5.26"
+tokio = "1.43.0"
