@@ -137,7 +137,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             const javaRegex = /^([^\/]+(?:\/[^\/]+)*)\/([^\/]+)\/([\d.]+)\/\2-[\d.]+(?:-[^\/]+)?\.[^\/]+$/
             const javaDetails = metadata.repoPath.path.match(javaRegex)
             if (Array.isArray(javaDetails) && javaDetails.length >= 3) {
-                name = javaDetails[1].replaceAll(/\//g, '.') + ":" + javaDetails[2]
+                name = `${javaDetails[1].replaceAll(/\//g, '.')}:${javaDetails[2]}`
                 version = javaDetails[3]
                 key = "Maven"
             } else if (metadata.repoPath.path.startsWith('org/jfrog') && metadata.repoPath.path.endsWith('.xml')) {
@@ -283,15 +283,17 @@ function logDetails(vulnerability: Vulnerability): void {
     }
 
     // SPECIFICS SECTION
-    console.log('-----------------------------')
-    console.log("Specifics")
-    for (const detail of vulnerability.database_specific["malicious-packages-origins"]) {
-        prettyLog([
-            `SHA256: ${detail.sha256}`,
-            `Import time ${formatDate(detail.import_time)}`,
-            `Modified time ${formatDate(detail.modified_time)}`,
-            `Source: ${detail.source}`
-        ])
+    if (Array.isArray(vulnerability.database_specific["malicious-packages-origins"])) {
+        console.log('-----------------------------')
+        console.log("Specifics")
+        for (const detail of vulnerability.database_specific["malicious-packages-origins"]) {
+            prettyLog([
+                `SHA256: ${detail.sha256}`,
+                `Import time ${formatDate(detail.import_time)}`,
+                `Modified time ${formatDate(detail.modified_time)}`,
+                `Source: ${detail.source}`
+            ])
+        }
     }
 
     if (vulnerability.references) {
