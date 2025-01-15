@@ -132,6 +132,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             version = goDetails[2]
             key = "Go"
             break
+        case "java":
         case "java-cache": 
             const javaRegex = /^([^\/]+(?:\/[^\/]+)*)\/([^\/]+)\/([\d.]+)\/\2-[\d.]+(?:-[^\/]+)?\.[^\/]+$/
             const javaDetails = metadata.repoPath.path.match(javaRegex)
