@@ -8,3 +8,5 @@ target
 credentials.toml
 pip.conf
 pvenv
+.terraform
+.terraform.*
