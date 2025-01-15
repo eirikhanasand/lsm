@@ -59,3 +59,39 @@ npm install <dependency_name> --registry https://<trial_id>.jfrog.io/artifactory
 ## Debugging the worker
 1. Ensure the worker is active and that the events are up to date (check the metadata)
 2. You have to use a new package, previous packages are cached and will not be refetched even if you update the worker.
+
+## How to use Artifactory
+The worker functions with the following package managers / technologies:
+- docker
+- gradle
+- maven
+- npm
+- pip
+
+We are currently working on:
+- rust
+- terraform
+
+### docker
+-- todo
+
+### npm
+1. Login with `npm login <id>.jfrog.io`
+-- todo
+
+### Terraform
+NB: Remember to replace the ID both in the login command and configuration file.
+1. Login with `terraform login <id>.jfrog.io`
+2. Add a configuration file `.terraformrc` with the following configuration:
+```tf
+provider_installation {
+    direct {
+        exclude = ["registry.terraform.io/*/*"]
+    }
+    network_mirror {
+        url = "https://<id>.jfrog.io/artifactory/api/terraform/terraform/providers/"
+    }
+}
+```
+3. Run `terraform init`
+-- todo
