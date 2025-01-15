@@ -78,14 +78,14 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
 
     const GRADLEtestData = {
         "repoPath": {
-        "key": "java-cache",
-        "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
-        "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
+            "key": "java-cache",
+            "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
+            "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
         },
         "originalRepoPath": {
-        "key": "java-cache",
-        "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
-        "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
+            "key": "java-cache",
+            "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
+            "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
         },
         "name": "kotlin-gradle-plugin-1.9.22-gradle82.jar",
         "modificationTime": -1,
@@ -136,9 +136,18 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         case "java-cache": 
             const javaRegex = /^([^\/]+(?:\/[^\/]+)*)\/([^\/]+)\/([\d.]+)\/\2-[\d.]+(?:-[^\/]+)?\.[^\/]+$/
             const javaDetails = metadata.repoPath.path.match(javaRegex)
-            name = javaDetails[2]
-            version = javaDetails[3]
-            key = "Maven"
+            if (javaDetails.length >= 3) {
+                name = javaDetails[2]
+                version = javaDetails[3]
+                key = "Maven"
+            } else if (metadata.repoPath.path.startsWith('org/jfrog') && metadata.repoPath.path.endsWith('.xml')) {
+                return {
+                    status: DownloadStatus.DOWNLOAD_STOP,
+                    message: `DOWNLOAD CONTINUED - Unversioned and distributed by JFrog itself.`,
+                    // @ts-ignore, doesnt exist locally but does exist remotely
+                    headers: {}
+                }
+            }
             break
     }
 
