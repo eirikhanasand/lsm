@@ -136,7 +136,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         case "java-cache": 
             const javaRegex = /^([^\/]+(?:\/[^\/]+)*)\/([^\/]+)\/([\d.]+)\/\2-[\d.]+(?:-[^\/]+)?\.[^\/]+$/
             const javaDetails = metadata.repoPath.path.match(javaRegex)
-            if (javaDetails.length >= 3) {
+            if (Array.isArray(javaDetails) && javaDetails.length >= 3) {
                 name = javaDetails[2]
                 version = javaDetails[3]
                 key = "Maven"
