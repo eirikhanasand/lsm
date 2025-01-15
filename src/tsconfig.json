@@ -7,7 +7,8 @@
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
         "allowJs": true,
-        "moduleResolution": "nodenext"
+        "moduleResolution": "nodenext",
+        "lib": ["ES2024"]
     },
     "include": [
         "**/*.ts",
