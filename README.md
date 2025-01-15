@@ -67,10 +67,13 @@ The worker functions with the following package managers / technologies:
 - maven
 - npm
 - pip
+- ruby
 
 We are currently working on:
+- go
 - rust
 - terraform
+- 
 
 ### docker
 -- todo
@@ -79,7 +82,7 @@ We are currently working on:
 1. Login with `npm login <id>.jfrog.io`
 -- todo
 
-### Terraform
+### terraform
 NB: Remember to replace the ID both in the login command and configuration file.
 1. Login with `terraform login <id>.jfrog.io`
 2. Add a configuration file `.terraformrc` with the following configuration:
@@ -95,3 +98,11 @@ provider_installation {
 ```
 3. Run `terraform init`
 -- todo
+
+### ruby
+1. Add it to the `~/.gemrc` file using the following command:
+`gem source -a https://<username>:<token>@trial9apndc.jfrog.io/artifactory/api/gems/ruby/`
+2. If anonymous access is allowed `gem source -a https://<id>.jfrog.io/artifactory/api/gems/ruby/` can be used.
+3. To view a list of sources and their resolutions use `gem source --list`.
+4. To store the credential in `~/.gem/credentials` use `curl -u <email>%40<email_domain>:<token> https://<id>.jfrog.io/artifactory/api/gems/ruby/api/v1/api_key.yaml > ~/.gem/credentials`
+5. `gem install <PACKAGE>` or explicitly `gem install <PACKAGE> --source https://trial9apndc.jfrog.io/artifactory/api/gems/ruby`

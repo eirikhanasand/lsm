@@ -96,11 +96,29 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         "clientAddress": "127.0.0.1"
     }
 
+    const RUBYtestData = {
+        "repoPath": {
+        "key": "ruby",
+        "path": "quick/Marshal.4.8/bundler-0.3.0.gemspec.rz",
+        "id": "ruby:quick/Marshal.4.8/bundler-0.3.0.gemspec.rz"
+        },
+        "originalRepoPath": {
+        "key": "ruby",
+        "path": "quick/Marshal.4.8/bundler-0.3.0.gemspec.rz",
+        "id": "ruby:quick/Marshal.4.8/bundler-0.3.0.gemspec.rz"
+        },
+        "name": "bundler-0.3.0.gemspec.rz",
+        "ifModifiedSince": -1,
+        "clientAddress": "129.241.236.195",
+        "repoType": 2
+    }
+
     // const metadata = NPMtestData
     // const metadata = DOCKERtestData
     // const metadata = PYTHONtestData
     // const metadata = GRADLEtestData
     // const metadata = GOtestData
+    // const metadata = RUBYtestData
     const metadata = data.metadata
     let name: string | null = null
     let version: string | null = null
@@ -148,6 +166,27 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
                     headers: {}
                 }
             }
+            break
+        case "ruby":
+            const rubyRegex1 =  /^([\w-]+)-(\d+\.\d+\.\d+)/
+            const rubyDetails1 =  metadata.name.match(rubyRegex1)
+            const rubyRegex2 = /([a-zA-Z0-9_-]+)\.(\d+\.\d+)(?:\.gz)?/
+            const rubyDetails2 = metadata.name.match(rubyRegex2)
+            if (Array.isArray(rubyDetails1)) {
+                name = rubyDetails1[1]
+                version = rubyDetails1[2]
+            } else if (Array.isArray(rubyDetails2)) {
+                name = rubyDetails2[1]
+                version = rubyDetails2[2]
+            } else if (metadata.name === "versions") {
+                return {
+                    status: DownloadStatus.DOWNLOAD_STOP,
+                    message: `DOWNLOAD CONTINUED - Ruby cache "versions". This has no version and is not vulnerable. Will be accepted.`,
+                    // @ts-ignore, doesnt exist locally but does exist remotely
+                    headers: {}
+                }
+            }
+            key = "RubyGems"
             break
     }
 

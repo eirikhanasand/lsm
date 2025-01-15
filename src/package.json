@@ -14,7 +14,9 @@
         "test-go": "dotenv -- bash -c 'set GOPROXY=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/api/go/go-test && go get github.com/mattermost/mattermost@v10.3.1'",
         "test-go-dangerous": "dotenv -- bash -c 'set GOPROXY=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/api/go/go-test && go get github.com/mattermost/mattermost@v10.3.1'",
         "test-python": "cd ../tests/python; rm -rf pvenv; python3 -m venv pvenv; source pvenv/bin/activate; cp -r .pip/pip.conf pvenv/pip.conf; python3 -m pip install numpy --no-cache-dir",
-        "test-python-dangerous": "cd ../tests/python; rm -rf pvenv; python3 -m venv pvenv; source pvenv/bin/activate; cp -r .pip/pip.conf pvenv/pip.conf; python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir"
+        "test-python-dangerous": "cd ../tests/python; rm -rf pvenv; python3 -m venv pvenv; source pvenv/bin/activate; cp -r .pip/pip.conf pvenv/pip.conf; python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir",
+        "test-ruby": "gem install bundler",
+        "test-ruby-dangerous": "gem install bundler -v 0.3.0"
     },
     "license": "ISC",
     "devDependencies": {
