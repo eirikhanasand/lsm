@@ -11,7 +11,7 @@
         "test-docker-dangerous": "echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'; dotenv -- bash -c 'docker pull $JFROG_TRIAL_ID.jfrog.io/docker/linux:3.11.0-12.19'",
         "test-npm": "dotenv -- bash -c 'npm install riot --registry https://$JFROG_TRIAL_ID.jfrog.io/artifactory/api/npm/npm/'",
         "test-npm-dangerous": "dotenv -- bash -c 'npm install hts-open-dex-react-ui@1.0.0 --registry https://$JFROG_TRIAL_ID.jfrog.io/artifactory/api/npm/npm/'",
-        "test-go": "dotenv -- bash -c 'set GOPROXY=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/api/go/go-test && go get github.com/mattermost/mattermost@v10.3.1'",
+        "test-go": "dotenv -e test.env -- bash -c \"export GOPROXY=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/api/go/go-test && echo GOPROXY=$GOPROXY && go get github.com/gin-gonic/gin@v1.10.0\"",
         "test-go-dangerous": "dotenv -- bash -c 'set GOPROXY=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/api/go/go-test && go get github.com/mattermost/mattermost@v10.3.1'",
         "test-python": "cd ../tests/python; rm -rf pvenv; python3 -m venv pvenv; source pvenv/bin/activate; cp -r .pip/pip.conf pvenv/pip.conf; python3 -m pip install numpy --no-cache-dir",
         "test-python-dangerous": "cd ../tests/python; rm -rf pvenv; python3 -m venv pvenv; source pvenv/bin/activate; cp -r .pip/pip.conf pvenv/pip.conf; python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir",
