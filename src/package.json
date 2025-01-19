@@ -17,6 +17,10 @@
         "test-python-dangerous": "cd ../tests/python; rm -rf pvenv; python3 -m venv pvenv; source pvenv/bin/activate; cp -r .pip/pip.conf pvenv/pip.conf; python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir",
         "test-ruby": "gem install bundler",
         "test-ruby-dangerous": "gem install bundler -v 0.3.0"
+        "test-gradle": "dotenv -- bash -c 'export GRADLE_REPO_URL=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/gradle-repo && ./gradlew build --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.20'",
+        "test-gradle-vulnerable": "dotenv -- bash -c 'export GRADLE_REPO_URL=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/gradle-repo && ./gradlew build --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.0'",
+        "test-maven": "dotenv -- bash -c 'export MAVEN_REPO_URL=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/maven-repo && mvn clean install -Dmaven.repo.local=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.20'",
+        "test-maven-vulnerable": "dotenv -- bash -c 'export MAVEN_REPO_URL=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/maven-repo && mvn clean install -Dmaven.repo.local=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.0'"
     },
     "license": "ISC",
     "devDependencies": {
