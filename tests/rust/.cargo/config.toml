@@ -14,10 +14,3 @@ registry = "sparse+https://trial9apndc.jfrog.io/artifactory/api/cargo/cargo-remo
 
 [source.crates-io]
 replace-with = "artifactory-remote"
-
-#Configuring cargo repo
-#https://jfrog.com/help/r/artifactory-configure-cargo-remote-repository/step-1-in-artifactory
-
-# cargo login
-# Bearer <token>
-# cargo add dependency

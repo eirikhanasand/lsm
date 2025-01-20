@@ -106,3 +106,9 @@ provider_installation {
 3. To view a list of sources and their resolutions use `gem source --list`.
 4. To store the credential in `~/.gem/credentials` use `curl -u <email>%40<email_domain>:<token> https://<id>.jfrog.io/artifactory/api/gems/ruby/api/v1/api_key.yaml > ~/.gem/credentials`
 5. `gem install <PACKAGE>` or explicitly `gem install <PACKAGE> --source https://trial9apndc.jfrog.io/artifactory/api/gems/ruby`
+
+### rust
+1. Configuring cargo repo from guide: https://jfrog.com/help/r/artifactory-configure-cargo-remote-repository/step-1-in-artifactory
+2. cargo login
+3. Bearer <token>
+4. cargo add dependency
