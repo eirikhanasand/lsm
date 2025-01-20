@@ -11,3 +11,4 @@ pvenv
 .terraform
 .terraform.*
 tests/rust/Cargo.lock
+src/test.env

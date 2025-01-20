@@ -112,3 +112,16 @@ provider_installation {
 2. cargo login
 3. Bearer <token>
 4. cargo add dependency
+
+### go
+For Go you need to have a virtual repo and a remote repo with these settings:  
+Remote repo:  
+- Allow Artifact Content Browsing
+- Store Artifacts Locally
+- Synchronize Properties
+- Bypass HEAD Requests
+- Block Mismatching Mime Types  
+Virtual repo:
+- Need to add the remote repo to the virtual repo  
+1. Have a working repo with `go.mod` and `main.go`
+2. `"test-go": "dotenv -e test.env -- bash -c \"export GOPROXY=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/api/go/go-test; go get github.com/gin-gonic/gin@v1.10.0\""` Or run `npm run go-test`
