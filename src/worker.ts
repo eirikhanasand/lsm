@@ -113,6 +113,24 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         "repoType": 2
     }
 
+    const CARGOtestData = {
+        "repoPath": {
+            "key": "cargo-remote",
+            "path": "index/se/rd/serde/1.0.137",
+            "id": "cargo-remote:index/se/rd/serde/1.0.137"
+        },
+        "originalRepoPath": {
+            "key": "cargo-remote",
+            "path": "index/se/rd/serde/1.0.137",
+            "id": "cargo-remote:index/se/rd/serde/1.0.137"
+        },
+        "name": "serde",
+        "ifModifiedSince": -1,
+        "clientAddress": "85.164.79.145",
+        "replaceHeadRequestWithGet": true,
+        "repoType": 2
+        }
+
     // const metadata = NPMtestData
     // const metadata = DOCKERtestData
     // const metadata = PYTHONtestData
@@ -143,8 +161,8 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             version = pythonDetails[2]
             key = "PyPI"
             break
-        case "go":
-            const goRegex = /\/([\w-]+)\/@v\/(v[\d.]+)/
+        case "go-test":
+            const goRegex = /^(.+?)\/@v\/(v[^/]+)/
             const goDetails =  metadata.repoPath.path.match(goRegex)
             name = goDetails[1]
             version = goDetails[2]
@@ -187,6 +205,23 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
                 }
             }
             key = "RubyGems"
+            break
+        case "cargo-remote":
+            const cargoVersionRegex = /\d.+/
+            const cargoDetails = metadata.repoPath.path.match(cargoVersionRegex)
+            console.log(metadata.repoPath.path)
+            console.log(cargoDetails)
+            if (Array.isArray(cargoDetails)) {
+                name = metadata.name
+                version = cargoDetails[0]
+                key = "crates.io"
+            } else {
+                return {
+                    status: DownloadStatus.DOWNLOAD_STOP,
+                    message: `DOWNLOAD STOPPED - Unable to extract package name and version for Cargo.`,
+                    headers: {}
+                }
+            }
             break
     }
 
