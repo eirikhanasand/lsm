@@ -113,12 +113,29 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         "repoType": 2
     }
 
+    const NUGETtestData ={
+        "repoPath": {
+          "key": "nuget-nuget-remote",
+          "path": ".nuGetV3/feed.json",
+          "id": "nuget-nuget-remote:.nuGetV3/feed.json"
+        },
+        "originalRepoPath": {
+          "key": "nuget-nuget-remote",
+          "path": ".nuGetV3/feed.json",
+          "id": "nuget-nuget-remote:.nuGetV3/feed.json"
+        },
+        "name": "feed.json",
+        "ifModifiedSince": -1,
+        "clientAddress": "81.167.47.252",
+        "repoType": 2
+      }
     // const metadata = NPMtestData
     // const metadata = DOCKERtestData
     // const metadata = PYTHONtestData
     // const metadata = GRADLEtestData
     // const metadata = GOtestData
     // const metadata = RUBYtestData
+    // const metadata = NUGETtestData
     const metadata = data.metadata
     let name: string | null = null
     let version: string | null = null
@@ -187,6 +204,13 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
                 }
             }
             key = "RubyGems"
+            break
+        case "nuget-nuget-remote":
+            const nugetRegex = /\.nuGetV3\/([\w\-\.]+)\.json$/ // Adjusted regex for .json paths
+            const nugetDetails = metadata.repoPath.path.match(nugetRegex)
+            name = nugetDetails[1] // Extract name (e.g., "feed")
+            version = "unknown" // No version information in this path
+            key = "NuGet"
             break
     }
 

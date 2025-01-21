@@ -106,3 +106,34 @@ provider_installation {
 3. To view a list of sources and their resolutions use `gem source --list`.
 4. To store the credential in `~/.gem/credentials` use `curl -u <email>%40<email_domain>:<token> https://<id>.jfrog.io/artifactory/api/gems/ruby/api/v1/api_key.yaml > ~/.gem/credentials`
 5. `gem install <PACKAGE>` or explicitly `gem install <PACKAGE> --source https://trial9apndc.jfrog.io/artifactory/api/gems/ruby`
+
+### NuGet
+#### Add Artifactory as a NuGet Source:  
+`nuget sources Add -Name ArtifactoryNuGet -Source https://trial9apndc.jfrog.io/artifactory/nuget-nuget-remote`  
+`nuget setapikey <YOUR_EMAIL>:<YOUR_API_KEY> -Source Artifactory`  
+
+#### Steps to Configure Artifactory as a NuGet Source  
+1. Log in to your Artifactory Instance  
+2. Navigate to Admin > Repositories > Repositories.  
+3. Create or identify your NuGet Remote Repository.  
+- Example URL: `https://api.nuget.org/v3/index.json` (for nuget.org).  
+
+#### Update Your nuget.config  
+Create or modify the nuget.config file to include your Artifactory repository.  
+File Locations:  
+Windows: %AppData%\NuGet\nuget.config  
+Linux/Mac: ~/.config/NuGet/Nuget.Config  
+Example nuget.config File:
+```xml
+<configuration>
+  <packageSources>
+    <add key="Artifactory" value="https://your-artifactory-instance.jfrog.io/artifactory/nuget-remote" />
+  </packageSources>
+  <apikeys>
+    <add key="https://your-artifactory-instance.jfrog.io/artifactory/nuget-remote" value="YOUR_API_KEY" />
+  </apikeys>
+</configuration>
+```
+#### Install Packages using Artifactory
+
+nuget install AutoMapper -Source Artifactory
