@@ -68,6 +68,7 @@ The worker functions with the following package managers / technologies:
 - npm
 - pip
 - ruby
+- huggingface (via pip)
 
 We are currently working on:
 - go
