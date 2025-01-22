@@ -3,7 +3,6 @@ import { BeforeDownload } from './interfaces.js';
 // LAST IMPORT MUST HAVE SEMICOLON, OTHERWISE JFROG ARTIFACTORY PARSING FAILS
 
 const OSV_URL = "https://api.osv.dev/v1/query"
-const parseNameToNameAndVersion = /^([a-zA-Z0-9-]+)-([\d\.]+)\.tgz$/
 
 export default async function runWorker(context: PlatformContext, data: BeforeDownloadRequest): Promise<BeforeDownload> {
     const NPMtestDataGood = {
@@ -160,8 +159,9 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
     let key: string = parseKey(metadata.repoPath.key)
     
     switch (metadata.repoPath.key) {
-        case "npm": 
-            const npmDetails = metadata.name.match(parseNameToNameAndVersion)
+        case "npm":
+            const npmRegex = /([a-zA-Z+_.]+)-([\d.]+)\.tgz/
+            const npmDetails = metadata.name.match(npmRegex)
             name = npmDetails[1]
             version = npmDetails[2]
             break
@@ -356,6 +356,7 @@ function logDetails(vulnerability: Vulnerability): void {
         `${vulnerability.id} - ${vulnerability.summary}`,
         `Published ${formatDate(vulnerability.published)}`,
         `Modified ${formatDate(vulnerability.modified)}`,
+        '-----------------------------',
         ...vulnerability.details.split('\n')
     ])
 
