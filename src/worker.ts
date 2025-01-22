@@ -216,7 +216,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             } else if (metadata.name === "versions") {
                 return {
                     status: DownloadStatus.DOWNLOAD_STOP,
-                    message: `DOWNLOAD CONTINUED - Ruby cache "versions". This has no version and is not vulnerable. Will be accepted.`,
+                    message: `DOWNLOAD CONTINUED - Ruby cache 'versions'. This has no version and is not vulnerable. Will be accepted.`,
                     // @ts-ignore, doesnt exist locally but does exist remotely
                     headers: {}
                 }

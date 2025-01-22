@@ -16,7 +16,7 @@
         "test-python": "cd ../tests/python; rm -rf pvenv; python3 -m venv pvenv; source pvenv/bin/activate; cp -r .pip/pip.conf pvenv/pip.conf; python3 -m pip install numpy --no-cache-dir",
         "test-python-dangerous": "cd ../tests/python; rm -rf pvenv; python3 -m venv pvenv; source pvenv/bin/activate; cp -r .pip/pip.conf pvenv/pip.conf; python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir",
         "test-ruby": "gem install bundler",
-        "test-ruby-dangerous": "gem install bundler -v 0.3.0",
+        "test-ruby-dangerous": "gem install actionpack -v 5.2.0",
 	    "test-gradle": "cross-env GRADLE_REPO_URL=https://$JFROG_TRIAL_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_ACCESS_TOKEN=$JFROG_ACCESS_TOKEN JFROG_TRIAL_ID=$JFROG_TRIAL_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4",
         "test-gradle-dangerous":  "cross-env GRADLE_REPO_URL=https://$JFROG_TRIAL_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_ACCESS_TOKEN=$JFROG_ACCESS_TOKEN JFROG_TRIAL_ID=$JFROG_TRIAL_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.1",
         "test-cargo": "dotenv -- bash -c 'cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_TRIAL_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde'",
