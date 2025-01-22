@@ -14,11 +14,14 @@ type Vulnerability = {
     published: string
     database_specific: { 
         "malicious-packages-origins": Package[] 
+        severity: Severity
+        cwe_ids: string[]
     }
     references: Reference[]
     affected: Affected[]
     schema_version: string
     credits: Credit[]
+    severity?: Severity[]
 }
 
 type Reference = {
@@ -71,4 +74,9 @@ type Credit = {
     name: string
     contact: string[]
     type: string
+}
+
+type Severity = {
+    type: string
+    score: string
 }

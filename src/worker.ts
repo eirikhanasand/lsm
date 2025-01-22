@@ -6,7 +6,7 @@ const OSV_URL = "https://api.osv.dev/v1/query"
 const parseNameToNameAndVersion = /^([a-zA-Z0-9-]+)-([\d\.]+)\.tgz$/
 
 export default async function runWorker(context: PlatformContext, data: BeforeDownloadRequest): Promise<BeforeDownload> {
-    const NPMtestData = {
+    const NPMtestDataGood = {
         "repoPath": {
           "key": "npm",
           "path": "@types/estree/-/estree-1.0.6.tgz",
@@ -21,6 +21,23 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
         "uri": "/artifactory/npm/@types/estree/-/estree-1.0.6.tgz",
         "clientAddress": "18.214.241.149",
+        "repoType": 2
+    }
+
+    const NPMtestDataBad = {
+        "repoPath": {
+            "key": "npm",
+            "path": "mathlive/-/mathlive-0.103.0.tgz",
+            "id": "npm:mathlive/-/mathlive-0.103.0.tgz"
+        },
+        "originalRepoPath": {
+            "key": "npm",
+            "path": "mathlive/-/mathlive-0.103.0.tgz",
+            "id": "npm:mathlive/-/mathlive-0.103.0.tgz"
+        },
+        "name": "mathlive-0.103.0.tgz",
+        "ifModifiedSince": -1,
+        "clientAddress": "88.95.182.216",
         "repoType": 2
     }
 
@@ -136,6 +153,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
     // const metadata = GOtestData
     // const metadata = RUBYtestData
     // const metadata = NUGETtestData
+    // const metadata = NPMtestDataBad
     const metadata = data.metadata
     let name: string | null = null
     let version: string | null = null
@@ -322,6 +340,17 @@ function prettyLog(logs: any[]): void {
 }
 
 function logDetails(vulnerability: Vulnerability): void {
+    // SEVERITY
+    if ('severity' in vulnerability) {
+        console.log(`Severity ${vulnerability.database_specific.severity}`)
+        for (const severity of vulnerability.severity) {
+            if ('type' in severity && 'score' in severity) {
+                prettyLog([severity.type, severity.score, '-----------------------------'])
+            }
+        }
+        prettyLog(["CWEs", vulnerability.database_specific.cwe_ids.join(', '), '-----------------------------'])
+    }
+
     // FIRST INFO SECTION
     prettyLog([
         `${vulnerability.id} - ${vulnerability.summary}`,
