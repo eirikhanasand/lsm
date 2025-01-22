@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>maven</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dynamic.dependency.groupId>org.apache.mina</dynamic.dependency.groupId>
+        <dynamic.dependency.artifactId>mina-core</dynamic.dependency.artifactId>
+        <dynamic.dependency.version>2.2.4</dynamic.dependency.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>artifactory</id>
+            <url>https://trial9apndc.jfrog.io/artifactory/java</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>${dynamic.dependency.groupId}</groupId>
+            <artifactId>${dynamic.dependency.artifactId}</artifactId>
+            <version>${dynamic.dependency.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
