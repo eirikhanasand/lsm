@@ -144,7 +144,8 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         "ifModifiedSince": -1,
         "clientAddress": "81.167.47.252",
         "repoType": 2
-      }
+    }
+
     // const metadata = NPMtestData
     // const metadata = DOCKERtestData
     // const metadata = PYTHONtestData
@@ -153,11 +154,12 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
     // const metadata = RUBYtestData
     // const metadata = NUGETtestData
     // const metadata = NPMtestDataBad
+
     const metadata = data.metadata
     let name: string | null = null
     let version: string | null = null
     let key: string = parseKey(metadata.repoPath.key)
-    
+
     switch (metadata.repoPath.key) {
         case "npm":
             const npmRegex = /([a-zA-Z+_.]+)-([\d.]+)\.tgz/
@@ -225,10 +227,10 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             key = "RubyGems"
             break
         case "nuget-nuget-remote":
-            const nugetRegex = /\.nuGetV3\/([\w\-\.]+)\.json$/ // Adjusted regex for .json paths
+            const nugetRegex = /\.nuGetV3\/([\w\-\.]+)\.json$/
             const nugetDetails = metadata.repoPath.path.match(nugetRegex)
-            name = nugetDetails[1] // Extract name (e.g., "feed")
-            version = "unknown" // No version information in this path
+            name = nugetDetails[1]
+            version = nugetDetails[2]
             key = "NuGet"
             break
     }
