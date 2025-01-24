@@ -234,6 +234,18 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             version = nugetDetails[2]
             key = "NuGet"
             break
+        case "alpine":
+            const alpineRegex = /v\d.\d+\/main\/x86_64\/(\w+).tar.gz/
+            const alpineDetails = metadata.repoPath.path.match(alpineRegex)
+            if (alpineDetails[1] === "APKINDEX") {
+                name = "APKINDEX"
+                version = "1.0.0"
+            } else {
+                name = alpineDetails[1]
+                version = alpineDetails[2]
+            }
+            key = "Alpine"
+            break
     }
 
     if (!name || !version) {
