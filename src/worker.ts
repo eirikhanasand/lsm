@@ -4,156 +4,157 @@ import { BeforeDownload } from './interfaces.js';
 
 const OSV_URL = "https://api.osv.dev/v1/query"
 
+const NPMtestDataGood = {
+    "repoPath": {
+      "key": "npm",
+      "path": "@types/estree/-/estree-1.0.6.tgz",
+      "id": "npm:@types/estree/-/estree-1.0.6.tgz"
+    },
+    "originalRepoPath": {
+      "key": "npm",
+      "path": "@types/estree/-/estree-1.0.6.tgz",
+      "id": "npm:@types/estree/-/estree-1.0.6.tgz"
+    },
+    "name": "estree-1.0.6.tgz",
+    "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+    "uri": "/artifactory/npm/@types/estree/-/estree-1.0.6.tgz",
+    "clientAddress": "18.214.241.149",
+    "repoType": 2
+}
+
+const NPMtestDataBad = {
+    "repoPath": {
+        "key": "npm",
+        "path": "mathlive/-/mathlive-0.103.0.tgz",
+        "id": "npm:mathlive/-/mathlive-0.103.0.tgz"
+    },
+    "originalRepoPath": {
+        "key": "npm",
+        "path": "mathlive/-/mathlive-0.103.0.tgz",
+        "id": "npm:mathlive/-/mathlive-0.103.0.tgz"
+    },
+    "name": "mathlive-0.103.0.tgz",
+    "ifModifiedSince": -1,
+    "clientAddress": "88.95.182.216",
+    "repoType": 2
+}
+
+const DOCKERtestData = {
+   "repoPath": {
+      "key": "docker",
+      "path": "library/ubuntu/latest/list.manifest.json",
+      "id": "docker:library/ubuntu/latest/list.manifest.json"
+    },
+    "originalRepoPath": {
+      "key": "docker",
+      "path": "library/ubuntu/latest/list.manifest.json",
+      "id": "docker:library/ubuntu/latest/list.manifest.json"
+    },
+    "name": "list.manifest.json",
+    "ifModifiedSince": -1,
+    "clientAddress": "88.95.182.216",
+    "repoType": 2
+}
+
+const PYTHONtestData = {
+    "repoPath": {
+      "key": "python",
+      "path": "c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
+      "id": "python:c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl"
+    },
+    "originalRepoPath": {
+      "key": "python",
+      "path": "c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
+      "id": "python:c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl"
+    },
+    "name": "numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
+    "ifModifiedSince": -1,
+    "clientAddress": "88.95.182.216",
+    "repoType": 2
+}
+
+const GOtestData = {
+    "repoPath": {
+      "key": "go",
+      "path": "github.com/mattermost/mattermost/@v/v10.3.1.info",
+      "id": "go:github.com/mattermost/mattermost/@v/v10.3.1.info"
+    },
+    "originalRepoPath": {
+      "key": "go",
+      "path": "github.com/mattermost/mattermost/@v/v10.3.1.info",
+      "id": "go:github.com/mattermost/mattermost/@v/v10.3.1.info"
+    },
+    "name": "v10.3.1.info",
+    "ifModifiedSince": -1,
+    "clientAddress": "81.167.47.252",
+    "replaceHeadRequestWithGet": true,
+    "repoType": 2
+}
+
+const GRADLEtestData = {
+    "repoPath": {
+        "key": "java-cache",
+        "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
+        "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
+    },
+    "originalRepoPath": {
+        "key": "java-cache",
+        "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
+        "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
+    },
+    "name": "kotlin-gradle-plugin-1.9.22-gradle82.jar",
+    "modificationTime": -1,
+    "lastModified": -1,
+    "ifModifiedSince": -1,
+    "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+    "uri": "/artifactory/java-cache/org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
+    "clientAddress": "127.0.0.1"
+}
+
+const RUBYtestData = {
+    "repoPath": {
+    "key": "ruby",
+    "path": "quick/Marshal.4.8/bundler-0.3.0.gemspec.rz",
+    "id": "ruby:quick/Marshal.4.8/bundler-0.3.0.gemspec.rz"
+    },
+    "originalRepoPath": {
+    "key": "ruby",
+    "path": "quick/Marshal.4.8/bundler-0.3.0.gemspec.rz",
+    "id": "ruby:quick/Marshal.4.8/bundler-0.3.0.gemspec.rz"
+    },
+    "name": "bundler-0.3.0.gemspec.rz",
+    "ifModifiedSince": -1,
+    "clientAddress": "129.241.236.195",
+    "repoType": 2
+}
+
+const NUGETtestData ={
+    "repoPath": {
+      "key": "nuget-nuget-remote",
+      "path": ".nuGetV3/feed.json",
+      "id": "nuget-nuget-remote:.nuGetV3/feed.json"
+    },
+    "originalRepoPath": {
+      "key": "nuget-nuget-remote",
+      "path": ".nuGetV3/feed.json",
+      "id": "nuget-nuget-remote:.nuGetV3/feed.json"
+    },
+    "name": "feed.json",
+    "ifModifiedSince": -1,
+    "clientAddress": "81.167.47.252",
+    "repoType": 2
+}
+
+// const metadata = NPMtestData
+// const metadata = DOCKERtestData
+// const metadata = PYTHONtestData
+// const metadata = GRADLEtestData
+// const metadata = GOtestData
+// const metadata = RUBYtestData
+// const metadata = NUGETtestData
+// const metadata = NPMtestDataBad
+
 export default async function runWorker(context: PlatformContext, data: BeforeDownloadRequest): Promise<BeforeDownload> {
-    const NPMtestDataGood = {
-        "repoPath": {
-          "key": "npm",
-          "path": "@types/estree/-/estree-1.0.6.tgz",
-          "id": "npm:@types/estree/-/estree-1.0.6.tgz"
-        },
-        "originalRepoPath": {
-          "key": "npm",
-          "path": "@types/estree/-/estree-1.0.6.tgz",
-          "id": "npm:@types/estree/-/estree-1.0.6.tgz"
-        },
-        "name": "estree-1.0.6.tgz",
-        "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
-        "uri": "/artifactory/npm/@types/estree/-/estree-1.0.6.tgz",
-        "clientAddress": "18.214.241.149",
-        "repoType": 2
-    }
-
-    const NPMtestDataBad = {
-        "repoPath": {
-            "key": "npm",
-            "path": "mathlive/-/mathlive-0.103.0.tgz",
-            "id": "npm:mathlive/-/mathlive-0.103.0.tgz"
-        },
-        "originalRepoPath": {
-            "key": "npm",
-            "path": "mathlive/-/mathlive-0.103.0.tgz",
-            "id": "npm:mathlive/-/mathlive-0.103.0.tgz"
-        },
-        "name": "mathlive-0.103.0.tgz",
-        "ifModifiedSince": -1,
-        "clientAddress": "88.95.182.216",
-        "repoType": 2
-    }
-
-    const DOCKERtestData = {
-       "repoPath": {
-          "key": "docker",
-          "path": "library/ubuntu/latest/list.manifest.json",
-          "id": "docker:library/ubuntu/latest/list.manifest.json"
-        },
-        "originalRepoPath": {
-          "key": "docker",
-          "path": "library/ubuntu/latest/list.manifest.json",
-          "id": "docker:library/ubuntu/latest/list.manifest.json"
-        },
-        "name": "list.manifest.json",
-        "ifModifiedSince": -1,
-        "clientAddress": "88.95.182.216",
-        "repoType": 2
-    }
-
-    const PYTHONtestData = {
-        "repoPath": {
-          "key": "python",
-          "path": "c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
-          "id": "python:c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl"
-        },
-        "originalRepoPath": {
-          "key": "python",
-          "path": "c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
-          "id": "python:c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl"
-        },
-        "name": "numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
-        "ifModifiedSince": -1,
-        "clientAddress": "88.95.182.216",
-        "repoType": 2
-    }
-
-    const GOtestData = {
-        "repoPath": {
-          "key": "go",
-          "path": "github.com/mattermost/mattermost/@v/v10.3.1.info",
-          "id": "go:github.com/mattermost/mattermost/@v/v10.3.1.info"
-        },
-        "originalRepoPath": {
-          "key": "go",
-          "path": "github.com/mattermost/mattermost/@v/v10.3.1.info",
-          "id": "go:github.com/mattermost/mattermost/@v/v10.3.1.info"
-        },
-        "name": "v10.3.1.info",
-        "ifModifiedSince": -1,
-        "clientAddress": "81.167.47.252",
-        "replaceHeadRequestWithGet": true,
-        "repoType": 2
-    }
-
-    const GRADLEtestData = {
-        "repoPath": {
-            "key": "java-cache",
-            "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
-            "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
-        },
-        "originalRepoPath": {
-            "key": "java-cache",
-            "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
-            "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
-        },
-        "name": "kotlin-gradle-plugin-1.9.22-gradle82.jar",
-        "modificationTime": -1,
-        "lastModified": -1,
-        "ifModifiedSince": -1,
-        "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
-        "uri": "/artifactory/java-cache/org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
-        "clientAddress": "127.0.0.1"
-    }
-
-    const RUBYtestData = {
-        "repoPath": {
-        "key": "ruby",
-        "path": "quick/Marshal.4.8/bundler-0.3.0.gemspec.rz",
-        "id": "ruby:quick/Marshal.4.8/bundler-0.3.0.gemspec.rz"
-        },
-        "originalRepoPath": {
-        "key": "ruby",
-        "path": "quick/Marshal.4.8/bundler-0.3.0.gemspec.rz",
-        "id": "ruby:quick/Marshal.4.8/bundler-0.3.0.gemspec.rz"
-        },
-        "name": "bundler-0.3.0.gemspec.rz",
-        "ifModifiedSince": -1,
-        "clientAddress": "129.241.236.195",
-        "repoType": 2
-    }
-
-    const NUGETtestData ={
-        "repoPath": {
-          "key": "nuget-nuget-remote",
-          "path": ".nuGetV3/feed.json",
-          "id": "nuget-nuget-remote:.nuGetV3/feed.json"
-        },
-        "originalRepoPath": {
-          "key": "nuget-nuget-remote",
-          "path": ".nuGetV3/feed.json",
-          "id": "nuget-nuget-remote:.nuGetV3/feed.json"
-        },
-        "name": "feed.json",
-        "ifModifiedSince": -1,
-        "clientAddress": "81.167.47.252",
-        "repoType": 2
-    }
-
-    // const metadata = NPMtestData
-    // const metadata = DOCKERtestData
-    // const metadata = PYTHONtestData
-    // const metadata = GRADLEtestData
-    // const metadata = GOtestData
-    // const metadata = RUBYtestData
-    // const metadata = NUGETtestData
-    // const metadata = NPMtestDataBad
 
     const metadata = data.metadata
     let name: string | null = null
@@ -404,8 +405,6 @@ function formatDate(date: string): string {
     const year = parsedDate.getFullYear()
     const hour = parsedDate.getHours().toLocaleString().padStart(2, '0')
     const minute = parsedDate.getMinutes().toLocaleString().padStart(2, '0')
-
     const formattedDate = `${day}.${month}.${year}, ${hour}:${minute}`
-
     return formattedDate
 }
