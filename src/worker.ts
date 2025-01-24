@@ -145,6 +145,23 @@ const NUGETtestData ={
     "repoType": 2
 }
 
+const CONDAtestData ={
+        "repoPath": {
+          "key": "conda",
+          "path": "win-64/pytz-2024.1-py312haa95532_0.conda",
+          "id": "conda:win-64/pytz-2024.1-py312haa95532_0.conda"
+        },
+        "originalRepoPath": {
+          "key": "conda",
+          "path": "win-64/pytz-2024.1-py312haa95532_0.conda",
+          "id": "conda:win-64/pytz-2024.1-py312haa95532_0.conda"
+        },
+        "name": "pytz-2024.1-py312haa95532_0.conda",
+        "ifModifiedSince": -1,
+        "clientAddress": "85.164.79.145",
+        "repoType": 2
+}
+
 // const metadata = NPMtestData
 // const metadata = DOCKERtestData
 // const metadata = PYTHONtestData
@@ -153,6 +170,7 @@ const NUGETtestData ={
 // const metadata = RUBYtestData
 // const metadata = NUGETtestData
 // const metadata = NPMtestDataBad
+// const metadata = CONDAtestData
 
 export default async function runWorker(context: PlatformContext, data: BeforeDownloadRequest): Promise<BeforeDownload> {
 
