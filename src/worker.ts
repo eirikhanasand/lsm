@@ -246,6 +246,21 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             }
             key = "Alpine"
             break
+        case "conda":
+            const condaRegex = /([a-zA-Z\-]+)-(\d+.\d+.\d+)/
+            const condaDetails = metadata.name.match(condaRegex)
+            if (Array.isArray(condaDetails)) {
+                name = condaDetails[1]
+                version = condaDetails[2]
+                key = "PyPI"
+            } else {
+                return {
+                    status: DownloadStatus.DOWNLOAD_STOP,
+                    message: `DOWNLOAD STOPPED - Unable to extract package name and version from Conda repository.`,
+                    headers: {}
+                }
+            }
+            break
     }
 
     if (!name || !version) {
