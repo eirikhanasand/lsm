@@ -10,3 +10,4 @@ pip.conf
 pvenv
 .terraform
 .terraform.*
+api/osv
