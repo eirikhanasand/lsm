@@ -1,0 +1,25 @@
+{
+    "name": "idk",
+    "version": "1.0.0",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+      "start": "node index.js",
+      "debug": "tsc && node --inspect --trace-deprecation dist/index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+      "@fastify/cors": "^10.0.1",
+      "dotenv": "^16.4.7",
+      "fastify": "^5.2.0",
+      "firebase-admin": "^13.0.2",
+      "redis": "^4.7.0"
+    },
+    "devDependencies": {
+      "ts-node": "^10.9.2",
+      "typescript": "^5.7.2"
+    }
+  }
+  
