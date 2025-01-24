@@ -48,7 +48,7 @@ async function getOSV() {
     console.log("Started reading OSV")
 
     try {
-        const osvFolderPath = path.resolve(__dirname, '../osv')
+        const osvFolderPath = path.resolve(__dirname, '../../osv')
         const files = await fs.readdir(osvFolderPath)
 
         console.log(`There are ${files.length} files.`)
@@ -56,7 +56,7 @@ async function getOSV() {
             const file = files[i]
             const heapUsed = (process.memoryUsage().rss / 1024 / 1024).toFixed(0)
             // const heapTotal = (process.availableMemory() / 1024 / 1024).toFixed(0)
-            if (i % 10 === 0) { console.log(`RAM: ${heapUsed}/24000 MB\tRead ${i} files.`) }
+            if (i % 10 === 0) { console.log(`RAM: ${heapUsed}/24000 MB\tRead ${i + 1} files.`) }
             const filePath = path.resolve(osvFolderPath, file)
             const fileContent = await fs.readFile(filePath, 'utf-8')
             const analysisData = JSON.parse(fileContent)
@@ -79,6 +79,7 @@ async function getOSV() {
 
         console.log("Vulnerable packages", packages.size)
         console.log("Discovered vulnerabilities", vulnerabilties.size)
+        console.log(`Sample vulnerable package: "${(packages.entries().next().value || [])[0]}"`)
         const now = new Date().getTime()
         console.log("Elapsed", now - startTime, "ms")
         return { packages, vulnerabilties }

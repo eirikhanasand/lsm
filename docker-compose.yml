@@ -7,11 +7,11 @@ services:
       - "3000:3000"
     command: npm start
 
-  redis:
-    image: redis:alpine
-    container_name: redis
-    ports:
-      - "6379:6379"
+  # redis:
+  #   image: redis:alpine
+  #   container_name: redis
+  #   ports:
+  #     - "6379:6379"
 
   backend:
     container_name: backend
@@ -20,9 +20,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    command: npm start
-    depends_on:
-      - redis
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+    # depends_on:
+    #   - redis
+    # environment:
+    #   - REDIS_HOST=redis
+    #   - REDIS_PORT=6379

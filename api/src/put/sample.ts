@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { invalidateCache } from "../flow.js"
+// import { invalidateCache } from "../flow.js"
 
 export default async function putSample(req: FastifyRequest, res: FastifyReply) {
     try {
@@ -11,7 +11,7 @@ export default async function putSample(req: FastifyRequest, res: FastifyReply) 
 
         const formattedID = id.toUpperCase()
 
-        invalidateCache(formattedID)
+        // invalidateCache(formattedID)
         return { message: `Updated currency ${formattedID}` }
     } catch (err) {
         const error = err as Error
