@@ -11,3 +11,4 @@ pvenv
 .terraform
 .terraform.*
 api/osv
+dist
