@@ -15,6 +15,11 @@ Library Safety Manager Open Source Plugin For Artifactory
 -> Set repository key to whatever you want to name the repository (usually the project name). Leave all other fields empty if you dont know what to put there. Make sure not to touch the URL field unless you know its incorrect and know what to put there.
 -> Create (remote / local) repository (button with green stroke bottom right)
 
+## Script to create all testing repositories
+1. `cd support`
+2. `npm install`
+3. `npm run repositories`
+
 ## How to develop the worker
 1. Run `npm install` to install all development dependencies
 2. Create a `.env` file in the `src` directory

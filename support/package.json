@@ -7,7 +7,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "repositories": "tsc && node dist/repositories.js",
+    "repositories": "rm -rf dist && tsc && node dist/src/repositories.js",
     "test-docker": "dotenv -- bash -c 'docker pull $JFROG_TRIAL_ID.jfrog.io/docker/ubuntu:latest'",
     "test-docker-dangerous": "echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'; dotenv -- bash -c 'docker pull $JFROG_TRIAL_ID.jfrog.io/docker/linux:3.11.0-12.19'",
     "test-npm": "dotenv -- bash -c 'npm install riot --registry https://$JFROG_TRIAL_ID.jfrog.io/artifactory/api/npm/npm/'",
