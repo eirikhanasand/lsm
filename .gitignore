@@ -12,3 +12,4 @@ pvenv
 .terraform.*
 api/osv
 dist
+osv.zip
