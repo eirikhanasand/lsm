@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "tsc && node dist/index.js",
+    "start": "tsc && node --max-old-space-size=24576 dist/index.js",
     "debug": "tsc && node --inspect --trace-deprecation dist/index.js"
   },
   "author": "",

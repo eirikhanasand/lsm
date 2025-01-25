@@ -6,7 +6,6 @@ RUN apk add --no-cache python3 make g++ varnish
 
 # Starts varnish
 COPY default.vcl ./etc/varnish/default.vcl
-COPY varnish.vcl ./etc/varnish/default2.vcl
 
 # Copies entrypoint
 COPY entrypoint.sh /entrypoint.sh
