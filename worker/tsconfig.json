@@ -13,9 +13,9 @@
     "include": [
         "**/*.ts",
         "node_modules/@types/**/*.d.ts", 
-        "../src/worker.ts", 
-        "../src/worker.spec.ts", 
+        "worker.ts", 
+        "worker.spec.ts", 
         "types.d.ts", 
-        "../src/interfaces.ts"
+        "interfaces.ts"
     ]
 }
