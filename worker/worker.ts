@@ -200,6 +200,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             key = "PyPI"
             break
         case "go":
+        case "go-cache":
             const goRegex = /\/([\w-]+)\/@v\/(v[\d.]+)/
             const goDetails =  metadata.repoPath.path.match(goRegex)
             name = goDetails[1]
