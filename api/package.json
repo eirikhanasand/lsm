@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "tsc && node --max-old-space-size=24576 dist/index.js",
-    "debug": "tsc && node --inspect --trace-deprecation dist/index.js"
+    "start": "rm -rf dist && tsc && node --max-old-space-size=24576 dist/src/index.js",
+    "debug": "rm -rf dist && tsc && node --inspect --trace-deprecation dist/src/index.js"
   },
   "author": "",
   "license": "ISC",

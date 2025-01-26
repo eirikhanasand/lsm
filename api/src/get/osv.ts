@@ -2,6 +2,7 @@ import path from "path"
 import { fileURLToPath } from "url"
 import fs from 'fs/promises'
 import { FastifyReply, FastifyRequest } from "fastify"
+import versionAffected from "../../utils/version.js"
 
 type OSVData = {
     packages: Map<string, string[]>
@@ -14,7 +15,6 @@ const startTime = new Date().getTime()
 const osv = await getOSV() as OSVData
 export default async function osvHandler(req: FastifyRequest, res: FastifyReply) {
     const { name, version, ecosystem } = req.params as any
-    // const { name, version, ecosystem} = req.body as any
 
     if (!name || !version || !ecosystem) {
         return {
@@ -38,9 +38,12 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
 
     for (const pkg of vulnerable) {
         const vulnerability = osv.vulnerabilties.get(pkg)
-        data.push(vulnerability)
+        if (versionAffected(version, ecosystem, vulnerability)) {
+            data.push(vulnerability)
+        }
     }
-    return data
+
+    return data.length ? data : {}
 }
 
 async function getOSV() {
@@ -49,11 +52,11 @@ async function getOSV() {
     console.log("Started reading OSV")
 
     try {
-        const osvFolderPath = path.resolve(__dirname, '../../osv')
+        const osvFolderPath = path.resolve(__dirname, '../../../osv')
         const files = await fs.readdir(osvFolderPath)
 
         console.log(`There are ${files.length} files.`)
-        for (let i = 0; i < files.length; i++) {
+        for (let i = 0; i < files.slice(0, 10).length; i++) {
             const file = files[i]
             const heapUsed = (process.memoryUsage().rss / 1024 / 1024).toFixed(0)
             // const heapTotal = (process.availableMemory() / 1024 / 1024).toFixed(0)
