@@ -27,7 +27,7 @@ Library Safety Manager Open Source Plugin For Artifactory
 ```ts
 JFROG_USERNAME=<your_jfrog_username>
 JFROG_ACCESS_TOKEN=<your_jfrog_token>
-JFROG_TRIAL_ID=<your_jfrog_trial_id>
+JFROG_ID=<your_jfrog_id>
 ```
 
 ## How to log into different technologies

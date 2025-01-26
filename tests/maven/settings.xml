@@ -22,13 +22,13 @@
                     </snapshots>
                     <id>central</id>
                     <name>maven</name>
-                    <url>https://${env.JFROG_TRIAL_ID}.jfrog.io/artifactory/maven</url>
+                    <url>https://${env.JFROG_ID}.jfrog.io/artifactory/maven</url>
                 </repository>
                 <repository>
                     <snapshots />
                     <id>snapshots</id>
                     <name>maven</name>
-                    <url>https://${env.JFROG_TRIAL_ID}.jfrog.io/artifactory/maven</url>
+                    <url>https://${env.JFROG_ID}.jfrog.io/artifactory/maven</url>
                 </repository>
             </repositories>
             <pluginRepositories>
@@ -38,13 +38,13 @@
                     </snapshots>
                     <id>central</id>
                     <name>maven</name>
-                    <url>https://${env.JFROG_TRIAL_ID}.jfrog.io/artifactory/maven</url>
+                    <url>https://${env.JFROG_ID}.jfrog.io/artifactory/maven</url>
                 </pluginRepository>
                 <pluginRepository>
                     <snapshots />
                     <id>snapshots</id>
                     <name>maven</name>
-                    <url>https://${env.JFROG_TRIAL_ID}.jfrog.io/artifactory/maven</url>
+                    <url>https://${env.JFROG_ID}.jfrog.io/artifactory/maven</url>
                 </pluginRepository>
             </pluginRepositories>
             <id>artifactory</id>

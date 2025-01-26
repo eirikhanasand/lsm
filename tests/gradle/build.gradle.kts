@@ -6,7 +6,7 @@ plugins {
 buildscript {
     repositories {
         maven {
-            url = uri("https://" + System.getenv("JFROG_TRIAL_ID") + "/java")
+            url = uri("https://" + System.getenv("JFROG_ID") + "/java")
             credentials {
                 username = System.getenv("JFROG_USERNAME")
                 password = System.getenv("JFROG_ACCESS_TOKEN")
@@ -21,7 +21,7 @@ buildscript {
 allprojects {
     repositories {
         maven {
-            url = uri("https://" + System.getenv("JFROG_TRIAL_ID") + "/java")
+            url = uri("https://" + System.getenv("JFROG_ID") + "/java")
             credentials {
                 username = System.getenv("JFROG_USERNAME")
                 password = System.getenv("JFROG_ACCESS_TOKEN")
@@ -33,7 +33,7 @@ allprojects {
 }
 
 artifactory {
-    setContextUrl("https://" + System.getenv("JFROG_TRIAL_ID"))
+    setContextUrl("https://" + System.getenv("JFROG_ID"))
 
     publish {
         repository {
