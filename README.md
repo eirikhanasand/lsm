@@ -36,7 +36,7 @@ Library Safety Manager Open Source Plugin For Artifactory
 3. Add the following credentials to the `.env` file:
 ```ts
 JFROG_USERNAME=<your_jfrog_username>
-JFROG_ACCESS_TOKEN=<your_jfrog_token>
+JFROG_TOKEN=<your_jfrog_token>
 JFROG_ID=<your_jfrog_id>
 ```
 
@@ -162,4 +162,4 @@ Remote repo:
 Virtual repo:
 - Need to add the remote repo to the virtual repo  
 1. Have a working repo with `go.mod` and `main.go`
-2. `"test-go": "dotenv -e test.env -- bash -c \"export GOPROXY=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-test; go get github.com/gin-gonic/gin@v1.10.0\""` Or run `npm run go-test`
+2. `"test-go": "dotenv -e test.env -- bash -c \"export GOPROXY=https://$JFROG_USERNAME:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-test; go get github.com/gin-gonic/gin@v1.10.0\""` Or run `npm run go-test`

@@ -9,7 +9,7 @@ buildscript {
             url = uri("https://" + System.getenv("JFROG_ID") + "/java")
             credentials {
                 username = System.getenv("JFROG_USERNAME")
-                password = System.getenv("JFROG_ACCESS_TOKEN")
+                password = System.getenv("JFROG_TOKEN")
             }
         }
     }
@@ -24,7 +24,7 @@ allprojects {
             url = uri("https://" + System.getenv("JFROG_ID") + "/java")
             credentials {
                 username = System.getenv("JFROG_USERNAME")
-                password = System.getenv("JFROG_ACCESS_TOKEN")
+                password = System.getenv("JFROG_TOKEN")
             }
         }
     }
@@ -39,7 +39,7 @@ artifactory {
         repository {
             repoKey = "java"
             username = System.getenv("JFROG_USERNAME")
-            password = System.getenv("JFROG_ACCESS_TOKEN")
+            password = System.getenv("JFROG_TOKEN")
         }
     }
 }

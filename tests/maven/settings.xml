@@ -4,12 +4,12 @@
     <servers>
         <server>
             <username>${env.JFROG_USERNAME}</username>
-            <password>${env.JFROG_ACCESS_TOKEN}</password>
+            <password>${env.JFROG_TOKEN}</password>
             <id>central</id>
         </server>
         <server>
             <username>${env.JFROG_USERNAME}</username>
-            <password>${env.JFROG_ACCESS_TOKEN}</password>
+            <password>${env.JFROG_TOKEN}</password>
             <id>snapshots</id>
         </server>
     </servers>

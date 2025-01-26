@@ -3,15 +3,15 @@ import { repositories, dependantRepositories, } from '../data/repositories.js'
 
 dotenv.config()
 
-if (!('JFROG_ACCESS_TOKEN' in process.env) || !process.env.JFROG_ACCESS_TOKEN?.length) {
-    throw new Error("Missing JFROG_ACCESS_TOKEN in env.")
+if (!('JFROG_TOKEN' in process.env) || !process.env.JFROG_TOKEN?.length) {
+    throw new Error("Missing JFROG_TOKEN in env.")
 }
 
 if (!('JFROG_ID' in process.env) || !process.env.JFROG_ID?.length) {
     throw new Error("Missing JFROG_ID in env.")
 }
 
-const token = process.env.JFROG_ACCESS_TOKEN
+const token = process.env.JFROG_TOKEN
 const id = process.env.JFROG_ID
 
 const createRepositoriesResponse = await createRepositories()
