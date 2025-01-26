@@ -1,6 +1,10 @@
 # lsm
 Library Safety Manager Open Source Plugin For Artifactory
 
+## How to setup quickly if first time or creating new JFrog instance
+1. Deploy the worker, see "How to deploy the worker"
+2. Deploy test repositories by going to the `support` folder and running `npm run repositories`
+
 ## How to deploy the worker
 1. Go to the `worker` directory
 2. Make sure the `jf` client is installed
