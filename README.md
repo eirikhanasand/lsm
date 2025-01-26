@@ -160,6 +160,7 @@ Remote repo:
 - Bypass HEAD Requests
 - Block Mismatching Mime Types  
 Important! Git Provider have to be Artifactory  
+
 Virtual repo:
 - Need to add the remote repo to the virtual repo  
 1. Have a working repo with `go.mod` and `main.go`
