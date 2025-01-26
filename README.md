@@ -1,6 +1,12 @@
 # lsm
 Library Safety Manager Open Source Plugin For Artifactory
 
+## How to deploy the worker
+1. Go to the `worker` directory
+2. Make sure the `jf` client is installed
+3. Run `jf login` and login
+4. Run `npm run deploy` to deploy the worker
+
 ## How to use the worker
 1. Make sure the worker is active (it autodisables itself every time you push an update, see the "How to activate an Artifactory Worker" section) 
 2. Create repository or find artifact
