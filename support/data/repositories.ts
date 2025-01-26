@@ -179,6 +179,14 @@ const repositories = [
         "url": "https://github.com/",
         "gitRegistryUrl": "https://registry.terraform.io",
         "vcsGitDownloadUrl": "https://releases.hashicorp.com"
+    },
+    {
+        "key": "github",
+        "packageType": "github",
+        "includesPattern": "**/*",
+        "rclass": "remote",
+        "repoLayoutRef": "simple-default",
+        "url": "https://github.com/",
     }
 ]
 
