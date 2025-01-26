@@ -44,9 +44,6 @@ JFROG_ID=<your_jfrog_id>
 <!-- docker login (remember to create access token) -->
 docker login <id>.jfrog.io
 
-<!-- npm login -->
-npm login --registry=https://<id>.jfrog.io/artifactory/api/npm/npm/ --auth-type=web
-
 ## How to fetch package via Artifactory
 <!-- docker download "exposures" (sample) image -->
 docker pull <id>.jfrog.io/docker-trial/exposures:latest
@@ -95,7 +92,7 @@ We are currently working on:
 -- todo
 
 ### npm
-1. Login with `npm login <id>.jfrog.io`
+1. Login with `npm login --registry=https://<id>.jfrog.io/artifactory/api/npm/npm/ --auth-type=web`
 -- todo
 
 ### terraform
