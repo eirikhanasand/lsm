@@ -14,10 +14,13 @@ if (!('JFROG_ID' in process.env) || !process.env.JFROG_ID?.length) {
 const token = process.env.JFROG_ACCESS_TOKEN
 const id = process.env.JFROG_ID
 
-createRepositories()
-setTimeout(() => {
+const createRepositoriesResponse = await createRepositories()
+
+if (createRepositoriesResponse.status === 200) {
     createDependantRepositories()
-}, 1000)
+} else {
+    console.log(`Failed to create dependant repositories: ${createRepositoriesResponse.error}`)
+}
 
 async function createRepositories() {
     try {
@@ -38,15 +41,17 @@ async function createRepositories() {
 
         const data = await response.text()
         console.log(`Successfully created ${repositories.length} repositories.`)
-        return data
+        return { status: 200, data }
     } catch (error) {
         const parsedError = JSON.parse((error as any).message) 
         const errorMessage = parsedError?.errors?.[0]?.message
 
         if (errorMessage.includes("repository key already exists")) {
             console.error("Repositories already exist.")
+            return { status: 409, error: "Repositories already exist." }
         } else {
             console.error(error)
+            return { status: 500, error }
         }
     }
 }
