@@ -26,6 +26,8 @@ sub vcl_hash {
 }
 
 sub vcl_backend_response {
+    # Caches for 1 hour
+    # set beresp.ttl = 1h;
     return (deliver);
 }
 
