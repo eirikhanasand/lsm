@@ -42,17 +42,17 @@ JFROG_ID=<your_jfrog_id>
 
 ## How to log into different technologies
 <!-- docker login (remember to create access token) -->
-docker login <trial_id>.jfrog.io
+docker login <id>.jfrog.io
 
 <!-- npm login -->
-npm login --registry=https://<trial_id>.jfrog.io/artifactory/api/npm/npm/ --auth-type=web
+npm login --registry=https://<id>.jfrog.io/artifactory/api/npm/npm/ --auth-type=web
 
 ## How to fetch package via Artifactory
 <!-- docker download "exposures" (sample) image -->
-docker pull <trial_id>.jfrog.io/docker-trial/exposures:latest
+docker pull <id>.jfrog.io/docker-trial/exposures:latest
 
 <!-- npm download -->
-npm install <dependency_name> --registry https://<trial_id>.jfrog.io/artifactory/api/npm/npm/   
+npm install <dependency_name> --registry https://<id>.jfrog.io/artifactory/api/npm/npm/   
 
 ## How to activate an Artifactory Worker
 1. Ensure the worker is deployed (check that the code matches the remote if you are unsure)
@@ -165,4 +165,4 @@ Remote repo:
 Virtual repo:
 - Need to add the remote repo to the virtual repo  
 1. Have a working repo with `go.mod` and `main.go`
-2. `"test-go": "dotenv -e test.env -- bash -c \"export GOPROXY=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_TRIAL_ID.jfrog.io/artifactory/api/go/go-test; go get github.com/gin-gonic/gin@v1.10.0\""` Or run `npm run go-test`
+2. `"test-go": "dotenv -e test.env -- bash -c \"export GOPROXY=https://$JFROG_USERNAME:$JFROG_ACCESS_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-test; go get github.com/gin-gonic/gin@v1.10.0\""` Or run `npm run go-test`
