@@ -25,4 +25,4 @@ EOL
 source pvenv/bin/activate
 
 # Installs numpy without using cache
-python3 -m pip install numpy --no-cache-dir
+python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir
