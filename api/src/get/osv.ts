@@ -56,7 +56,7 @@ async function getOSV() {
         const files = await fs.readdir(osvFolderPath)
 
         console.log(`There are ${files.length} files.`)
-        for (let i = 0; i < files.slice(0, 10).length; i++) {
+        for (let i = 0; i < files.length; i++) {
             const file = files[i]
             const heapUsed = (process.memoryUsage().rss / 1024 / 1024).toFixed(0)
             // const heapTotal = (process.availableMemory() / 1024 / 1024).toFixed(0)
