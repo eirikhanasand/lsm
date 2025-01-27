@@ -8,8 +8,8 @@
   "main": "index.js",
   "scripts": {
     "repositories": "rm -rf dist && tsc && node dist/src/repositories.js",
-    "test-docker": "dotenv -- bash -c 'docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest'",
-    "test-docker-dangerous": "echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'; dotenv -- bash -c 'docker pull $JFROG_ID.jfrog.io/docker/linux:3.11.0-12.19'",
+    "test-docker": "dotenv -- bash -c 'echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_EMAIL --password-stdin; docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest'",
+    "test-docker-dangerous": "echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'; dotenv -- bash -c 'echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_EMAIL --password-stdin; docker pull $JFROG_ID.jfrog.io/docker/linux:3.11.0-12.19'",
     "test-npm": "dotenv -- bash -c 'npm install riot --registry https://$JFROG_ID.jfrog.io/artifactory/api/npm/npm/'",
     "test-npm-dangerous": "dotenv -- bash -c 'npm install mathlive@0.103.0 --registry https://$JFROG_ID.jfrog.io/artifactory/api/npm/npm/'",
     "test-go": "dotenv -e ../support/test.env -- bash -c \"cd ../tests/go/; export GOPROXY=https://$JFROG_USERNAME:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual; go get github.com/gin-gonic/gin@v1.10.0\"",
