@@ -13,3 +13,5 @@ pvenv
 api/osv
 dist
 osv.zip
+tests/npm/package*.json
+tests/npm/node_modules/

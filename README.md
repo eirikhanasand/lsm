@@ -40,17 +40,6 @@ JFROG_TOKEN=<your_jfrog_token>
 JFROG_ID=<your_jfrog_id>
 ```
 
-## How to log into different technologies
-<!-- docker login (remember to create access token) -->
-docker login <id>.jfrog.io
-
-## How to fetch package via Artifactory
-<!-- docker download "exposures" (sample) image -->
-docker pull <id>.jfrog.io/docker-trial/exposures:latest
-
-<!-- npm download -->
-npm install <dependency_name> --registry https://<id>.jfrog.io/artifactory/api/npm/npm/   
-
 ## How to activate an Artifactory Worker
 1. Ensure the worker is deployed (check that the code matches the remote if you are unsure)
 2. In the Artifactory platform, select Administration 
@@ -87,13 +76,6 @@ We are currently working on:
 - rust
 - terraform
 - 
-
-### docker
--- todo
-
-### npm
-1. Login with `npm login --registry=https://<id>.jfrog.io/artifactory/api/npm/npm/ --auth-type=web`
--- todo
 
 ### terraform
 NB: Remember to replace the ID both in the login command and configuration file.
