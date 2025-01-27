@@ -108,7 +108,8 @@ const repositories = [
         "repoLayoutRef": "go-default",
         "remoteRepoLayoutRef": "go-default",
         "url": "https://proxy.golang.org",
-        "vcsGitProvider": "ARTIFACTORY"
+        "vcsGitProvider": "ARTIFACTORY",
+        "archiveBrowsingEnabled": true
     },
     {
         "key": "gradle",
