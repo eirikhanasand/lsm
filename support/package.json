@@ -12,8 +12,8 @@
     "test-docker-dangerous": "echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'; dotenv -- bash -c 'echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_EMAIL --password-stdin; docker pull $JFROG_ID.jfrog.io/docker/linux:3.11.0-12.19'",
     "test-npm": "dotenv -- bash -c 'cd ../tests/npm; chmod +x setup.sh; ./setup.sh'",
     "test-npm-dangerous": "dotenv -- bash -c 'cd ../tests/npm; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
-    "test-go": "dotenv -- bash -c \"cd ../tests/go/; export GOPROXY=https://$JFROG_USERNAME:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual; go get github.com/gin-gonic/gin@v1.10.0\"",
-    "test-go-dangerous": "dotenv -- bash -c 'set GOPROXY=https://$JFROG_USERNAME:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual && go get github.com/mattermost/mattermost@v10.3.1'",
+    "test-go": "dotenv -- bash -c 'cd ../tests/go/; go clean -modcache; export GOPROXY=https://$JFROG_USERNAME:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual; go get github.com/gin-gonic/gin@v1.10.0'",
+    "test-go-dangerous": "dotenv -- bash -c 'cd ../tests/go/; export GOPROXY=https://$JFROG_USERNAME:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual; go get github.com/mattermost/mattermost@v10.3.1'",
     "test-python": "dotenv -- bash -c 'cd ../tests/python; chmod +x setup.sh; ./setup.sh'",
     "test-python-dangerous": "dotenv -- bash -c 'cd ../tests/python; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
     "test-ruby": "gem install bundler",
@@ -25,7 +25,15 @@
     "test-maven-dangerous": "cross-env MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1",
     "test-cargo-dangerous": "dotenv -- bash -c 'cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0'",
     "test-nuget": "dotenv -- bash -c 'nuget install AutoMapper -Source https://$JFROG_ID.jfrog.io/artifactory/api/nuget/v3/nuget-nuget-remote/index.json'",
-    "test-nuget-dangerous": "dotenv -- bash -c 'nuget install Malicious.Package -Source https://$JFROG_ID.jfrog.io/artifactory/nuget-nuget-remote'"
+    "test-nuget-dangerous": "dotenv -- bash -c 'nuget install Malicious.Package -Source https://$JFROG_ID.jfrog.io/artifactory/nuget-nuget-remote'",
+    "test-terraform": "dotenv -- bash -c 'cd ../tests/terraform; chmod +x setup.sh; ./setup.sh'",
+    "test-swift": "github-generic",
+    "test-ansible": "github-generic",
+    "test-bower": "github-generic",
+    "test-chef": "github-generic",
+    "test-cocoapods": "github-generic",
+    "test-composer": "github-generic",
+    "test-vcs": "github-generic"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
