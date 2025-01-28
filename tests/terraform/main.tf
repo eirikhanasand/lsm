@@ -9,7 +9,7 @@ terraform {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "3.5.0"
+  version = "5.0.0"
 
   name = "test-vpc"
   cidr = "10.0.0.0/16"
