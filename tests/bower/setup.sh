@@ -23,7 +23,7 @@ if [[ -f ".bowerrc" ]]; then
   rm .bowerrc
 fi
 
-# Creates a Bower configuration file
+# Creates Bower configuration file
 cat > .bowerrc <<EOL
 {
   "directory": "bower_components",
