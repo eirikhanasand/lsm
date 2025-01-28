@@ -1,4 +1,4 @@
-export default function versionAffected(version: string, ecosystem: string, vulnerability: any) {
+export default function versionAffected(version: string, ecosystem: string, vulnerability: any, type?: string) {
     const affected = vulnerability.affected
     for (const pkg of affected) {
         if (pkg.package.ecosystem !== ecosystem) {
@@ -8,6 +8,10 @@ export default function versionAffected(version: string, ecosystem: string, vuln
         // Goes through all events of each vulnerability that matches the 
         // package name and ecosystem and returns true if any is in range
         for (const range of pkg.ranges) {
+            if (type && type !== range.type) {
+                continue
+            }
+
             for (let i = 0; i < range.events.length; i++) {
                 const event = range.events[i]
                 const nextEvent = range.events[i + 1]

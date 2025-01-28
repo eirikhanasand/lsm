@@ -9,7 +9,7 @@ export default async function apiRoutes(fastify: FastifyInstance, options: Fasti
     // get handlers
     fastify.get("/", indexHandler)
     fastify.get("/whitelist", whitelistHandler)
-    fastify.get("/osv/:ecosystem/:name/:version", osvHandler)
+    fastify.get("/osv/:ecosystem/:name/:version/:type", osvHandler)
     
     // post handlers
     // fastify.post("/osv", osvHandler)
