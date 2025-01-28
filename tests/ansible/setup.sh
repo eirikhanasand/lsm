@@ -10,8 +10,8 @@ if [[ -z "$JFROG_EMAIL" || -z "$JFROG_TOKEN" || -z "$JFROG_ID" ]]; then
 fi
 
 # Exports proxy environment variables
-export http_proxy="https://$TRIAL_ID.jfrog.io/artifactory/github/"
-export https_proxy="https://$TRIAL_ID.jfrog.io/artifactory/github/"
+export http_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
+export https_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
 
 # Runs the playbook
 ansible-playbook -i inventory.ini test_proxy.yml
