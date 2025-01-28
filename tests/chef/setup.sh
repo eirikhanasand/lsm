@@ -9,13 +9,13 @@ if [[ -z "$JFROG_EMAIL" || -z "$JFROG_TOKEN" || -z "$JFROG_ID" ]]; then
   exit 1
 fi
 
-# Create necessary directories and files
+# Creates necessary chef directories and files
 mkdir -p cookbooks/test_download/recipes
 touch cookbooks/test_download/recipes/default.rb
 
-# Set proxy environment variables
+# Sets proxy environment variables
 export http_proxy="https://$TRIAL_ID.jfrog.io/artifactory/github/"
 export https_proxy="https://$TRIAL_ID.jfrog.io/artifactory/github/"
 
-# Run the Chef client with the test_download cookbook
+# Runs the Chef client with the test_download cookbook
 chef-client -z -c solo.rb -o 'test_download::default'

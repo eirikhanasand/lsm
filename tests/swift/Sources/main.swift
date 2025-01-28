@@ -1,6 +1,6 @@
 import Foundation
 
-let url = URL(string: "https://httpbin.org/image/png")! // Test file
+let url = URL(string: "https://httpbin.org/image/png")!
 let semaphore = DispatchSemaphore(value: 0)
 
 // Create a URL request

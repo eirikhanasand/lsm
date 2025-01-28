@@ -11,11 +11,10 @@ fi
 
 touch main.swift
 
-# Replace main.swift with a simple Swift HTTP download example
 cat > Sources/main.swift <<EOL
 import Foundation
 
-let url = URL(string: "https://httpbin.org/image/png")! // Test file
+let url = URL(string: "https://httpbin.org/image/png")!
 let semaphore = DispatchSemaphore(value: 0)
 
 // Create a URL request
@@ -45,6 +44,10 @@ let task = URLSession.shared.dataTask(with: request) { data, response, error in
 task.resume()
 semaphore.wait()
 EOL
+
+# Sets proxy environment variables
+export http_proxy="https://$TRIAL_ID.jfrog.io/artifactory/github/"
+export https_proxy="https://$TRIAL_ID.jfrog.io/artifactory/github/"
 
 # Build and run the Swift project
 swift build
