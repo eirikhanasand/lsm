@@ -1,0 +1,11 @@
+---
+- name: Test proxy with Ansible
+  hosts: localhost
+  tasks:
+    - name: Download a test file
+      ansible.builtin.get_url:
+        url: https://httpbin.org/image/png
+        dest: /tmp/test_file.png
+      environment:
+        http_proxy: "{{ lookup('env', 'http_proxy') }}"
+        https_proxy: "{{ lookup('env', 'https_proxy') }}"

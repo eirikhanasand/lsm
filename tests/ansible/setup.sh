@@ -9,4 +9,16 @@ if [[ -z "$JFROG_EMAIL" || -z "$JFROG_TOKEN" || -z "$JFROG_ID" ]]; then
   exit 1
 fi
 
-echo "Ansible safe todo"
+# Exports proxy environment variables
+export http_proxy="https://$TRIAL_ID.jfrog.io/artifactory/github/"
+export https_proxy="https://$TRIAL_ID.jfrog.io/artifactory/github/"
+
+# Runs the playbook
+ansible-playbook -i inventory.ini test_proxy.yml
+
+# Verifies if the file was downloaded
+if [[ -f "/tmp/test_file.png" ]]; then
+  echo "File downloaded successfully via proxy."
+else
+  echo "Failed to download the file."
+fi
