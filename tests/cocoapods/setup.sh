@@ -10,14 +10,20 @@ if [[ -z "$JFROG_EMAIL" || -z "$JFROG_TOKEN" || -z "$JFROG_ID" ]]; then
 fi
 
 # Set up proxy environment variables
-export http_proxy="http://your-proxy-address:port"
-export https_proxy="http://your-proxy-address:port"
+export http_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
+export https_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
 
 # Create a directory for the CocoaPods test
 mkdir -p cocoapods_test
 cd cocoapods_test
 
-# Initialize a new Podfile
+# Installs xcodeproj
+gem install xcodeproj
+
+# Ruby script to create a xcodeproj file
+ruby create_xcodeproj.rb
+
+# Initializes new Podfile
 cat > Podfile <<EOL
 platform :ios, '12.0'
 
@@ -27,19 +33,11 @@ target 'TestApp' do
 end
 EOL
 
-# Install CocoaPods if it's not installed
+# Installs CocoaPods if it's not installed
 if ! command -v pod &> /dev/null; then
   echo "Installing CocoaPods..."
   gem install cocoapods
 fi
 
-# Install the pod dependencies (with the proxy)
-echo "Installing pods with proxy..."
+# Installs the pod dependencies to test if the proxy works
 pod install
-
-# Verify if the pods were installed
-if [[ -d "Pods/AFNetworking" ]]; then
-  echo "CocoaPod 'AFNetworking' installed successfully."
-else
-  echo "Failed to install CocoaPod 'AFNetworking'."
-fi
