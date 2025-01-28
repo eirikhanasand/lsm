@@ -305,6 +305,23 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             version = terraformDetails[2]
             key = "GIT"
             break
+        case "cargo-remote":
+            const cargoVersionRegex = /\d.+/
+            const cargoDetails = metadata.repoPath.path.match(cargoVersionRegex)
+            console.log(metadata.repoPath.path)
+            console.log(cargoDetails)
+            if (Array.isArray(cargoDetails)) {
+                name = metadata.name
+                version = cargoDetails[0]
+                key = "crates.io"
+            } else {
+                return {
+                    status: DownloadStatus.DOWNLOAD_STOP,
+                    message: `DOWNLOAD STOPPED - Unable to extract package name and version for Cargo.`,
+                    headers: {}
+                }
+            }
+            break
     }
 
     if (!name || !version) {
