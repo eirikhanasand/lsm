@@ -19,7 +19,9 @@ fi
 export http_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
 export https_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
 
-rm .bowerrc
+if [[ -f ".bowerrc" ]]; then
+  rm .bowerrc
+fi
 
 # Creates a Bower configuration file
 cat > .bowerrc <<EOL
