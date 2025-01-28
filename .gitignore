@@ -16,3 +16,6 @@ osv.zip
 tests/npm/package*.json
 tests/npm/node_modules/
 go.sum
+tests/chef/nodes/
+chef_guid
+local-mode-cache
