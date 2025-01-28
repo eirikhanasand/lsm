@@ -1,8 +1,8 @@
 terraform {
     required_providers {
-        azurerm = {
-            source  = "hashicorp/azurerm"
-            version = "4.3.0"
+        artifactory = {
+          source = "jfrog/artifactory"
+          version = "7.0.0"
         }
     }
 }

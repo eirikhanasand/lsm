@@ -27,6 +27,7 @@
     "test-nuget": "dotenv -- bash -c 'nuget install AutoMapper -Source https://$JFROG_ID.jfrog.io/artifactory/api/nuget/v3/nuget-nuget-remote/index.json'",
     "test-nuget-dangerous": "dotenv -- bash -c 'nuget install Malicious.Package -Source https://$JFROG_ID.jfrog.io/artifactory/nuget-nuget-remote'",
     "test-terraform": "dotenv -- bash -c 'cd ../tests/terraform; chmod +x setup.sh; ./setup.sh'",
+    "test-terraform-dangerous": "dotenv -- bash -c 'cd ../tests/terraform; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
     "test-swift": "github-generic",
     "test-ansible": "github-generic",
     "test-bower": "github-generic",
