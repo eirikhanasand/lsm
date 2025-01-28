@@ -21,7 +21,7 @@ const __dirname = path.dirname(__filename)
 const startTime = new Date().getTime()
 const osv = await getOSV() as OSVData
 export default async function osvHandler(req: FastifyRequest, res: FastifyReply) {
-    const { name, version, ecosystem, type } = req.params as Params
+    const { name, version, ecosystem } = req.params as Params
 
     if (!name || !version || !ecosystem) {
         return {
@@ -45,7 +45,7 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
 
     for (const pkg of vulnerable) {
         const vulnerability = osv.vulnerabilties.get(pkg)
-        if (versionAffected(version, ecosystem, vulnerability, type)) {
+        if (versionAffected(version, ecosystem, vulnerability)) {
             data.push(vulnerability)
         }
     }

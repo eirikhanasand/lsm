@@ -128,7 +128,7 @@ const RUBYtestData = {
     "repoType": 2
 }
 
-const NUGETtestData ={
+const NUGETtestData = {
     "repoPath": {
       "key": "nuget-nuget-remote",
       "path": ".nuGetV3/feed.json",
@@ -145,7 +145,7 @@ const NUGETtestData ={
     "repoType": 2
 }
 
-const CONDAtestData ={
+const CONDAtestData = {
         "repoPath": {
           "key": "conda",
           "path": "win-64/pytz-2024.1-py312haa95532_0.conda",
@@ -162,6 +162,23 @@ const CONDAtestData ={
         "repoType": 2
 }
 
+const TERRAFORMtestData = {
+    "repoPath": {
+      "key": "terraform",
+      "path": "terraform-provider-aws/5.84.0/terraform-provider-aws_5.84.0_darwin_arm64.zip",
+      "id": "terraform:terraform-provider-aws/5.84.0/terraform-provider-aws_5.84.0_darwin_arm64.zip"
+    },
+    "originalRepoPath": {
+      "key": "terraform",
+      "path": "terraform-provider-aws/5.84.0/terraform-provider-aws_5.84.0_darwin_arm64.zip",
+      "id": "terraform:terraform-provider-aws/5.84.0/terraform-provider-aws_5.84.0_darwin_arm64.zip"
+    },
+    "name": "terraform-provider-aws_5.84.0_darwin_arm64.zip",
+    "ifModifiedSince": -1,
+    "clientAddress": "100.72.90.23",
+    "repoType": 2
+}
+
 // const metadata = NPMtestData
 // const metadata = DOCKERtestData
 // const metadata = PYTHONtestData
@@ -171,6 +188,7 @@ const CONDAtestData ={
 // const metadata = NUGETtestData
 // const metadata = NPMtestDataBad
 // const metadata = CONDAtestData
+// const metadata = TERRAFORMtestData
 
 export default async function runWorker(context: PlatformContext, data: BeforeDownloadRequest): Promise<BeforeDownload> {
 
@@ -280,6 +298,13 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
                 }
             }
             break
+        case "terraform":
+            const terraformRegex = /terraform-provider-(\w+)_([\d.]+)/
+            const terraformDetails = metadata.name.match(terraformRegex)
+            name = terraformDetails[1]
+            version = terraformDetails[2]
+            key = "GIT"
+            break
     }
 
     if (!name || !version) {
@@ -337,6 +362,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
 async function checkHash(context: PlatformContext, name: string, version: string, ecosystem: string): Promise<GoogleStatus> {
     try {
         const response = await context.clients.axios.post(
+            // `${OSV_URL}/${ecosystem}/${name}/${version}`
             OSV_URL, 
             {
                 version, 
