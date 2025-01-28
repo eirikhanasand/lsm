@@ -1,5 +1,0 @@
-{
-  "directory": "bower_components",
-  "proxy": "https://.jfrog.io/artifactory/github/",
-  "https-proxy": "https://.jfrog.io/artifactory/github/"
-}

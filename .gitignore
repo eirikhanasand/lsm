@@ -19,3 +19,4 @@ go.sum
 tests/chef/nodes/
 chef_guid
 local-mode-cache
+tests/bower/.bowerrc
