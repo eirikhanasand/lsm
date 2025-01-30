@@ -219,7 +219,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             break
         case "go":
         case "go-cache":
-            const goRegex = /\/([^\/]+)(?:@v?|\/@v\/v)(\d+\.\d+\.\d+)(?=\.zip|$)/
+            const goRegex = /([^\/]+\/[^\/]+)\/@v\/v?(\d+\.\d+\.\d+(\.\d+)?)\.(mod|info|zip)/
             const goDetails =  metadata.repoPath.path.match(goRegex)
             name = goDetails[1]
             version = goDetails[2]
