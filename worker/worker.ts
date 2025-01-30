@@ -2,7 +2,7 @@ import { PlatformContext, BeforeDownloadRequest, DownloadStatus } from 'jfrog-wo
 import { BeforeDownload } from './interfaces.js';
 // LAST IMPORT MUST HAVE SEMICOLON, OTHERWISE JFROG ARTIFACTORY PARSING FAILS
 
-const OSV_URL = "http://129.241.150.86:8080/api/osv/"
+const OSV_URL = "http://129.241.150.86:8080/api/osv"
 
 const NPMtestDataGood = {
     "repoPath": {
@@ -346,12 +346,14 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         }
     }
 
-    if ('vulns' in hashData.data) {
+    if (hashData.data.length) {
         // TITLE SECTION
         prettyLog(['DOWNLOAD STOPPED: MALICIOUS', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`])
-        console.log('-----------------------------')
-        for (const vulnerability of hashData.data.vulns) {
-            logDetails(vulnerability)
+        if ('vulns' in hashData.data) {
+            console.log('-----------------------------')
+            for (const vulnerability of hashData.data.vulns) {
+                logDetails(vulnerability)
+            }
         }
         return {
             status: DownloadStatus.DOWNLOAD_STOP,
@@ -378,7 +380,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
 
 async function checkHash(context: PlatformContext, name: string, version: string, ecosystem: string): Promise<GoogleStatus> {
     try {
-        const response = await context.clients.axios.get(`${OSV_URL}/${ecosystem}/${name}/${version}`) 
+        const response = await context.clients.axios.get(`${OSV_URL}/${ecosystem}/${name}/${version}/`) 
         return {
             status: 200,
             data: response.data
