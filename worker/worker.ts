@@ -2,7 +2,7 @@ import { PlatformContext, BeforeDownloadRequest, DownloadStatus } from 'jfrog-wo
 import { BeforeDownload } from './interfaces.js';
 // LAST IMPORT MUST HAVE SEMICOLON, OTHERWISE JFROG ARTIFACTORY PARSING FAILS
 
-const OSV_URL = "https://api.osv.dev/v1/query"
+const OSV_URL = "http://129.241.150.86:8080/api/osv/"
 
 const NPMtestDataGood = {
     "repoPath": {
@@ -378,23 +378,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
 
 async function checkHash(context: PlatformContext, name: string, version: string, ecosystem: string): Promise<GoogleStatus> {
     try {
-        const response = await context.clients.axios.post(
-            // `${OSV_URL}/${ecosystem}/${name}/${version}`
-            OSV_URL, 
-            {
-                version, 
-                package: {
-                    name,
-                    ecosystem
-                }
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
-
+        const response = await context.clients.axios.get(`${OSV_URL}/${ecosystem}/${name}/${version}`) 
         return {
             status: 200,
             data: response.data
