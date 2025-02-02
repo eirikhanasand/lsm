@@ -41,7 +41,8 @@
     "test-composer": "dotenv -- bash -c 'cd ../tests/composer; chmod +x setup.sh; ./setup.sh'",
     "test-composer-dangerous": "dotenv -- bash -c 'cd ../tests/composer; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
     "test-vcs": "dotenv -- bash -c 'cd ../tests/vcs; chmod +x setup.sh; ./setup.sh'",
-    "test-vcs-dangerous": "dotenv -- bash -c 'cd ../tests/vcs; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'"
+    "test-vcs-dangerous": "dotenv -- bash -c 'cd ../tests/vcs; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
+    "test-debian": "dotenv -- bash -c 'cd ../tests/debian; chmod +x setup.sh; ./setup.sh'"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
