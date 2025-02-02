@@ -10,6 +10,7 @@ sub vcl_recv {
 }
 
 sub vcl_backend_response {
+    set beresp.ttl = 3600s;
     return (deliver);
 }
 
