@@ -71,11 +71,18 @@ The worker functions with the following package managers / technologies:
 - ruby
 - huggingface (via pip)
 - terraform
+- bower
+- debian
 
 We are currently working on:
 - go
 - rust
-- 
+- swift
+- ansible
+- chef
+- cocoapods
+- sbt
+- ivy
 
 ### terraform
 NB: Remember to replace the ID both in the login command and configuration file.
