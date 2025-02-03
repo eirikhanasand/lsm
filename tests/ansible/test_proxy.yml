@@ -1,11 +1,8 @@
 ---
-- name: Test proxy with Ansible
+- name: Test Artifactory Proxy
   hosts: localhost
   tasks:
-    - name: Download a test file
+    - name: Download a file via Artifactory proxy
       ansible.builtin.get_url:
-        url: https://httpbin.org/image/png
+        url: "https://{{ JFROG_EMAIL }}:{{ JFROG_TOKEN }}@{{ JFROG_ID }}.jfrog.io/artifactory/github/eirikhanasand/lsm/blob/main/README.md"
         dest: /tmp/test_file.png
-      environment:
-        http_proxy: "{{ lookup('env', 'http_proxy') }}"
-        https_proxy: "{{ lookup('env', 'https_proxy') }}"
