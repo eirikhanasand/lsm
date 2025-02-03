@@ -46,8 +46,8 @@ semaphore.wait()
 EOL
 
 # Sets proxy environment variables
-export http_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
-export https_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
+export http_proxy="https://$JFROG_ID.jfrog.io/artifactory/api/github/github/"
+export https_proxy="https://$JFROG_ID.jfrog.io/artifactory/api/github/github/"
 
 # Build and run the Swift project
 swift build
