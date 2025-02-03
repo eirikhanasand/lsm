@@ -14,8 +14,8 @@ mkdir -p cookbooks/test_download/recipes
 touch cookbooks/test_download/recipes/default.rb
 
 # Sets proxy environment variables
-export http_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
-export https_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
+export http_proxy="https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/"
+export https_proxy="https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/"
 
 # Runs the Chef client with the test_download cookbook
-chef-client -z -c solo.rb -o 'test_download::default'
+JFROG_ID=$JFROG_ID JFROG_EMAIL=$JFROG_EMAIL JFROG_TOKEN=$JFROG_TOKEN chef-client -z -c solo.rb -o 'test_download::default'
