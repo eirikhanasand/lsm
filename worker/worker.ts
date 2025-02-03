@@ -327,6 +327,24 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
                 key = "GIT"
             }
             break
+        case "ansible":
+            const ansibleVersionRegex = /(\d.\d.\d)/
+            const ansibleDetails = metadata.name.match(ansibleVersionRegex)
+            if (Array.isArray(ansibleDetails)) {
+                name = parseKey(metadata.name)
+                version = ansibleDetails[0]
+                key = "GIT"
+            }
+            break
+        case "chef":
+            const chefVersionRegex = /(\d.\d.\d)/
+            const chefDetails = metadata.name.match(chefVersionRegex)
+            if (Array.isArray(chefDetails)) {
+                name = parseKey(metadata.name)
+                version = chefDetails[0]
+                key = "GIT"
+            }
+            break
     }
 
     if (!name || !version) {
