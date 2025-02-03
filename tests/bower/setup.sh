@@ -9,26 +9,23 @@ if [[ -z "$JFROG_EMAIL" || -z "$JFROG_TOKEN" || -z "$JFROG_ID" ]]; then
   exit 1
 fi
 
-# Install Bower (if not already installed)
+# Installs Bower (if not already installed)
 if ! command -v bower &> /dev/null; then
-  echo "Installing Bower..."
-  npm install bower
+  echo "Installing Bower, Bower Art Resolver..."
+  npm install bower bower-art-resolver
 fi
-
-# Sets proxy environment variables
-export http_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
-export https_proxy="https://$JFROG_ID.jfrog.io/artifactory/github/"
 
 if [[ -f ".bowerrc" ]]; then
   rm .bowerrc
 fi
 
-# Creates Bower configuration file
+# Bower configuration file
 cat > .bowerrc <<EOL
 {
-  "directory": "bower_components",
-  "proxy": "$http_proxy",
-  "https-proxy": "$https_proxy"
+	"registry" : "https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/bower/bower",
+	"resolvers" : [
+		"bower-art-resolver"
+	]
 }
 EOL
 

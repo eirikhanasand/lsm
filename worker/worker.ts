@@ -16,7 +16,7 @@ const NPMtestDataGood = {
       "id": "npm:@types/estree/-/estree-1.0.6.tgz"
     },
     "name": "estree-1.0.6.tgz",
-    "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+    "servletContextUrl": "https://<id>.jfrog.io/artifactory",
     "uri": "/artifactory/npm/@types/estree/-/estree-1.0.6.tgz",
     "clientAddress": "18.214.241.149",
     "repoType": 2
@@ -106,7 +106,7 @@ const GRADLEtestData = {
     "modificationTime": -1,
     "lastModified": -1,
     "ifModifiedSince": -1,
-    "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+    "servletContextUrl": "https://<id>.jfrog.io/artifactory",
     "uri": "/artifactory/java-cache/org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
     "clientAddress": "127.0.0.1"
 }
@@ -197,7 +197,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
     let version: string | null = null
     let key: string = parseKey(metadata.repoPath.key)
 
-    switch (metadata.repoPath.key) {
+    switch (key) {
         case "npm":
             const npmRegex = /([a-zA-Z+_.]+)-([\d.]+)\.tgz/
             const npmDetails = metadata.name.match(npmRegex)
@@ -218,7 +218,6 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             key = "PyPI"
             break
         case "go":
-        case "go-cache":
             const goRegex = /([^\/]+\/[^\/]+)\/@v\/v?(\d+\.\d+\.\d+(\.\d+)?)\.(mod|info|zip)/
             const goDetails =  metadata.repoPath.path.match(goRegex)
             name = goDetails[1]
@@ -227,7 +226,6 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             break
         case "maven":
         case "java":
-        case "java-cache": 
             const javaRegex = /^([^\/]+(?:\/[^\/]+)*)\/([^\/]+)\/([\d.]+)\/\2-[\d.]+(?:-[^\/]+)?\.[^\/]+$/
             const javaDetails = metadata.repoPath.path.match(javaRegex)
             if (Array.isArray(javaDetails) && javaDetails.length >= 3) {
@@ -264,7 +262,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             }
             key = "RubyGems"
             break
-        case "nuget-nuget-remote":
+        case "nuget":
             const nugetRegex = /\.nuGetV3\/([\w\-\.]+)\.json$/
             const nugetDetails = metadata.repoPath.path.match(nugetRegex)
             name = nugetDetails[1]
@@ -305,11 +303,9 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             version = terraformDetails[2]
             key = "GIT"
             break
-        case "cargo-remote":
+        case "cargo":
             const cargoVersionRegex = /\d.+/
             const cargoDetails = metadata.repoPath.path.match(cargoVersionRegex)
-            console.log(metadata.repoPath.path)
-            console.log(cargoDetails)
             if (Array.isArray(cargoDetails)) {
                 name = metadata.name
                 version = cargoDetails[0]
@@ -320,6 +316,15 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
                     message: `DOWNLOAD STOPPED - Unable to extract package name and version for Cargo.`,
                     headers: {}
                 }
+            }
+            break
+        case "bower":
+            const bowerVersionRegex = /(\d.\d.\d)/
+            const bowerDetails = metadata.name.match(bowerVersionRegex)
+            if (Array.isArray(bowerDetails)) {
+                name = parseKey(metadata.name)
+                version = bowerDetails[0]
+                key = "GIT"
             }
             break
     }
@@ -346,7 +351,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         }
     }
 
-    if (hashData.data.length) {
+    if ((hashData.data as any).length) {
         // TITLE SECTION
         prettyLog(['DOWNLOAD STOPPED: MALICIOUS', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`])
         if ('vulns' in hashData.data) {

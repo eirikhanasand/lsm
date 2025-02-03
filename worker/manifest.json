@@ -4,14 +4,6 @@
     "filterCriteria": {
         "artifactFilterCriteria": {
             "repoKeys": [
-                "USE UI NOT IDE FOR THIS. THIS JSON ARRAY WILL NOT WORK"
-            ]
-        }
-    },
-    "secrets": {},
-    "unusedField": {
-        "artifactFilterCriteria": {
-            "repoKeys": [
                 "go-test",
                 "rust-cargo-local",
                 "docker",
@@ -51,6 +43,7 @@
             ]
         }
     },
+    "secrets": {},
     "sourceCodePath": "./worker.ts",
     "action": "BEFORE_DOWNLOAD",
     "enabled": true,
