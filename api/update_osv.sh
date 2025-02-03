@@ -1,5 +1,8 @@
 #!/bin/sh
 
+export PGPASSWORD="osvpassword"
+PSQL="psql -h postgres -U postgres -d osvdb -t -c"
+
 while true; do
     echo "Downloading OSV vulnerabilities..."
     
@@ -11,7 +14,7 @@ while true; do
 
     echo "Updating database..."
 
-    PSQL="psql -h postgres -U postgres -d osvdb"
+    existing_vulns=$($PSQL "SELECT name FROM vulnerabilities;")
 
     for file in osv/*.json; do
         vuln_name=$(basename "$file" .json)
@@ -21,19 +24,27 @@ while true; do
             continue
         fi
 
-        $PSQL <<EOF
-        INSERT INTO vulnerabilities (name, ecosystem, version, data)
-        VALUES ('$vuln_name', 'unknown', 'unknown', '$(cat "$file")'::jsonb)
-        ON CONFLICT (name) DO UPDATE SET data = EXCLUDED.data;
-EOF
+        json_data=$(jq -c '.' "$file")
 
-        echo "Processed: $vuln_name"
+        if echo "$existing_vulns" | grep -q "$vuln_name"; then
+            existing_size=$($PSQL "SELECT length(data::text) FROM vulnerabilities WHERE name = '$vuln_name';" | tr -d ' ')
+            new_size=$(echo -n "$json_data" | wc -c)
+
+            if [ "$existing_size" = "$new_size" ]; then
+                echo "Skipping unchanged vulnerability: $vuln_name"
+                continue
+            fi
+
+            echo "Updating vulnerability: $vuln_name"
+            $PSQL "UPDATE vulnerabilities SET data = '$json_data'::jsonb WHERE name = '$vuln_name';"
+        else
+            echo "Inserting new vulnerability: $vuln_name"
+            $PSQL "INSERT INTO vulnerabilities (name, ecosystem, version, data) VALUES ('$vuln_name', 'unknown', 'unknown', '$json_data'::jsonb);"
+        fi
     done
 
     echo "Removing outdated vulnerabilities..."
-    $PSQL <<EOF
-    DELETE FROM vulnerabilities WHERE name NOT IN (SELECT name FROM vulnerabilities);
-EOF
+    $PSQL "DELETE FROM vulnerabilities WHERE name NOT IN ($(ls osv/*.json | xargs -n1 basename | sed 's/\.json//g' | awk '{printf "'\''%s'\'',", $1}' | sed 's/,$//'));"
 
     rm -rf osv
 
