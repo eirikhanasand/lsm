@@ -24,8 +24,6 @@
     "test-maven-dangerous": "cross-env MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1",
     "test-cargo": "dotenv -- bash -c 'cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde'",
     "test-cargo-dangerous": "dotenv -- bash -c 'cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0'",
-    "test-nuget": "dotenv -- bash -c 'nuget install AutoMapper -Source https://$JFROG_ID.jfrog.io/artifactory/api/nuget/v3/nuget-nuget-remote/index.json'",
-    "test-nuget-dangerous": "dotenv -- bash -c 'nuget install Malicious.Package -Source https://$JFROG_ID.jfrog.io/artifactory/nuget-nuget-remote'",
     "test-terraform": "dotenv -- bash -c 'cd ../tests/terraform; chmod +x setup.sh; ./setup.sh'",
     "test-terraform-dangerous": "dotenv -- bash -c 'cd ../tests/terraform; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
     "test-cocoapods": "dotenv -- bash -c 'curl https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'",

@@ -32,7 +32,6 @@
                 "gitlfs",
                 "helm",
                 "ivy",
-                "nuget",
                 "opkg",
                 "composer",
                 "p2",

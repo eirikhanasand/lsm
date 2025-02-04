@@ -128,23 +128,6 @@ const RUBYtestData = {
     "repoType": 2
 }
 
-const NUGETtestData = {
-    "repoPath": {
-      "key": "nuget-nuget-remote",
-      "path": ".nuGetV3/feed.json",
-      "id": "nuget-nuget-remote:.nuGetV3/feed.json"
-    },
-    "originalRepoPath": {
-      "key": "nuget-nuget-remote",
-      "path": ".nuGetV3/feed.json",
-      "id": "nuget-nuget-remote:.nuGetV3/feed.json"
-    },
-    "name": "feed.json",
-    "ifModifiedSince": -1,
-    "clientAddress": "81.167.47.252",
-    "repoType": 2
-}
-
 const CONDAtestData = {
         "repoPath": {
           "key": "conda",
@@ -185,7 +168,6 @@ const TERRAFORMtestData = {
 // const metadata = GRADLEtestData
 // const metadata = GOtestData
 // const metadata = RUBYtestData
-// const metadata = NUGETtestData
 // const metadata = NPMtestDataBad
 // const metadata = CONDAtestData
 // const metadata = TERRAFORMtestData
@@ -261,13 +243,6 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
                 }
             }
             key = "RubyGems"
-            break
-        case "nuget":
-            const nugetRegex = /\.nuGetV3\/([\w\-\.]+)\.json$/
-            const nugetDetails = metadata.repoPath.path.match(nugetRegex)
-            name = nugetDetails[1]
-            version = nugetDetails[2]
-            key = "NuGet"
             break
         case "alpine":
             const alpineRegex = /v\d.\d+\/main\/x86_64\/(\w+).tar.gz/

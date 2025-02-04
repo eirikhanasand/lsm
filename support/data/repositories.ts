@@ -22,13 +22,6 @@ const repositories = [
         "repoLayoutRef": "maven-2-default"
     },
     {
-        "key": "nuget-virtual",
-        "packageType": "nuget",
-        "includesPattern": "**/*",
-        "rclass": "virtual",
-        "repoLayoutRef": "nuget-default"
-    },
-    {
         "key": "sbt",
         "packageType": "sbt",
         "includesPattern": "**/*",
@@ -43,13 +36,6 @@ const repositories = [
         "includesPattern": "**/*",
         "rclass": "local",
         "repoLayoutRef": "maven-2-default"
-    },
-    {
-        "key": "nuget-local",
-        "packageType": "nuget",
-        "includesPattern": "**/*",
-        "rclass": "local",
-        "repoLayoutRef": "nuget-default"
     },
     
     // remote
@@ -142,18 +128,6 @@ const repositories = [
         "rclass": "remote",
         "repoLayoutRef": "npm-default",
         "url": "https://registry.npmjs.org"
-    },
-    {
-        "key": "nuget",
-        "packageType": "nuget",
-        "includesPattern": "**/*",
-        "rclass": "remote",
-        "repoLayoutRef": "nuget-default",
-        "downloadContextPath": "api/v2/package",
-        "feedContextPath": "api/v2",
-        "v3FeedUrl": "https://api.nuget.org/v3/index.json",
-        // "symbolServerUrl": "https://symbols.nuget.org/download/symbols" FIELD DOESNT EXIST
-        "url": "https://www.nuget.org/",
     },
     {
         "key": "python",
