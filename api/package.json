@@ -4,6 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "tsc",
     "start": "rm -rf dist && tsc && node --max-old-space-size=24576 dist/src/index.js",
     "debug": "rm -rf dist && tsc && node --inspect --trace-deprecation dist/src/index.js"
   },
@@ -15,10 +16,13 @@
     "dotenv": "^16.4.7",
     "fastify": "^5.2.0",
     "firebase-admin": "^13.0.2",
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "typescript": "^5.7.2",
+    "pg": "^8.11.1"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "@types/pg": "^8.11.0"
   }
 }
