@@ -345,6 +345,15 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
                 key = "GIT"
             }
             break
+        default: 
+            const genericVersionRegex = /(\d.\d.\d)/
+            const genericDetails = metadata.name.match(genericVersionRegex)
+            if (Array.isArray(genericDetails)) {
+                name = parseKey(metadata.name)
+                version = genericDetails[0]
+                key = "GIT"
+            }
+            break
     }
 
     if (!name || !version) {
