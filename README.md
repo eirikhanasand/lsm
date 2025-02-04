@@ -73,14 +73,16 @@ The worker functions with the following package managers / technologies:
 - terraform
 - bower
 - debian
-
-We are currently working on:
+- alpine
+- cocoapods
 - go
-- rust
 - swift
 - ansible
+- generic
+
+We are currently working on:
+- rust
 - chef
-- cocoapods
 - sbt
 - ivy
 

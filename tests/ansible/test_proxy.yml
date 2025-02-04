@@ -5,4 +5,4 @@
     - name: Download a file via Artifactory proxy
       ansible.builtin.get_url:
         url: "https://{{ JFROG_EMAIL }}:{{ JFROG_TOKEN }}@{{ JFROG_ID }}.jfrog.io/artifactory/github/eirikhanasand/lsm/blob/main/README.md"
-        dest: /tmp/test_file.png
+        dest: ./README.md

@@ -1,6 +1,0 @@
-platform :ios, '12.0'
-
-target 'TestApp' do
-  use_frameworks!
-  pod 'AFNetworking', '~> 4.0'
-end
