@@ -189,7 +189,24 @@ const repositories = [
         "rclass": "remote",
         "repoLayoutRef": "simple-default",
         "url": "https://github.com/",
-    }
+    },
+    {
+        "key": "bower",
+        "packageType": "bower",
+        "includesPattern": "**/*",
+        "rclass": "remote",
+        "repoLayoutRef": "simple-default",
+        "url": "https://github.com/",
+        "gitRegistryUrl": "https://registry.bower.io",
+    },
+    {
+        "key": "chef",
+        "packageType": "chef",
+        "includesPattern": "**/*",
+        "rclass": "remote",
+        "repoLayoutRef": "simple-default",
+        "url": "https://supermarket.chef.io",
+    },
 ]
 
 const dependantRepositories = [
