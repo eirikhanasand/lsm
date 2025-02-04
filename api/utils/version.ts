@@ -1,12 +1,9 @@
 export default function versionAffected(version: string, ecosystem: string, vulnerability: any) {
-    const affected = vulnerability.affected
-    for (const pkg of affected) {
+    for (const pkg of vulnerability.affected) {
         if (pkg.package.ecosystem !== ecosystem && ecosystem !== 'GIT') {
             continue
         }
 
-        // Goes through all events of each vulnerability that matches the 
-        // package name and ecosystem and returns true if any is in range
         for (const range of pkg.ranges) {
             if (ecosystem === 'GIT' && ecosystem !== range.type) {
                 continue
@@ -24,7 +21,7 @@ export default function versionAffected(version: string, ecosystem: string, vuln
                         return true
                     }
                 }
-            }   
+            }
         }
     }
     
@@ -35,7 +32,7 @@ function versionIsInRange(version: string, rangeStart: string, rangeEnd: string 
     function parseVersion(v: string) {
         return v.split(/[^\d]+/).filter(Boolean).map(Number)
     }
-  
+
     function compareVersions(v1: number[], v2: number[]) {
         for (let i = 0; i < Math.max(v1.length, v2.length); i++) {
             const part1 = v1[i] || 0
@@ -45,15 +42,15 @@ function versionIsInRange(version: string, rangeStart: string, rangeEnd: string 
         }
         return 0
     }
-  
+
     const versionParts = parseVersion(version)
     const rangeStartParts = parseVersion(rangeStart)
-  
+
     if (!rangeEnd) {
         return compareVersions(versionParts, rangeStartParts) >= 0
     }
-  
-    const rangeEndParts = parseVersion(rangeEnd);
+
+    const rangeEndParts = parseVersion(rangeEnd)
 
     return (
         compareVersions(versionParts, rangeStartParts) >= 0 &&

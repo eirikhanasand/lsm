@@ -12,11 +12,14 @@ while true; do
     unzip -o osv.zip -d osv > /dev/null
     rm osv.zip
 
-    echo "Updating database..."
+    echo "Updating database with a maximum of 10 JSON files..."
 
-    existing_vulns=$($PSQL "SELECT name FROM vulnerabilities;")
+    counter=0
+    for file in $(ls osv/*.json | head -n 10); do
+        if [ "$counter" -ge 10 ]; then
+            break
+        fi
 
-    for file in osv/*.json; do
         vuln_name=$(basename "$file" .json)
 
         if ! jq empty "$file" > /dev/null 2>&1; then
@@ -24,30 +27,23 @@ while true; do
             continue
         fi
 
-        json_data=$(jq -c '.' "$file")
+        json_data=$(jq -c '.' "$file" | sed "s/'/''/g") 
 
-        if echo "$existing_vulns" | grep -q "$vuln_name"; then
-            existing_size=$($PSQL "SELECT length(data::text) FROM vulnerabilities WHERE name = '$vuln_name';" | tr -d ' ')
-            new_size=$(echo -n "$json_data" | wc -c)
+        $PSQL <<EOF
+        INSERT INTO vulnerabilities (name, ecosystem, version, data)
+        VALUES ('$vuln_name', 'unknown', 'unknown', '$json_data'::jsonb)
+        ON CONFLICT (name) DO UPDATE SET data = EXCLUDED.data;
+EOF
 
-            if [ "$existing_size" = "$new_size" ]; then
-                echo "Skipping unchanged vulnerability: $vuln_name"
-                continue
-            fi
-
-            echo "Updating vulnerability: $vuln_name"
-            $PSQL "UPDATE vulnerabilities SET data = '$json_data'::jsonb WHERE name = '$vuln_name';"
-        else
-            echo "Inserting new vulnerability: $vuln_name"
-            $PSQL "INSERT INTO vulnerabilities (name, ecosystem, version, data) VALUES ('$vuln_name', 'unknown', 'unknown', '$json_data'::jsonb);"
-        fi
+        echo "Processed: $vuln_name"
+        counter=$((counter+1))
     done
 
     echo "Removing outdated vulnerabilities..."
-    $PSQL "DELETE FROM vulnerabilities WHERE name NOT IN ($(ls osv/*.json | xargs -n1 basename | sed 's/\.json//g' | awk '{printf "'\''%s'\'',", $1}' | sed 's/,$//'));"
+    $PSQL "DELETE FROM vulnerabilities WHERE name NOT IN (SELECT name FROM (SELECT name FROM vulnerabilities EXCEPT SELECT name FROM (SELECT basename(name, '.json') AS name FROM pg_ls_dir('osv')) AS temp) AS outdated);"
 
     rm -rf osv
 
-    echo "Database update complete. Sleeping for 1 hour..."
+    echo "Database update complete with 10 JSON files. Sleeping for 1 hour..."
     sleep 3600
 done

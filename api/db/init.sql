@@ -1,4 +1,19 @@
-ALTER USER postgres WITH ENCRYPTED PASSWORD 'osvpassword';
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'osvdb') THEN
+        CREATE DATABASE osvdb;
+    END IF;
+END $$;
+
+\c osvdb
+
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'osvuser') THEN
+        CREATE USER osvuser WITH ENCRYPTED PASSWORD 'osvpassword';
+        GRANT ALL PRIVILEGES ON DATABASE osvdb TO osvuser;
+    END IF;
+END $$;
 
 
 CREATE TABLE IF NOT EXISTS vulnerabilities (
