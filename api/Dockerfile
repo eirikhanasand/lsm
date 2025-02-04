@@ -1,29 +1,32 @@
-# Use Alpine-based Node.js
+# Node image with Alpine Linux
 FROM node:20-alpine
 
-# Install dependencies
+# Installs apk dependencies
 RUN apk add --no-cache python3 make g++ varnish postgresql-client jq
 
-# Set the working directory
+# Sets the working directory
 WORKDIR /app
+
+# Starts varnish
+COPY default.vcl ./etc/varnish/default.vcl
 
 # Copy package.json first for caching
 COPY package*.json ./
 
-# Install ALL dependencies (including TypeScript & PostgreSQL client)
+# Installs node dependencies
 RUN npm install
 
-# Copy the rest of the source code
+# Copies the rest of the API source code
 COPY . .
 
-# Compile TypeScript BEFORE running the backend
+# Compiles the API
 RUN npm run build
 
-# Ensure scripts are executable
+# Adds script execution permissions
 RUN chmod +x /app/entrypoint.sh /app/update_osv.sh
 
-# Expose API port
+# Exposes API port
 EXPOSE 8080
 
-# Run the update script before starting the backend
-CMD /bin/sh -c "/app/update_osv.sh && exec node --max-old-space-size=24576 dist/src/index.js"
+# Starts the update script and executes the entrypoint script
+CMD /bin/sh -c "/app/update_osv.sh && exec /entrypoint.sh"
