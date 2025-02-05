@@ -278,7 +278,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             version = terraformDetails[2]
             key = "GIT"
             break
-        case "cargo":
+        case "cargo-remote":
             const cargoVersionRegex = /\d.+/
             const cargoDetails = metadata.repoPath.path.match(cargoVersionRegex)
             if (Array.isArray(cargoDetails)) {
