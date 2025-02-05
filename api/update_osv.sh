@@ -27,23 +27,22 @@ while true; do
             continue
         fi
 
-        json_data=$(jq -c '.' "$file" | sed "s/'/''/g") 
+        json_data=$(jq -c '.' "$file" | sed "s/'/''/g")
 
-        echo "INSERT INTO vulnerabilities (name, ecosystem, version, data)
-              VALUES ('$vuln_name', 'unknown', 'unknown', '$json_data'::jsonb)
-              ON CONFLICT (name) DO UPDATE SET data = EXCLUDED.data;" | $PSQL
+        echo "Executing SQL for $vuln_name"
 
-        echo "Processed: $vuln_name"
+        $PSQL "INSERT INTO vulnerabilities (name, ecosystem, version, data) 
+               VALUES ('$vuln_name', 'unknown', 'unknown', '$json_data'::jsonb) 
+               ON CONFLICT (ecosystem, name, version) DO UPDATE SET data = EXCLUDED.data;"
+
         counter=$((counter+1))
     done
 
     echo "Removing outdated vulnerabilities..."
-    $PSQL "DELETE FROM vulnerabilities WHERE name NOT IN (
-        SELECT name FROM vulnerabilities 
-        EXCEPT 
-        SELECT REPLACE(name, '.json', '') FROM pg_ls_dir('osv')
+    
+   $PSQL "DELETE FROM vulnerabilities WHERE name NOT IN (
+    SELECT name FROM vulnerabilities WHERE ecosystem IS NOT NULL
     );"
-
 
     rm -rf osv
 
