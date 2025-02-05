@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export PGPASSWORD="osvpassword"
-PSQL="psql -h postgres -U postgres -d osvdb -t -c"
+PSQL="psql -h postgres -U osvuser -d osvdb -t -c"
 
 while true; do
     echo "Downloading OSV vulnerabilities..."
@@ -15,7 +15,7 @@ while true; do
     echo "Updating database with a maximum of 10 JSON files..."
 
     counter=0
-    for file in $(ls osv/*.json | head -n 10); do
+    for file in osv/*.json; do
         if [ "$counter" -ge 10 ]; then
             break
         fi
