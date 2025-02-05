@@ -1,1 +1,1 @@
-cookbook_path './cookbooks'
+cookbook_path File.expand_path('cookbooks', __dir__)

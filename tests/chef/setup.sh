@@ -11,11 +11,24 @@ fi
 
 # Creates necessary chef directories and files
 mkdir -p cookbooks/test_download/recipes
-touch cookbooks/test_download/recipes/default.rb
+#touch cookbooks/test_download/recipes/default.rb
 
-# Sets proxy environment variables
-export http_proxy="https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/"
-export https_proxy="https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/"
+# Add basic content to default.rb
+cat <<EOF > cookbooks/test_download/recipes/default.rb
+log 'Hello, Chef!' do
+  level :info
+end
+EOF
+
+# Add metadata.rb to define the cookbook
+cat <<EOF > cookbooks/test_download/metadata.rb
+name 'test_download'
+version '0.1.0'
+EOF
+
+# DEBUG
+echo "Current Directory: $(pwd)"
+ls -R cookbooks
 
 # Runs the Chef client with the test_download cookbook
 JFROG_ID=$JFROG_ID JFROG_EMAIL=$JFROG_EMAIL JFROG_TOKEN=$JFROG_TOKEN chef-client -z -c solo.rb -o 'test_download::default'
