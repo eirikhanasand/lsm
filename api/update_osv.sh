@@ -6,7 +6,7 @@ PSQL="psql -h postgres -U osvuser -d osvdb -t -c"
 while true; do
     echo "Downloading OSV vulnerabilities..."
     
-    wget -O osv.zip -q "https://www.googleapis.com/download/storage/v1/b/osv-vulnerabilities/o/all.zip?generation=1738262461584480&alt=media"
+    gsutil cp gs://osv-vulnerabilities/all.zip osv.zip
     
     mkdir -p osv
     unzip -o osv.zip -d osv > /dev/null
@@ -29,18 +29,21 @@ while true; do
 
         json_data=$(jq -c '.' "$file" | sed "s/'/''/g") 
 
-        $PSQL <<EOF
-        INSERT INTO vulnerabilities (name, ecosystem, version, data)
-        VALUES ('$vuln_name', 'unknown', 'unknown', '$json_data'::jsonb)
-        ON CONFLICT (name) DO UPDATE SET data = EXCLUDED.data;
-EOF
+        echo "INSERT INTO vulnerabilities (name, ecosystem, version, data)
+              VALUES ('$vuln_name', 'unknown', 'unknown', '$json_data'::jsonb)
+              ON CONFLICT (name) DO UPDATE SET data = EXCLUDED.data;" | $PSQL
 
         echo "Processed: $vuln_name"
         counter=$((counter+1))
     done
 
     echo "Removing outdated vulnerabilities..."
-    $PSQL "DELETE FROM vulnerabilities WHERE name NOT IN (SELECT name FROM (SELECT name FROM vulnerabilities EXCEPT SELECT name FROM (SELECT basename(name, '.json') AS name FROM pg_ls_dir('osv')) AS temp) AS outdated);"
+    $PSQL "DELETE FROM vulnerabilities WHERE name NOT IN (
+        SELECT name FROM vulnerabilities 
+        EXCEPT 
+        SELECT REPLACE(name, '.json', '') FROM pg_ls_dir('osv')
+    );"
+
 
     rm -rf osv
 

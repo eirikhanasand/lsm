@@ -2,7 +2,18 @@
 FROM node:20-alpine
 
 # Installs apk dependencies
-RUN apk add --no-cache python3 make g++ varnish postgresql-client jq
+RUN apk add --no-cache python3 make g++ varnish postgresql-client jq py3-pip bash
+
+# Virtual environment for Python packages
+RUN python3 -m venv /opt/venv
+
+# Upgrades pip inside the virtual environment and installs gsutil
+RUN /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install gsutil && \
+    /opt/venv/bin/pip install --no-cache-dir -U crcmod
+
+# Sets environment variables to use gsutil globally
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Sets the working directory
 WORKDIR /app
