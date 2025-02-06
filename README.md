@@ -79,9 +79,11 @@ The worker functions with the following package managers / technologies:
 - swift
 - ansible
 - generic
+- oci
+- helm
+- rust
 
 We are currently working on:
-- rust
 - chef
 - sbt
 - ivy
