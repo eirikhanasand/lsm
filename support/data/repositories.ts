@@ -174,6 +174,15 @@ const repositories = [
         "gitRegistryUrl": "https://registry.bower.io",
     },
     {
+        "key": "composer",
+        "packageType": "composer",
+        "includesPattern": "**/*",
+        "rclass": "remote",
+        "repoLayoutRef": "composer-default",
+        "url": "https://github.com/",
+        "gitRegistryUrl": "https://packagist.org",
+    },
+    {
         "key": "chef",
         "packageType": "chef",
         "includesPattern": "**/*",

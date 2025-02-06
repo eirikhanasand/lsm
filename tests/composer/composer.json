@@ -1,0 +1,7 @@
+{
+    "name": "test-project/jfrog-test",
+    "description": "A test project to validate Composer and JFrog Artifactory integration",
+    "require": {
+        "monolog/monolog": "^2.0"
+    }
+}
