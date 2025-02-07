@@ -38,8 +38,13 @@
     "test-composer-dangerous": "dotenv -- bash -c 'cd ../tests/composer; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
     "test-vcs": "dotenv -- bash -c 'cd ../tests/vcs; chmod +x setup.sh; ./setup.sh'",
     "test-vcs-dangerous": "dotenv -- bash -c 'cd ../tests/vcs; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
+<<<<<<< HEAD
     "test-chef": "dotenv -- bash -c 'cd ../tests/chef; chmod +x setup.sh; ./setup.sh'",
     "test-generic": "dotenv -- bash -c 'curl https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'"
+=======
+    "test-sbt": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.4 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
+    "test-sbt-dangerous": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.1 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\""
+>>>>>>> 3dee22c (Added SBT testing and full support.)
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
