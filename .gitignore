@@ -13,12 +13,13 @@ pvenv
 api/osv
 dist
 osv.zip
-tests/npm/package*.json
-tests/npm/node_modules/
 go.sum
-tests/chef/nodes/
 chef_guid
 local-mode-cache
+tests/npm/package*.json
+tests/npm/node_modules/
+tests/chef/nodes/
 tests/bower/.bowerrc
 tests/composer/vendor
+tests/sbt/.bsp
 .composer
