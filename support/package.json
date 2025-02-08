@@ -33,6 +33,8 @@
     "test-alpine": "dotenv -- bash -c 'cd ../tests/alpine; chmod +x setup.sh; ./setup.sh'",
     "test-oci": "echo 'OCI uses the Docker registry. Therefore, the Docker test will be executed:'; npm run test-docker",
     "test-helm": "echo 'Helm uses the Docker registry. Therefore, the Docker test will be executed:'; npm run test-docker",
+    "test-sbt": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.4 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
+    "test-sbt-dangerous": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.1 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
 
     "test-composer": "dotenv -- bash -c 'cd ../tests/composer; chmod +x setup.sh; ./setup.sh'",
     "test-composer-dangerous": "dotenv -- bash -c 'cd ../tests/composer; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
@@ -40,8 +42,6 @@
     "test-vcs-dangerous": "dotenv -- bash -c 'cd ../tests/vcs; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
     "test-chef": "dotenv -- bash -c 'cd ../tests/chef; chmod +x setup.sh; ./setup.sh'",
     "test-generic": "dotenv -- bash -c 'curl https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'"
-    "test-sbt": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.4 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
-    "test-sbt-dangerous": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.1 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\""
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
