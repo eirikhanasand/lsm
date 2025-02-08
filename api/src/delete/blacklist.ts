@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { run } from "../db.js"
+import run from "../db.js"
 
 type BlacklistParams = {
     name: string
@@ -13,14 +13,11 @@ export default async function blacklistDeleteHandler(req: FastifyRequest<{ Param
     }
 
     try {
-        const deletedRows = await run(
-            `
+        const deletedRows = await run(`
             DELETE FROM blacklist
             WHERE name = $1
             RETURNING *;
-            `,
-            [name]
-        )
+        `, [name])
 
         if (deletedRows.rowCount === 0) {
             return res.status(404).send({ error: "Blacklist entry not found." })

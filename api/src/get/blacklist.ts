@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import versionAffected from "../../utils/version.js"
-import { get } from "../db.js"
+import run from "../db.js"
 
 type OSVHandlerParams = {
     name: string
@@ -16,15 +16,12 @@ export default async function blacklistHandler(req: FastifyRequest, res: Fastify
     }
 
     try {
-        const result = await get(
-            `
+        const result = await run(`
             SELECT * FROM blacklist 
             WHERE name = $1
             AND version = $2 
             AND ecosystem = $3
-            `, 
-            [name, ecosystem, version]
-        )
+        `, [name, ecosystem, version])
 
         if (result.rows.length === 0) {
             return res.status(404).send({})

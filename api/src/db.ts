@@ -20,7 +20,7 @@ const pool = new Pool({
     connectionTimeoutMillis: 3000
 })
 
-export async function get(query: string, params: string[]) {
+export default async function run(query: string, params: string[]) {
     const client = await pool.connect()
     try {
         return await client.query(query, params)

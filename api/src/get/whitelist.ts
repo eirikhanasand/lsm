@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import versionAffected from "../../utils/version.js"
-import { get } from "../db.js"
+import run from "../db.js"
 
 type OSVHandlerParams = {
     name: string
@@ -16,7 +16,7 @@ export default async function whitelistHandler(req: FastifyRequest, res: Fastify
     }
 
     try {
-        const result = await get(`
+        const result = await run(`
             SELECT * FROM whitelist 
             WHERE name = $1
             AND version = $2 AND ecosystem = $3

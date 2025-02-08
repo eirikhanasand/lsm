@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { run } from "../db.js"
+import run from "../db.js"
 
 type BlacklistEntry = {
     name: string
@@ -15,14 +15,11 @@ export default async function blacklistPostHandler(req: FastifyRequest<{ Body: B
     }
 
     try {
-        await run(
-            `
+        await run(`
             INSERT INTO blacklist (name, version, ecosystem)
             VALUES ($1, $2, $3)
             ON CONFLICT (name, version, ecosystem) DO NOTHING
-            `, 
-            [name, version, ecosystem]
-        )
+        `, [name, version, ecosystem])
 
         return res.status(201).send({ message: "Added to blacklist successfully." })
     } catch (error) {

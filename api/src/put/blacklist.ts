@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { run } from "../db.js"
+import run from "../db.js"
 
 type BlacklistEntry = {
     name: string
@@ -15,15 +15,12 @@ export default async function blacklistPutHandler(req: FastifyRequest<{ Body: Bl
     }
 
     try {
-        const updatedRows = await run(
-            `
+        const updatedRows = await run(`
             UPDATE blacklist
             SET version = $2, ecosystem = $3
             WHERE name = $1
             RETURNING *;
-            `,
-            [name, version, ecosystem]
-        )
+        `, [name, version, ecosystem])
 
         if (updatedRows.rowCount === 0) {
             return res.status(404).send({ error: "Blacklist entry not found." })

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { run } from "../db.js"
+import run from "../db.js"
 
 type WhitelistEntry = {
     name: string
@@ -15,14 +15,11 @@ export default async function whitelistPostHandler(req: FastifyRequest<{ Body: W
     }
 
     try {
-        await run(
-            `
+        await run(`
             INSERT INTO whitelist (name, version, ecosystem)
             VALUES ($1, $2, $3)
             ON CONFLICT (name, version, ecosystem) DO NOTHING
-            `, 
-            [name, version, ecosystem]
-        )
+        `, [name, version, ecosystem])
 
         return res.status(201).send({ message: "Added to whitelist successfully." })
     } catch (error) {
