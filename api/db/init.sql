@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS vulnerabilities (
     name TEXT NOT NULL UNIQUE,
     ecosystem TEXT NOT NULL,
     version TEXT NOT NULL,
-    data JSONB NOT NULL
+    data JSONB NOT NULL,
+    CONSTRAINT unique_ecosystem_name_version UNIQUE (ecosystem, name, version)
 );
 
 -- Indexes for Vulnerability
