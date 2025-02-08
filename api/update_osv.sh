@@ -3,39 +3,41 @@
 export PGPASSWORD="osvpassword"
 PSQL="psql -h postgres -U osvuser -d osvdb -t -c"
 
+echo "Downloading vulnerabilities archive..."
 gsutil cp gs://osv-vulnerabilities/all.zip osv.zip
 
 mkdir -p osv
 unzip -o osv.zip -d osv > /dev/null
 rm osv.zip
 
-export PSQL 
+echo "Preparing bulk insert..."
+temp_file="vuln_data.csv"
+temp_names="vuln_names.txt"
+rm -f $temp_file $temp_names
 
-process_file() {
-    file="$1"
+# Processes JSON files in parallel and creates CSV for bulk insert
+find osv -name '*.json' | xargs -P 32 -I {} sh -c '
+    file="{}"
     vuln_name=$(basename "$file" .json)
-
-    if ! jq empty "$file" > /dev/null 2>&1; then
-        echo "Error: Invalid JSON file - $file"
-        return
+    if jq empty "$file" > /dev/null 2>&1; then
+        json_data=$(jq -c "." "$file" | sed "s/\"/\"\"/g")
+        echo "$vuln_name,unknown,unknown,$json_data" >> vuln_data.csv
+        echo "$vuln_name" >> vuln_names.txt
+    else
+        echo "Skipping invalid JSON: $file"
     fi
+'
 
-    json_data=$(jq -c "." "$file" | sed "s/'/''/g")
+# Copies csv into db
+echo "Inserting data into database..."
+$PSQL "\COPY vulnerabilities (name, ecosystem, version, data) FROM '$temp_file' WITH (FORMAT csv, QUOTE '\"', ESCAPE '\"');"
 
-    $PSQL "INSERT INTO vulnerabilities (name, ecosystem, version, data)
-           VALUES ('$vuln_name', 'unknown', 'unknown', '$json_data'::jsonb)
-           ON CONFLICT (ecosystem, name, version) DO UPDATE SET data = EXCLUDED.data;"
-}
-
-export -f process_file
-
-find osv -name '*.json' | xargs -P 32 -I {} bash -c 'process_file "$@"' _ {}
+# Populates vulnerability names
+$PSQL "\COPY vulnerability_names (name) FROM '$temp_names' WITH (FORMAT csv);"
 
 echo "Cleaning up old vulnerabilities..."
-$PSQL "DELETE FROM vulnerabilities WHERE name NOT IN (
-    SELECT name FROM vulnerabilities WHERE ecosystem IS NOT NULL
-);"
+$PSQL "DELETE FROM vulnerabilities WHERE name NOT IN (SELECT name FROM vulnerability_names);"
 
-rm -rf osv
+rm -rf osv $temp_file $temp_names
 
-echo "Database update complete"
+echo "Database update complete."

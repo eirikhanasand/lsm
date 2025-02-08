@@ -25,6 +25,11 @@ CREATE TABLE IF NOT EXISTS blacklist (
     name TEXT PRIMARY KEY
 );
 
+-- Vulnerability names
+CREATE TABLE IF NOT EXISTS vulnerability_names (
+    name TEXT PRIMARY KEY
+);
+
 -- Table for version specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_versions (
     name TEXT NOT NULL,
@@ -79,7 +84,6 @@ CREATE TABLE IF NOT EXISTS vulnerabilities (
 
 -- Indexes for Vulnerability
 CREATE INDEX IF NOT EXISTS idx_ecosystem_name_version ON vulnerabilities (ecosystem, name, version);
-CREATE INDEX IF NOT EXISTS idx_vulnerability_name ON vulnerabilities (name);
 
 -- Indexes for Whitelist
 CREATE INDEX IF NOT EXISTS idx_whitelist_versions_name ON whitelist_versions (name);
