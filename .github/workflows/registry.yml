@@ -147,7 +147,13 @@ jobs:
         index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
         EOL
         source pvenv/bin/activate
-        python3 -m pip install numpy --no-cache-dir
+        python3 -m pip install numpy --no-cache-dir 2>&1 | tee go_get.log || {
+          if grep -q "409" go_get.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
     - name: test_python_dangerous
       run: |
@@ -157,7 +163,13 @@ jobs:
         index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
         EOL
         source pvenv/bin/activate
-        python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir
+        python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir 2>&1 | tee go_get.log || {
+          if grep -q "409" go_get.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
     # - name: test_ruby
     #   run: |
