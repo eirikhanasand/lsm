@@ -139,37 +139,37 @@ jobs:
     #       fi
     #     }
 
-    - name: test_python
-      run: |
-        python3 -m venv pvenv
-        cat > pvenv/pip.conf <<EOL
-        [global]
-        index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
-        EOL
-        source pvenv/bin/activate
-        python3 -m pip install numpy --no-cache-dir 2>&1 | tee go_get.log || {
-          if grep -q "409" go_get.log; then
-            echo "409 success"
-          else
-            exit 1
-          fi
-        }
+    # - name: test_python
+    #   run: |
+    #     python3 -m venv pvenv
+    #     cat > pvenv/pip.conf <<EOL
+    #     [global]
+    #     index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
+    #     EOL
+    #     source pvenv/bin/activate
+    #     python3 -m pip install numpy --no-cache-dir 2>&1 | tee python.log || {
+    #       if grep -q "409" python.log; then
+    #         echo "409 success"
+    #       else
+    #         exit 1
+    #       fi
+    #     }
 
-    - name: test_python_dangerous
-      run: |
-        python3 -m venv pvenv
-        cat > pvenv/pip.conf <<EOL
-        [global]
-        index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
-        EOL
-        source pvenv/bin/activate
-        python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir 2>&1 | tee go_get.log || {
-          if grep -q "409" go_get.log; then
-            echo "409 success"
-          else
-            exit 1
-          fi
-        }
+    # - name: test_python_dangerous
+    #   run: |
+    #     python3 -m venv pvenv
+    #     cat > pvenv/pip.conf <<EOL
+    #     [global]
+    #     index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
+    #     EOL
+    #     source pvenv/bin/activate
+    #     python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir 2>&1 | tee python.log || {
+    #       if grep -q "409" python.log; then
+    #         echo "409 success"
+    #       else
+    #         exit 1
+    #       fi
+    #     }
 
     # - name: test_ruby
     #   run: |
@@ -224,13 +224,51 @@ jobs:
     #   run: |
     #     echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1"
 
-    # - name: test_rust
-    #   run: |
-    #     echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde"
+    - name: test_rust
+      run: |
+        cat > src/main.rs <<EOL
+        use ferris_says::say;
+        use std::io::{stdout, BufWriter};
 
-    # - name: test_rust_dangerous
-    #   run: |
-    #     echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0"
+        fn main() {
+            let stdout = stdout();
+            let message = String::from("Hello fellow Rustaceans!");
+            let width = message.chars().count();
+
+            let mut writer = BufWriter::new(stdout.lock());
+            say(&message, width, &mut writer).unwrap();
+        }
+        EOL
+        cat > .cargo/.env <<EOL
+        $JFROG_TOKEN
+        EOL
+        cat > .cargo/config.toml <<EOL
+        [registry]
+        default = "artifactory"
+        global-credential-providers = ["cargo:token"]
+
+        [registries.artifactory]
+        index = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
+
+        [source.artifactory]
+        registry = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
+
+        [source.crates-io]
+        replace-with = "artifactory-remote"
+        EOL
+        cat > .cargo/credentials.toml <<EOL
+        [registries.artifactory]
+        token = "$JFROG_TOKEN"
+
+        [source.artifactory]
+        token = "$JFROG_TOKEN"
+        EOL
+        CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote
+        cargo add serde
+
+    - name: test_rust_dangerous
+      run: |
+        echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0"
 
     # - name: test_terraform
     #   run: |
