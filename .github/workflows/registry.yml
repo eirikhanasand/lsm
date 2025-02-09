@@ -278,7 +278,13 @@ jobs:
         EOL
         echo "Bearer $JFROG_TOKEN" | cargo login
         CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote 
-        cargo add serde
+        cargo add serde 2>&1 | tee python.log || {
+          if grep -q "409" python.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
     - name: test_rust_dangerous
       run: |
