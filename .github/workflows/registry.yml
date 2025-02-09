@@ -40,12 +40,45 @@ jobs:
           echo "Unexpected success: Image pulled successfully"
           exit 1
         else
-          echo "Expected failure: Received HTTP 400 error, test passed."
+          echo "Expected failure: Received manifest error, test passed."
           exit 0
         fi
 
-# "test-docker": "dotenv -e '../.env' -- bash -c 'echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin; docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest'",
-# "test-docker-dangerous": "echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'; dotenv -e '../.env' -- bash -c 'echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin; docker pull $JFROG_ID.jfrog.io/docker/linux:3.11.0-12.19'",
+    - name: test_npm
+      run: |
+        # Writes the auth token directly to .npmrc
+        echo "//${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/:_authToken=${{ secrets.JFROG_TOKEN }}" >> ~/.npmrc
+
+        # Sets the JFrog registry as the default
+        npm config set registry https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/
+
+        # Installs the package
+        npm install riot
+
+        # Resets the registry to the default NPM registry
+        npm config set registry https://registry.npmjs.org/
+
+        # Removes the token from .npmrc after the script
+        sed -i '' "/${{ secrets.JFROG_ID }}.jfrog.io/d" ~/.npmrc
+
+    - name: test_npm_dangerous
+      run: |
+        # Writes the auth token directly to .npmrc
+        echo "//${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/:_authToken=${{ secrets.JFROG_TOKEN }}" >> ~/.npmrc
+
+        # Sets the JFrog registry as the default
+        npm config set registry https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/
+
+        # Installs the package
+        npm install mathlive@0.103.0
+
+        # Resets the registry to the default NPM registry
+        npm config set registry https://registry.npmjs.org/
+
+        # Removes the token from .npmrc after the script
+        sed -i '' "/${{ secrets.JFROG_ID }}.jfrog.io/d" ~/.npmrc
+
+
 # "test-npm": "dotenv -e '../.env' -- bash -c 'cd ../tests/npm; chmod +x setup.sh; ./setup.sh'",
 # "test-npm-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/npm; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
 # "test-go": "dotenv -e '../.env' -- bash -c 'cd ../tests/go/; go clean -modcache; go mod tidy; export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual; go get github.com/gin-gonic/gin@v1.10.0'",
