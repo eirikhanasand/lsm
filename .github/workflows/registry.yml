@@ -1,0 +1,67 @@
+name: Test Registry
+
+on:
+  push:
+    branches:
+      - "dev"
+      - "main"
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      JFROG_ID: ${{ secrets.JFROG_ID }}
+      JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }}
+      JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: test_npm
+      run: |
+        echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
+        docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest
+
+    - name: Run a multi-line script
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project.
+
+# "test-docker": "dotenv -e '../.env' -- bash -c 'echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin; docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest'",
+# "test-docker-dangerous": "echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'; dotenv -e '../.env' -- bash -c 'echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin; docker pull $JFROG_ID.jfrog.io/docker/linux:3.11.0-12.19'",
+# "test-npm": "dotenv -e '../.env' -- bash -c 'cd ../tests/npm; chmod +x setup.sh; ./setup.sh'",
+# "test-npm-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/npm; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
+# "test-go": "dotenv -e '../.env' -- bash -c 'cd ../tests/go/; go clean -modcache; go mod tidy; export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual; go get github.com/gin-gonic/gin@v1.10.0'",
+# "test-go-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/go/; go clean -modcache; go mod tidy; export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual; go get github.com/golang/glog@v1.0.0'",
+# "test-python": "dotenv -e '../.env' -- bash -c 'cd ../tests/python; chmod +x setup.sh; ./setup.sh'",
+# "test-python-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/python; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
+# "test-ruby": "dotenv -e '../.env' -- bash -c 'gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/; gem install bundler'",
+# "test-ruby-dangerous": "dotenv -e '../.env' -- bash -c 'gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/; gem install actionpack -v 5.2.0'",
+# "test-gradle": "cross-env GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory chmod +x ../tests/gradle/gradlew; ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4",
+# "test-gradle-dangerous": "cross-env GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.1",
+# "test-maven": "cross-env MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.4",
+# "test-maven-dangerous": "cross-env MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1",
+# "test-cargo": "dotenv -e '../.env' -- bash -c 'cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde'",
+# "test-cargo-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0'",
+# "test-terraform": "dotenv -e '../.env' -- bash -c 'cd ../tests/terraform; chmod +x setup.sh; ./setup.sh'",
+# "test-terraform-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/terraform; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
+# "test-cocoapods": "dotenv -e '../.env' -- bash -c 'curl https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'",
+# "test-ansible": "dotenv -e '../.env' -- bash -c 'cd ../tests/ansible; chmod +x setup.sh; ./setup.sh'",
+# "test-bower": "dotenv -e '../.env' -- bash -c 'cd ../tests/bower; chmod +x setup.sh; ./setup.sh'",
+# "test-debian": "dotenv -e '../.env' -- bash -c 'cd ../tests/debian; chmod +x setup.sh; ./setup.sh'",
+# "test-alpine": "dotenv -e '../.env' -- bash -c 'cd ../tests/alpine; chmod +x setup.sh; ./setup.sh'",
+# "test-oci": "echo 'OCI uses the Docker registry. Therefore, the Docker test will be executed:'; npm run test-docker",
+# "test-helm": "echo 'Helm uses the Docker registry. Therefore, the Docker test will be executed:'; npm run test-docker",
+# "test-sbt": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.4 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
+# "test-sbt-dangerous": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.1 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
+
+# "test-composer": "dotenv -e '../.env' -- bash -c 'cd ../tests/composer; chmod +x setup.sh; ./setup.sh'",
+# "test-composer-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/composer; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
+# "test-vcs": "dotenv -e '../.env' -- bash -c 'cd ../tests/vcs; chmod +x setup.sh; ./setup.sh'",
+# "test-vcs-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/vcs; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
+# "test-chef": "dotenv -e '../.env' -- bash -c 'cd ../tests/chef; chmod +x setup.sh; ./setup.sh'",
+# "test-generic": "dotenv -e '../.env' -- bash -c 'curl https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'"
