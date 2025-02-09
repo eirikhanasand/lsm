@@ -278,8 +278,8 @@ jobs:
         EOL
         echo "Bearer $JFROG_TOKEN" | cargo login
         CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote 
-        cargo add serde 2>&1 | tee python.log || {
-          if grep -q "409" python.log; then
+        cargo add serde 2>&1 | tee rust.log || {
+          if grep -q "409" rust.log; then
             echo "409 success"
           else
             exit 1
@@ -288,7 +288,65 @@ jobs:
 
     - name: test_rust_dangerous
       run: |
-        echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0"
+        mkdir src
+        mkdir .cargo
+        cat > src/main.rs <<EOL
+        use ferris_says::say;
+        use std::io::{stdout, BufWriter};
+
+        fn main() {
+            let stdout = stdout();
+            let message = String::from("Hello fellow Rustaceans!");
+            let width = message.chars().count();
+
+            let mut writer = BufWriter::new(stdout.lock());
+            say(&message, width, &mut writer).unwrap();
+        }
+        EOL
+        cat > .cargo/.env <<EOL
+        $JFROG_TOKEN
+        EOL
+        cat > .cargo/config.toml <<EOL
+        [registry]
+        default = "artifactory"
+        global-credential-providers = ["cargo:token"]
+
+        [registries.artifactory]
+        index = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
+
+        [source.artifactory]
+        registry = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
+
+        [source.crates-io]
+        replace-with = "artifactory-remote"
+        EOL
+        cat > .cargo/credentials.toml <<EOL
+        [registries.artifactory]
+        token = "$JFROG_TOKEN"
+
+        [source.artifactory]
+        token = "$JFROG_TOKEN"
+        EOL
+        cat > Cargo.toml <<EOL
+        [package]
+        name = "rust"
+        version = "0.1.0"
+        edition = "2021"
+        publish = ["artifactory"]
+
+        [dependencies]
+        clap = "4.5.26"
+        tokio = "1.43.0"
+        EOL
+        echo "Bearer $JFROG_TOKEN" | cargo login
+        CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote 
+        cargo add serde-json-wasm@1.0.0 2>&1 | tee rust.log || {
+          if grep -q "409" rust.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
     # - name: test_terraform
     #   run: |
