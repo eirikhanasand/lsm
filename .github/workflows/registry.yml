@@ -17,6 +17,7 @@ jobs:
     env:
       JFROG_ID: ${{ secrets.JFROG_ID }}
       JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }}
+      JFROG_EMAIL: ${{ secrets.JFROG_EMAIL }}
       JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
     
     steps:
@@ -24,7 +25,7 @@ jobs:
     # - name: test_docker_oci_helm
     #   run: |
     #     echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
-    #     if docker pull ${{ secrets.JFROG_ID }}.jfrog.io/docker/ubuntu:latest; then
+    #     if docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest; then
     #       echo "Unexpected success: Image pulled successfully"
     #       exit 1
     #     else
@@ -36,7 +37,7 @@ jobs:
     #   run: |
     #     echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'
     #     echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
-    #     if docker pull ${{ secrets.JFROG_ID }}.jfrog.io/docker/linux:3.11.0-12.19; then
+    #     if docker pull $JFROG_ID.jfrog.io/docker/linux:3.11.0-12.19; then
     #       echo "Unexpected success: Image pulled successfully"
     #       exit 1
     #     else
@@ -47,10 +48,10 @@ jobs:
     # - name: test_npm
     #   run: |
     #     # Writes the auth token directly to .npmrc
-    #     echo "//${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/:_authToken=${{ secrets.JFROG_TOKEN }}" >> ~/.npmrc
+    #     echo "//$JFROG_ID.jfrog.io/artifactory/api/npm/npm/:_authToken=$JFROG_TOKEN" >> ~/.npmrc
 
     #     # Sets the JFrog registry as the default
-    #     npm config set registry https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/
+    #     npm config set registry https://$JFROG_ID.jfrog.io/artifactory/api/npm/npm/
 
     #     # Installs the package
     #     if npm install riot; then
@@ -65,15 +66,15 @@ jobs:
     #     npm config set registry https://registry.npmjs.org/
 
     #     # Removes the token from .npmrc after the script
-    #     sed -i '' "/${{ secrets.JFROG_ID }}.jfrog.io/d" ~/.npmrc
+    #     sed -i '' "/$JFROG_ID.jfrog.io/d" ~/.npmrc
 
     # - name: test_npm_dangerous
     #   run: |
     #     # Writes the auth token directly to .npmrc
-    #     echo "//${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/:_authToken=${{ secrets.JFROG_TOKEN }}" >> ~/.npmrc
+    #     echo "//$JFROG_ID.jfrog.io/artifactory/api/npm/npm/:_authToken=$JFROG_TOKEN" >> ~/.npmrc
 
     #     # Sets the JFrog registry as the default
-    #     npm config set registry https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/
+    #     npm config set registry https://$JFROG_ID.jfrog.io/artifactory/api/npm/npm/
 
     #     # Installs the package
     #     if npm install mathlive@0.103.0; then
@@ -88,7 +89,7 @@ jobs:
     #     npm config set registry https://registry.npmjs.org/
 
     #     # Removes the token from .npmrc after the script
-    #     sed -i '' "/${{ secrets.JFROG_ID }}.jfrog.io/d" ~/.npmrc
+    #     sed -i '' "/$JFROG_ID.jfrog.io/d" ~/.npmrc
 
     # - name: test_go
     #   run: |
@@ -108,37 +109,37 @@ jobs:
 
     - name: test_ruby
       run: |
-        gem source -a https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/gems/ruby/
+        gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
         gem install bundler
     
     - name: test_ruby_dangerous
       run: |
-        gem source -a https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/gems/ruby/
+        gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
         gem install actionpack -v 5.2.0
     
     - name: test_gradle
       run: |
-        echo "GRADLE_REPO_URL=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory chmod +x ../tests/gradle/gradlew; ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4"
+        echo "GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory chmod +x ../tests/gradle/gradlew; ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4"
     
     - name: test_gradle_dangerous
       run: |
-        echo "GRADLE_REPO_URL=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.1"
+        echo "GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.1"
 
     - name: test_maven
       run: |
-        echo "MAVEN_REPO_URL=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.4"
+        echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.4"
 
     - name: test_maven_dangerous
       run: |
-        echo "MAVEN_REPO_URL=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1"
+        echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1"
 
     - name: test_rust
       run: |
-        echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde"
+        echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde"
 
     - name: test_rust_dangerous
       run: |
-        echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0"
+        echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0"
 
     - name: test_terraform
       run: |
@@ -150,7 +151,7 @@ jobs:
 
     - name: test_cocoapods
       run: |
-        if curl --fail 'https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOkEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/github/Alamofire'; then
+        if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOkEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'; then
           echo "Unexpected success: Package downloaded successfully"
           exit 1
         else
@@ -172,7 +173,7 @@ jobs:
 
     - name: test_alpine
       run: |
-        if curl --fail 'https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/alpine/v3.21/main/x86_64/APKINDEX.tar.gz'; then
+        if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/alpine/v3.21/main/x86_64/APKINDEX.tar.gz'; then
           echo "Unexpected success: Package downloaded successfully"
           exit 1
         else
@@ -182,11 +183,11 @@ jobs:
 
     - name: test_sbt
       run: |
-        JFROG_ID=${{ secrets.JFROG_ID }} DEPENDENCY=org.apache.mina:mina-core:2.2.4 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
+        JFROG_ID=$JFROG_ID DEPENDENCY=org.apache.mina:mina-core:2.2.4 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
 
     - name: test_sbt_dangerous
       run: |
-        JFROG_ID=${{ secrets.JFROG_ID }} DEPENDENCY=org.apache.mina:mina-core:2.2.1 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
+        JFROG_ID=$JFROG_ID DEPENDENCY=org.apache.mina:mina-core:2.2.1 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
 
     - name: test_composer
       run: |
@@ -210,7 +211,7 @@ jobs:
 
     - name: test_generic
       run: |
-        if curl --fail 'https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/github/Alamofire'; then
+        if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'; then
           echo "Unexpected success: Package downloaded successfully"
           exit 1
         else
