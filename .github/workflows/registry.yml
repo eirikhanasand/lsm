@@ -210,4 +210,4 @@ jobs:
 
     - name: test_generic
       run: |
-        curl https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire
+        curl https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/github/Alamofire
