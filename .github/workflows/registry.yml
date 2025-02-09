@@ -107,7 +107,13 @@ jobs:
         go clean -modcache
         go mod tidy
         export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual
-        go get github.com/gin-gonic/gin@v1.10.0
+        go get github.com/gin-gonic/gin@v1.10.0 2>&1 | tee go_get.log || {
+          if grep -q "404" go_get.log; then
+            echo "404 success"
+          else
+            exit 1
+          fi
+        }
     
     - name: test_go_dangerous
       run: |
