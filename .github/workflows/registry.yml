@@ -347,11 +347,12 @@ jobs:
     #         exit 1
     #       fi
     #     }
-
-    - name: test_terraform
+    - name: Set up Terraform
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: latest
+
+    - name: test_terraform
       run: |
         # Creates the Terraform credentials file
         mkdir -p .terraform.d
