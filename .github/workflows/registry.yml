@@ -108,11 +108,13 @@ jobs:
 
     - name: test_ruby
       run: |
-        echo "gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/; gem install bundler'"
+        gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
+        gem install bundler
     
     - name: test_ruby_dangerous
       run: |
-        echo "gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/; gem install actionpack -v 5.2.0'"
+        gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
+        gem install actionpack -v 5.2.0
     
     - name: test_gradle
       run: |
