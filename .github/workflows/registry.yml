@@ -148,7 +148,7 @@ jobs:
 
     - name: test_cocoapods
       run: |
-        if curl 'https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOkEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/github/Alamofire'; then
+        if curl --fail 'https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOkEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/github/Alamofire'; then
           echo "Unexpected success: Package downloaded successfully"
           exit 1
         else
