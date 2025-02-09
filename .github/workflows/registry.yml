@@ -21,7 +21,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: test_docker
+    - name: test_docker_oci_helm
       run: |
         echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
         if docker pull ${{ secrets.JFROG_ID }}.jfrog.io/docker/ubuntu:latest; then
@@ -32,7 +32,7 @@ jobs:
           exit 0
         fi
 
-    - name: test_docker_dangerous
+    - name: test_docker_oci_helm_dangerous
       run: |
         echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'
         echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
@@ -177,14 +177,6 @@ jobs:
           echo "Expected failure: Received HTTP 409 error, test passed."
           exit 0
         fi
-
-    - name: test_oci
-      run: |
-        echo 'OCI uses the Docker registry. Therefore, the Docker test will be executed:'; npm run test-docker
-
-    - name: test_helm
-      run: |
-        echo 'Helm uses the Docker registry. Therefore, the Docker test will be executed:'; npm run test-docker
 
     - name: test_sbt
       run: |
