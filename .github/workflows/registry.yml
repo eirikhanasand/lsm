@@ -180,11 +180,11 @@ jobs:
 
     - name: test_sbt
       run: |
-        JFROG_ID=${{ secrets.JFROG_ID }} DEPENDENCY=org.apache.mina:mina-core:2.2.4 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile"
+        JFROG_ID=${{ secrets.JFROG_ID }} DEPENDENCY=org.apache.mina:mina-core:2.2.4 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
 
     - name: test_sbt_dangerous
       run: |
-        JFROG_ID=${{ secrets.JFROG_ID }} DEPENDENCY=org.apache.mina:mina-core:2.2.1 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile"
+        JFROG_ID=${{ secrets.JFROG_ID }} DEPENDENCY=org.apache.mina:mina-core:2.2.1 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
 
     - name: test_composer
       run: |
