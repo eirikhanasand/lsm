@@ -108,45 +108,45 @@ jobs:
 
     - name: test_ruby
       run: |
-        gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
+        gem source -a https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/gems/ruby/
         gem install bundler
     
     - name: test_ruby_dangerous
       run: |
-        gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
+        gem source -a https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/gems/ruby/
         gem install actionpack -v 5.2.0
     
     - name: test_gradle
       run: |
-        echo "GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory chmod +x ../tests/gradle/gradlew; ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4"
+        echo "GRADLE_REPO_URL=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory chmod +x ../tests/gradle/gradlew; ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4"
     
     - name: test_gradle_dangerous
       run: |
-        echo "GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.1"
+        echo "GRADLE_REPO_URL=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.1"
 
     - name: test_maven
       run: |
-        echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.4"
+        echo "MAVEN_REPO_URL=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.4"
 
     - name: test_maven_dangerous
       run: |
-        echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1"
+        echo "MAVEN_REPO_URL=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1"
 
     - name: test_rust
       run: |
-        echo "dotenv -e '../.env' -- bash -c 'cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde'"
+        echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde"
 
     - name: test_rust_dangerous
       run: |
-        echo "dotenv -e '../.env' -- bash -c 'cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0'"
+        echo "cd ../tests/rust/; CARGO_REGISTRIES_DEFAULT=https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/cargo/cargo-remote cargo add serde-json-wasm@1.0.0"
 
     - name: test_terraform
       run: |
-        echo "dotenv -e '../.env' -- bash -c 'cd ../tests/terraform; chmod +x setup.sh; ./setup.sh'"
+        echo "cd ../tests/terraform; chmod +x setup.sh; ./setup.sh"
 
     - name: test_terraform_dangerous
       run: |
-        echo "dotenv -e '../.env' -- bash -c 'cd ../tests/terraform; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'"
+        echo "cd ../tests/terraform; chmod +x setup-dangerous.sh; ./setup-dangerous.sh"
 
     - name: test_cocoapods
       run: |
