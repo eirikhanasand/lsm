@@ -110,12 +110,12 @@ jobs:
     - name: test_ruby
       run: |
         gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
-        if gem install bundler; then
-          echo "Unexpected success: Package downloaded successfully"
-          exit 1
-        else
+        if gem install bundler 2>&1 | tee gem_install.log | grep "409"; then
           echo "Expected failure: Received HTTP 409 error, test passed."
           exit 0
+        else
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
         fi
     
     - name: test_ruby_dangerous
