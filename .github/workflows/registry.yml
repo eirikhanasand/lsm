@@ -90,9 +90,16 @@ jobs:
         # Removes the token from .npmrc after the script
         sed -i '' "/${{ secrets.JFROG_ID }}.jfrog.io/d" ~/.npmrc
 
+    - name: test_cocoapods
+      run: |
+        if curl https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'; then
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 409 error, test passed."
+          exit 0
+        fi
 
-# "test-npm": "dotenv -e '../.env' -- bash -c 'cd ../tests/npm; chmod +x setup.sh; ./setup.sh'",
-# "test-npm-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/npm; chmod +x setup-dangerous.sh; ./setup-dangerous.sh'",
 # "test-go": "dotenv -e '../.env' -- bash -c 'cd ../tests/go/; go clean -modcache; go mod tidy; export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual; go get github.com/gin-gonic/gin@v1.10.0'",
 # "test-go-dangerous": "dotenv -e '../.env' -- bash -c 'cd ../tests/go/; go clean -modcache; go mod tidy; export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual; go get github.com/golang/glog@v1.0.0'",
 # "test-python": "dotenv -e '../.env' -- bash -c 'cd ../tests/python; chmod +x setup.sh; ./setup.sh'",
