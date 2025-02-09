@@ -1,12 +1,13 @@
-import dotenv from 'dotenv'
-import { Pool } from "pg"
+// import dotenv from 'dotenv'
+import pg from 'pg';
+const { Pool } = pg;
 
-dotenv.config({ path: '../.env' })
+// dotenv.config({ path: '../../.env' })
 
-const { DB_PASSWORD } = process.env
-if (!DB_PASSWORD) {
-    throw new Error("Missing DB_PASSWORD env variable.")    
-}
+// const { DB_PASSWORD } = process.env
+// if (!DB_PASSWORD) {
+//     throw new Error("Missing DB_PASSWORD env variable.")    
+// }
 
 const pool = new Pool({
     user: "osvuser",

@@ -17,7 +17,7 @@ services:
       POSTGRES_DB: osvdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./api/db/init.sql:/docker-entrypoint-initdb.d/init.sql 
+      - ./api/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     healthcheck:
@@ -37,17 +37,6 @@ services:
       - DATABASE_URL=postgresql://osvuser:osvpassword@postgres:5432/osvdb?sslmode=disable
     ports:
       - "8080:8080"
-
-
-  cronjob:
-    image: alpine
-    container_name: lsm_cron
-    depends_on:
-      - api
-    volumes:
-      - ./api/update_osv.sh:/app/update_osv.sh
-    command: >
-      /bin/sh -c "echo '0 * * * * /bin/sh /app/update_osv.sh' | crontab - && crond -f"
 
 volumes:
   postgres_data:

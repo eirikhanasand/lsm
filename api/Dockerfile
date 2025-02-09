@@ -34,6 +34,9 @@ RUN npm run build
 # Adds script execution permissions
 RUN chmod +x /app/entrypoint.sh /app/update_osv.sh
 
+# Cronjob to update osv hourly
+RUN echo '0 * * * * /bin/sh /app/update_osv.sh' >> /etc/crontabs/root
+
 # Exposes API port
 EXPOSE 8080
 
