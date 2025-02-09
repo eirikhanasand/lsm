@@ -109,7 +109,17 @@ jobs:
 
     - name: test_ruby
       run: |
-        gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
+        OUTPUT=$(gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/ 2>&1 || true)
+        echo "$OUTPUT"
+
+        if echo "$OUTPUT" | grep -q "409"; then
+          echo "Expected 409 error, test passed."
+          exit 0
+        else
+          echo "Unexpected error, failing the job."
+          exit 1
+        fi
+        # gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
     
     - name: test_ruby_dangerous
       run: |
