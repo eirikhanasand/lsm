@@ -288,8 +288,8 @@ jobs:
 
     - name: test_rust_dangerous
       run: |
-        mkdir src
-        mkdir .cargo
+        mkdir -p src
+        mkdir -p .cargo
         cat > src/main.rs <<EOL
         use ferris_says::say;
         use std::io::{stdout, BufWriter};
