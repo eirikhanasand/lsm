@@ -21,10 +21,9 @@ find osv -name '*.json' -print0 | xargs -P 32 -0 -I {} sh -c '
     file="{}"
     vuln_name="${file##*/}"
     vuln_name="${vuln_name%.json}"
-    if json_data=$(jq -c . "$file" | sed '"'"'s/"/""/g'"'"'); then
-        echo "\"$vuln_name\",\"unknown\",\"unknown\",\"$json_data\"" >> "$1"
-        echo "$vuln_name" >> "$2"
-    fi
+    json_data=$(jq -c . "$file" | sed '"'"'s/"/""/g'"'"');
+    echo "\"$vuln_name\",\"unknown\",\"unknown\",\"$json_data\"" >> "$1"
+    echo "$vuln_name" >> "$2"
 ' _ "$temp_file" "$temp_names"
 
 echo "Populating vulnerabilities..."
