@@ -265,6 +265,17 @@ jobs:
         [source.artifactory]
         token = "$JFROG_TOKEN"
         EOL
+        cat > Cargo.toml <<EOL
+        [package]
+        name = "rust"
+        version = "0.1.0"
+        edition = "2021"
+        publish = ["artifactory"]
+
+        [dependencies]
+        clap = "4.5.26"
+        tokio = "1.43.0"
+        EOL
         CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote
         cargo add serde
 
