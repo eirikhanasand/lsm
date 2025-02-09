@@ -170,7 +170,13 @@ jobs:
 
     - name: test_alpine
       run: |
-        curl https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/alpine/v3.21/main/x86_64/APKINDEX.tar.gz
+        if curl --fail 'https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/alpine/v3.21/main/x86_64/APKINDEX.tar.gz'; then
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 409 error, test passed."
+          exit 0
+        fi
 
     - name: test_oci
       run: |
@@ -210,4 +216,10 @@ jobs:
 
     - name: test_generic
       run: |
-        curl https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/github/Alamofire
+        if curl --fail 'https://${{ secrets.JFROG_EMAIL }}:${{ secrets.JFROG_TOKEN }}@${{ secrets.JFROG_ID }}.jfrog.io/artifactory/github/Alamofire'; then
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 409 error, test passed."
+          exit 0
+        fi
