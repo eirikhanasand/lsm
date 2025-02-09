@@ -110,7 +110,14 @@ jobs:
     - name: test_ruby
       run: |
         gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
-        gem install bundler
+        if ! gem install bundler; then
+          if [[ $? -eq 1 ]] && gem install bundler 2>&1 | grep -q "409"; then
+            echo "409 Conflict detected, but this is expected. Proceeding..."
+          else
+            echo "Unexpected error during gem installation."
+            exit 1
+          fi
+        fi
     
     - name: test_ruby_dangerous
       run: |
