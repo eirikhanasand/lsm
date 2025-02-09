@@ -276,7 +276,8 @@ jobs:
         clap = "4.5.26"
         tokio = "1.43.0"
         EOL
-        CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote
+        echo "Bearer $JFROG_TOKEN" | cargo login
+        CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote 
         cargo add serde
 
     - name: test_rust_dangerous
