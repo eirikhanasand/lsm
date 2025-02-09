@@ -53,7 +53,13 @@ jobs:
         npm config set registry https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/
 
         # Installs the package
-        npm install riot
+        if npm install riot; then
+          echo "Unexpected success: Package installed successfully"
+          exit 1
+        else
+          echo "Expected failure: Package blocked, test passed."
+          exit 0
+        fi
 
         # Resets the registry to the default NPM registry
         npm config set registry https://registry.npmjs.org/
@@ -70,7 +76,13 @@ jobs:
         npm config set registry https://${{ secrets.JFROG_ID }}.jfrog.io/artifactory/api/npm/npm/
 
         # Installs the package
-        npm install mathlive@0.103.0
+        if npm install mathlive@0.103.0; then
+          echo "Unexpected success: Package installed successfully"
+          exit 1
+        else
+          echo "Expected failure: Package blocked, test passed."
+          exit 0
+        fi
 
         # Resets the registry to the default NPM registry
         npm config set registry https://registry.npmjs.org/
