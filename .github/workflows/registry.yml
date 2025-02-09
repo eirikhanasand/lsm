@@ -91,61 +91,73 @@ jobs:
     #     # Removes the token from .npmrc after the script
     #     sed -i '' "/$JFROG_ID.jfrog.io/d" ~/.npmrc
 
-    - name: test_go
-      run: |
-        cat > go.mod <<EOL
-        module github.com/eirikhanasand/lsm
-        go 1.22.2
-        EOL
-        cat > main.go <<EOL
-        package main
-        import "fmt"
-        func main() {
-          fmt.Println("Hello, World!")
-        }
-        EOL
-        go clean -modcache
-        go mod tidy
-        export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual
-        go get github.com/gin-gonic/gin@v1.10.0 2>&1 | tee go_get.log || {
-          if grep -q "404" go_get.log; then
-            echo "404 success"
-          else
-            exit 1
-          fi
-        }
+    # - name: test_go
+    #   run: |
+    #     cat > go.mod <<EOL
+    #     module github.com/eirikhanasand/lsm
+    #     go 1.22.2
+    #     EOL
+    #     cat > main.go <<EOL
+    #     package main
+    #     import "fmt"
+    #     func main() {
+    #       fmt.Println("Hello, World!")
+    #     }
+    #     EOL
+    #     go clean -modcache
+    #     go mod tidy
+    #     export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual
+    #     go get github.com/gin-gonic/gin@v1.10.0 2>&1 | tee go_get.log || {
+    #       if grep -q "404" go_get.log; then
+    #         echo "404 success"
+    #       else
+    #         exit 1
+    #       fi
+    #     }
     
-    - name: test_go_dangerous
+    # - name: test_go_dangerous
+    #   run: |
+    #     cat > go.mod <<EOL
+    #     module github.com/eirikhanasand/lsm
+    #     go 1.22.2
+    #     EOL
+    #     cat > main.go <<EOL
+    #     package main
+    #     import "fmt"
+    #     func main() {
+    #       fmt.Println("Hello, World!")
+    #     }
+    #     EOL
+    #     go clean -modcache
+    #     go mod tidy
+    #     export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual
+    #     go get github.com/golang/glog@v1.0.0 2>&1 | tee go_get.log || {
+    #       if grep -q "404" go_get.log; then
+    #         echo "404 success"
+    #       else
+    #         exit 1
+    #       fi
+    #     }
+
+    - name: test_python
       run: |
-        cat > go.mod <<EOL
-        module github.com/eirikhanasand/lsm
-        go 1.22.2
+        python3 -m venv pvenv
+        cat > pvenv/pip.conf <<EOL
+        [global]
+        index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
         EOL
-        cat > main.go <<EOL
-        package main
-        import "fmt"
-        func main() {
-          fmt.Println("Hello, World!")
-        }
+        source pvenv/bin/activate
+        python3 -m pip install numpy --no-cache-dir
+
+    - name: test_python_dangerous
+      run: |
+        python3 -m venv pvenv
+        cat > pvenv/pip.conf <<EOL
+        [global]
+        index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
         EOL
-        go clean -modcache
-        go mod tidy
-        export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual
-        go get github.com/golang/glog@v1.0.0 2>&1 | tee go_get.log || {
-          if grep -q "404" go_get.log; then
-            echo "404 success"
-          else
-            exit 1
-          fi
-        }
-
-    # - name: test_python
-    #   run: |
-    #     echo "cd ../tests/python; chmod +x setup.sh; ./setup.sh"
-
-    # - name: test_python_dangerous
-    #   run: |
-    #     echo "cd ../tests/python; chmod +x setup-dangerous.sh; ./setup-dangerous.sh"
+        source pvenv/bin/activate
+        python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir
 
     # - name: test_ruby
     #   run: |
