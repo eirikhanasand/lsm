@@ -34,7 +34,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql://osvuser:osvpassword@postgres:5432/osvdb?sslmode=disable
+      - DATABASE_URL=postgresql://osvuser:osvpassword@lsm_database:5432/osvdb?sslmode=disable
     ports:
       - "8080:8080"
 

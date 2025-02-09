@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import versionAffected from "../../utils/version.js"
-// import { get } from "../db.js"
+import run from "../db.js"
 
 type OSVHandlerParams = {
     name: string
@@ -16,19 +16,24 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
     }
 
     try {
-        // const result = await get(`
-        //     SELECT data FROM vulnerabilities 
-        //     WHERE name = $1 AND version = $2 AND ecosystem = $3
-        // `, [name, ecosystem, version])
+        console.log(`Fetching vulnerabilities: name=${name}, version=${version}, ecosystem=${ecosystem}`)
 
-        // if (result.rows.length === 0) {
-        //     return res.status(404).send({})
-        // }
+        const result = await run(
+            `
+            SELECT data FROM vulnerabilities 
+            WHERE name = $1 AND version = $2 AND ecosystem = $3
+            `,
+            [name, version, ecosystem]
+        )
 
-        // const vulnerabilities = result.rows.map(row => row.data)
-        // const filteredVulnerabilities = vulnerabilities.filter(vuln => versionAffected(version, ecosystem, vuln))
+        if (result.rows.length === 0) {
+            return res.status(404).send({})
+        }
 
-        // return res.send(filteredVulnerabilities.length ? filteredVulnerabilities : {})
+        const vulnerabilities = result.rows.map(row => row.data)
+        const filteredVulnerabilities = vulnerabilities.filter(vuln => versionAffected(version, ecosystem, vuln))
+
+        return res.send(filteredVulnerabilities.length ? filteredVulnerabilities : {})
     } catch (error) {
         console.error("Database error:", error)
         return res.status(500).send({ error: "Internal Server Error" })

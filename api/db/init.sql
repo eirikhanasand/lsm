@@ -25,11 +25,6 @@ CREATE TABLE IF NOT EXISTS blacklist (
     name TEXT PRIMARY KEY
 );
 
--- Vulnerability names
-CREATE TABLE IF NOT EXISTS vulnerability_names (
-    name TEXT PRIMARY KEY
-);
-
 -- Table for version specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_versions (
     name TEXT NOT NULL,
@@ -76,14 +71,18 @@ CREATE TABLE IF NOT EXISTS blacklist_repositories (
 CREATE TABLE IF NOT EXISTS vulnerabilities (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
+    package_name TEXT NOT NULL,
     ecosystem TEXT NOT NULL,
-    version TEXT NOT NULL,
+    version_introduced TEXT NOT NULL,
+    version_fixed TEXT NOT NULL,
     data JSONB NOT NULL,
-    CONSTRAINT unique_ecosystem_name_version UNIQUE (ecosystem, name, version)
+    CONSTRAINT unique_name_ecosystem_version UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
 );
 
 -- Indexes for Vulnerability
-CREATE INDEX IF NOT EXISTS idx_ecosystem_name_version ON vulnerabilities (ecosystem, name, version);
+CREATE INDEX IF NOT EXISTS idx_name_ecosystem_version ON vulnerabilities (name, package_name, ecosystem, version_introduced, version_fixed);
+CREATE INDEX IF NOT EXISTS idx_package_name ON vulnerabilities (name, package_name);
+CREATE INDEX IF NOT EXISTS idx_vuln_name ON vulnerabilities (name);
 
 -- Indexes for Whitelist
 CREATE INDEX IF NOT EXISTS idx_whitelist_versions_name ON whitelist_versions (name);

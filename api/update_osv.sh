@@ -13,18 +13,24 @@ rm osv.zip
 
 echo "Preparing bulk insert..."
 temp_file="vuln_data.csv"
-temp_names="vuln_names.txt"
-rm -f $temp_file $temp_names
+rm -f $temp_file
 
 # Processes JSON files in parallel and creates CSV for bulk insert
 find osv -name '*.json' -print0 | xargs -P 32 -0 -I {} sh -c '
     file="{}"
     vuln_name="${file##*/}"
     vuln_name="${vuln_name%.json}"
-    json_data=$(jq -c . "$file" | sed '"'"'s/"/""/g'"'"');
-    echo "\"$vuln_name\",\"unknown\",\"unknown\",\"$json_data\"" >> "$1"
-    echo "$vuln_name" >> "$2"
-' _ "$temp_file" "$temp_names"
+    json_data=$(jq -c . "$file" | sed '"'"'s/"/""/g'"'"')
+    package_name=$(jq -r ".affected[0].package.name" "$file")
+    ecosystem=$(jq -r ".affected[0].package.ecosystem" "$file")
+    version_introduced=$(jq -r ".affected[0].ranges[0].events[-1].introduced" "$file")
+    version_fixed=$(jq -r ".affected[0].ranges[0].events[-1].fixed" "$file")
+    package_name=${package_name:-"unknown"}
+    ecosystem=${ecosystem:-"unknown"}
+    version_introduced=${version_introduced:-"unknown"}
+    version_fixed=${version_fixed:-"unknown"}
+    echo "\"$vuln_name\",\"$package_name\",\"$ecosystem\",\"$version_introduced\",\"$version_fixed\",\"$json_data\"" >> "$1"
+' _ "$temp_file"
 
 echo "Populating vulnerabilities..."
 $PSQL "CREATE TABLE vulnerabilities_new (name TEXT PRIMARY KEY, ecosystem TEXT, version TEXT, data JSONB);"
@@ -38,17 +44,6 @@ DROP TABLE vulnerabilities_old;
 COMMIT;
 EOF
 
-echo "Populating vulnerability names..."
-$PSQL_MULTILINE <<EOF
-BEGIN;
-CREATE TABLE vulnerability_names_new (name TEXT UNIQUE);
-\COPY vulnerability_names_new (name) FROM '$temp_names' WITH (FORMAT csv);
-ALTER TABLE vulnerability_names RENAME TO vulnerability_names_old;
-ALTER TABLE vulnerability_names_new RENAME TO vulnerability_names;
-DROP TABLE vulnerability_names_old;
-COMMIT;
-EOF
-
-rm -rf osv $temp_file $temp_names
+rm -rf osv $temp_file
 
 echo "Database ready."
