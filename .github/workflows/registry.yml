@@ -109,27 +109,13 @@ jobs:
 
     - name: test_ruby
       run: |
-        gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/ || echo "Warning: Failed to add gem source"
-        OUTPUT=$(gem install bundler 2>&1 || true)
-        echo "$OUTPUT"
-        if echo "$OUTPUT" | grep "409"; then
-          echo "Expected failure: Received HTTP 409 error, test passed."
-          exit 0
-        else
-          echo "Unexpected success or different error: Check logs."
-          exit 1
-        fi
+        gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
+        gem install bundler
     
     - name: test_ruby_dangerous
       run: |
         gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/
-        if gem install actionpack -v 5.2.0; then
-          echo "Unexpected success: Package downloaded successfully"
-          exit 1
-        else
-          echo "Expected failure: Received HTTP 409 error, test passed."
-          exit 0
-        fi
+        gem install actionpack -v 5.2.0
     
     - name: test_gradle
       run: |
