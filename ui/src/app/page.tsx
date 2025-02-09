@@ -1,10 +1,16 @@
-export default function Home() {
+import Link from "next/link";
+
+  export default function Home() {
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-            <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-            </main>
-            <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-            </footer>
-        </div>
-    )
-}
+      <main className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4">
+        <h1 className="text-3xl font-bold text-blue-600">Library Safety Manager</h1>
+        <p className="mt-2 text-gray-700">A plugin for JFrog's Artifactory to check for vulnerabilities in packages.</p>
+        
+        <Link href="/dashboard">
+          <button className="mt-4 rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600">
+            Login
+          </button>
+        </Link>
+      </main>
+    );
+  }
