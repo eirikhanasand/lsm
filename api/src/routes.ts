@@ -11,21 +11,22 @@ import blacklistHandler from "./get/blacklist.js"
 import { FastifyInstance, FastifyPluginOptions } from "fastify"
 
 export default async function apiRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
-    // get handlers
+    // GET handlers
     fastify.get("/", indexHandler)
     fastify.get("/osv/:ecosystem/:name/:version", osvHandler)
-    fastify.get("/whitelist", whitelistHandler)
-    fastify.get("/blacklist", blacklistHandler)
-    
-    // post handlers
+    fastify.get("/whitelist/:name/:version/:ecosystem", whitelistHandler)
+    fastify.get("/blacklist/:name/:version/:ecosystem", blacklistHandler)
+
+    // POST handlers
     fastify.post("/whitelist", whitelistPostHandler)
     fastify.post("/blacklist", blacklistPostHandler)
 
-    // put handlers
-    fastify.put("/whitelist", whitelistPutHandler)
-    fastify.put("/blacklist", blacklistPutHandler)
+    // PUT handlers 
+    fastify.put("/whitelist/:name/:version/:ecosystem", whitelistPutHandler)
+    fastify.put("/blacklist/:name/:version/:ecosystem", blacklistPutHandler)
 
-    // delete handlers
-    fastify.delete("/whitelist", whitelistDeleteHandler)
-    fastify.delete("/blacklist", blacklistDeleteHandler)
+    // DELETE handlers
+    fastify.delete("/whitelist/:name", whitelistDeleteHandler)
+    fastify.delete("/blacklist/:name", blacklistDeleteHandler)
 }
+

@@ -15,16 +15,24 @@ export default async function blacklistPutHandler(req: FastifyRequest<{ Body: Bl
     }
 
     try {
-        const updatedRows = await run(`
-            UPDATE blacklist
-            SET version = $2, ecosystem = $3
-            WHERE name = $1
-            RETURNING *;
-        `, [name, version, ecosystem])
+        console.log(`Updating blacklist: name=${name}, version=${version}, ecosystem=${ecosystem}`)
 
-        if (updatedRows.rowCount === 0) {
+        const checkExists = await run("SELECT name FROM blacklist WHERE name = $1;", [name])
+        if (checkExists.rowCount === 0) {
             return res.status(404).send({ error: "Blacklist entry not found." })
         }
+
+        await run(`
+            INSERT INTO blacklist_versions (name, version) 
+            VALUES ($1, $2)
+            ON CONFLICT (name) DO UPDATE SET version = EXCLUDED.version;
+        `, [name, version])
+
+        await run(`
+            INSERT INTO blacklist_ecosystems (name, ecosystem) 
+            VALUES ($1, $2)
+            ON CONFLICT (name) DO UPDATE SET ecosystem = EXCLUDED.ecosystem;
+        `, [name, ecosystem])
 
         return res.send({ message: "Blacklist entry updated successfully." })
     } catch (error) {

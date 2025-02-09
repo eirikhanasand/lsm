@@ -16,21 +16,22 @@ export default async function blacklistHandler(req: FastifyRequest, res: Fastify
     }
 
     try {
-        const result = await run(`
-            SELECT * FROM blacklist 
-            WHERE name = $1
-            AND version = $2 
-            AND ecosystem = $3
-        `, [name, ecosystem, version])
+        console.log(`Fetching blacklist entry: name=${name}, version=${version}, ecosystem=${ecosystem}`)
+
+        const result = await run(
+            `SELECT b.name, bv.version, be.ecosystem 
+             FROM blacklist b
+             LEFT JOIN blacklist_versions bv ON b.name = bv.name
+             LEFT JOIN blacklist_ecosystems be ON b.name = be.name
+             WHERE b.name = $1 AND bv.version = $2 AND be.ecosystem = $3;`,
+            [name, version, ecosystem]
+        )
 
         if (result.rows.length === 0) {
-            return res.status(404).send({})
+            return res.status(404).send({ error: "Blacklist entry not found." })
         }
 
-        const vulnerabilities = result.rows.map(row => row.data)
-        const filteredVulnerabilities = vulnerabilities.filter(vuln => versionAffected(version, ecosystem, vuln))
-
-        return res.send(filteredVulnerabilities.length ? filteredVulnerabilities : {})
+        return res.send(result.rows[0])
     } catch (error) {
         console.error("Database error:", error)
         return res.status(500).send({ error: "Internal Server Error" })

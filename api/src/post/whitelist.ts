@@ -7,7 +7,7 @@ type WhitelistEntry = {
     ecosystem: string
 }
 
-export default async function whitelistPostHandler(req: FastifyRequest<{ Body: WhitelistEntry }>, res: FastifyReply) {
+export default async function whitelistPutHandler(req: FastifyRequest<{ Body: WhitelistEntry }>, res: FastifyReply) {
     const { name, version, ecosystem } = req.body
 
     if (!name || !version || !ecosystem) {
@@ -15,13 +15,26 @@ export default async function whitelistPostHandler(req: FastifyRequest<{ Body: W
     }
 
     try {
-        await run(`
-            INSERT INTO whitelist (name, version, ecosystem)
-            VALUES ($1, $2, $3)
-            ON CONFLICT (name, version, ecosystem) DO NOTHING
-        `, [name, version, ecosystem])
+        console.log(`Updating whitelist: name=${name}, version=${version}, ecosystem=${ecosystem}`)
 
-        return res.status(201).send({ message: "Added to whitelist successfully." })
+        const checkExists = await run("SELECT name FROM whitelist WHERE name = $1;", [name])
+        if (checkExists.rowCount === 0) {
+            return res.status(404).send({ error: "Whitelist entry not found." })
+        }
+
+        await run(`
+            INSERT INTO whitelist_versions (name, version)
+            VALUES ($1, $2)
+            ON CONFLICT (name) DO UPDATE SET version = EXCLUDED.version;
+        `, [name, version])
+
+        await run(`
+            INSERT INTO whitelist_ecosystems (name, ecosystem)
+            VALUES ($1, $2)
+            ON CONFLICT (name) DO UPDATE SET ecosystem = EXCLUDED.ecosystem;
+        `, [name, ecosystem])
+
+        return res.send({ message: "Whitelist entry updated successfully." })
     } catch (error) {
         console.error("Database error:", error)
         return res.status(500).send({ error: "Internal Server Error" })

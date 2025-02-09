@@ -15,16 +15,34 @@ export default async function whitelistPutHandler(req: FastifyRequest<{ Body: Wh
     }
 
     try {
-        const updatedRows = await run(`
-            UPDATE whitelist
-            SET version = $2, ecosystem = $3
-            WHERE name = $1
-            RETURNING *;
-        `, [name, version, ecosystem])
+        console.log(`Updating whitelist: name=${name}, version=${version}, ecosystem=${ecosystem}`)
 
-        if (updatedRows.rowCount === 0) {
+        const checkExists = await run(
+            `SELECT name FROM whitelist WHERE name = $1;`, 
+            [name]
+        )
+
+        if (checkExists.rowCount === 0) {
             return res.status(404).send({ error: "Whitelist entry not found." })
         }
+
+        await run(
+            `UPDATE whitelist_versions 
+             SET version = $2 
+             WHERE name = $1;
+             INSERT INTO whitelist_versions (name, version) 
+             SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_versions WHERE name = $1);`,
+            [name, version]
+        )
+
+        await run(
+            `UPDATE whitelist_ecosystems 
+             SET ecosystem = $2 
+             WHERE name = $1;
+             INSERT INTO whitelist_ecosystems (name, ecosystem) 
+             SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_ecosystems WHERE name = $1);`,
+            [name, ecosystem]
+        )
 
         return res.send({ message: "Whitelist entry updated successfully." })
     } catch (error) {
