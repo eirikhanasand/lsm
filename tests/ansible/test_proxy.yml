@@ -1,8 +1,0 @@
----
-- name: Test Artifactory Proxy
-  hosts: localhost
-  tasks:
-    - name: Download a file via Artifactory proxy
-      ansible.builtin.get_url:
-        url: "https://{{ JFROG_EMAIL }}:{{ JFROG_TOKEN }}@{{ JFROG_ID }}.jfrog.io/artifactory/github/eirikhanasand/lsm/blob/main/README.md"
-        dest: ./README.md
