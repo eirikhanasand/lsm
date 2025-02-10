@@ -1,14 +1,14 @@
-export default async function fetchRepositories() {
-    try {
-        const response = await fetch("")
+// export default async function fetchRepositories() {
+//     try {
+//         const response = await fetch("")
 
-        if (!response.ok) {
-            throw new Error(await response.text())
-        }
+//         if (!response.ok) {
+//             throw new Error(await response.text())
+//         }
 
-        const data = response.json()
-        return data
-    } catch (error) {
-        console.error(error)
-    }
-}
+//         const data = response.json()
+//         return data
+//     } catch (error) {
+//         console.error(error)
+//     }
+// }
