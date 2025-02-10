@@ -214,9 +214,7 @@ jobs:
     #     # ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4"
     
     - name: test_gradle_dangerous
-      run: |
-        set -e  # Exit on error
-        
+      run: |        
         mkdir -p gradle/src/main/kotlin
         mkdir -p .gradle
 
@@ -225,7 +223,7 @@ jobs:
           println("Hello, Gradle!")
         }
         EOF
-          
+
         cat > gradle/settings.gradle.kts <<EOF
         rootProject.name = "gradle-project"
           
@@ -241,7 +239,7 @@ jobs:
         gradlePluginPortal()
         }
         }
-          
+
         dependencyResolutionManagement {
           repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
             repositories {
@@ -255,25 +253,25 @@ jobs:
           }
         }
         EOF
-          
+
         cat > gradle/build.gradle.kts <<EOF
         plugins {
           id("java")
           id("com.jfrog.artifactory") version "5.2.5"  // JFrog Artifactory
           kotlin("jvm") version "1.9.22"
         }
-          
+
         buildscript {
           dependencies {
             classpath("org.jfrog.buildinfo:build-info-extractor-gradle:4+")
           }
         }
-          
+
         apply(plugin = "com.jfrog.artifactory")
-          
+
         artifactory {
           setContextUrl("https://\${System.getenv("JFROG_ID")}.jfrog.io/artifactory")
-          
+
           publish {
             repository {
               repoKey = "java"
@@ -282,11 +280,11 @@ jobs:
             }
           }
         }
-          
+
         dependencies {
           implementation("org.apache.mina:mina-core:2.0.6")
         }
-          
+
         sourceSets {
           main {
             kotlin.srcDir("src/main/kotlin")  // Specify the location of Kotlin source files
@@ -297,9 +295,9 @@ jobs:
         cd gradle
         gradle wrapper
         cd ..
-          
+
         export GRADLE_USER_HOME=.gradle
-          
+
         # Run the build with no daemon, no build cache, and refreshing dependencies
         ./gradle/gradlew --project-dir ./gradle --no-daemon --no-build-cache --refresh-dependencies clean build | tee gradle.log || {
           if grep -q "409" gradle.log; then
@@ -309,9 +307,7 @@ jobs:
           fi
         }
 
-
-
-# - name: test_maven
+    # - name: test_maven
     #   run: |
     #     echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.4"
 
