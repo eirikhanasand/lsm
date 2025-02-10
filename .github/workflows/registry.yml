@@ -22,418 +22,418 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-#     - name: test_docker_oci_helm
-#       run: |
-#         echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
-#         if docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest; then
-#           echo "Unexpected success: Image pulled successfully"
-#           exit 1
-#         else
-#           echo "Expected failure: Received HTTP 400 error, test passed."
-#           exit 0
-#         fi
+    - name: test_docker_oci_helm
+      run: |
+        echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
+        if docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest; then
+          echo "Unexpected success: Image pulled successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 400 error, test passed."
+          exit 0
+        fi
 
-#     - name: test_docker_oci_helm_dangerous
-#       run: |
-#         echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'
-#         echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
-#         if docker pull $JFROG_ID.jfrog.io/docker/linux:3.11.0-12.19; then
-#           echo "Unexpected success: Image pulled successfully"
-#           exit 1
-#         else
-#           echo "Expected failure: Received manifest error, test passed."
-#           exit 0
-#         fi
+    - name: test_docker_oci_helm_dangerous
+      run: |
+        echo 'This is correct syntax, but its likely been taken down by the Docker team due to being malicious.'
+        echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
+        if docker pull $JFROG_ID.jfrog.io/docker/linux:3.11.0-12.19; then
+          echo "Unexpected success: Image pulled successfully"
+          exit 1
+        else
+          echo "Expected failure: Received manifest error, test passed."
+          exit 0
+        fi
 
-#     - name: test_npm
-#       run: |
-#         # Writes the auth token directly to .npmrc
-#         echo "//$JFROG_ID.jfrog.io/artifactory/api/npm/npm/:_authToken=$JFROG_TOKEN" >> ~/.npmrc
+    - name: test_npm
+      run: |
+        # Writes the auth token directly to .npmrc
+        echo "//$JFROG_ID.jfrog.io/artifactory/api/npm/npm/:_authToken=$JFROG_TOKEN" >> ~/.npmrc
 
-#         # Sets the JFrog registry as the default
-#         npm config set registry https://$JFROG_ID.jfrog.io/artifactory/api/npm/npm/
+        # Sets the JFrog registry as the default
+        npm config set registry https://$JFROG_ID.jfrog.io/artifactory/api/npm/npm/
 
-#         # Installs the package
-#         if npm install riot; then
-#           echo "Unexpected success: Package installed successfully"
-#           exit 1
-#         else
-#           echo "Expected failure: Package blocked, test passed."
-#           exit 0
-#         fi
+        # Installs the package
+        if npm install riot; then
+          echo "Unexpected success: Package installed successfully"
+          exit 1
+        else
+          echo "Expected failure: Package blocked, test passed."
+          exit 0
+        fi
 
-#         # Resets the registry to the default NPM registry
-#         npm config set registry https://registry.npmjs.org/
+        # Resets the registry to the default NPM registry
+        npm config set registry https://registry.npmjs.org/
 
-#         # Removes the token from .npmrc after the script
-#         sed -i '' "/$JFROG_ID.jfrog.io/d" ~/.npmrc
+        # Removes the token from .npmrc after the script
+        sed -i '' "/$JFROG_ID.jfrog.io/d" ~/.npmrc
 
-#     - name: test_npm_dangerous
-#       run: |
-#         # Writes the auth token directly to .npmrc
-#         echo "//$JFROG_ID.jfrog.io/artifactory/api/npm/npm/:_authToken=$JFROG_TOKEN" >> ~/.npmrc
+    - name: test_npm_dangerous
+      run: |
+        # Writes the auth token directly to .npmrc
+        echo "//$JFROG_ID.jfrog.io/artifactory/api/npm/npm/:_authToken=$JFROG_TOKEN" >> ~/.npmrc
 
-#         # Sets the JFrog registry as the default
-#         npm config set registry https://$JFROG_ID.jfrog.io/artifactory/api/npm/npm/
+        # Sets the JFrog registry as the default
+        npm config set registry https://$JFROG_ID.jfrog.io/artifactory/api/npm/npm/
 
-#         # Installs the package
-#         if npm install mathlive@0.103.0; then
-#           echo "Unexpected success: Package installed successfully"
-#           exit 1
-#         else
-#           echo "Expected failure: Package blocked, test passed."
-#           exit 0
-#         fi
+        # Installs the package
+        if npm install mathlive@0.103.0; then
+          echo "Unexpected success: Package installed successfully"
+          exit 1
+        else
+          echo "Expected failure: Package blocked, test passed."
+          exit 0
+        fi
 
-#         # Resets the registry to the default NPM registry
-#         npm config set registry https://registry.npmjs.org/
+        # Resets the registry to the default NPM registry
+        npm config set registry https://registry.npmjs.org/
 
-#         # Removes the token from .npmrc after the script
-#         sed -i '' "/$JFROG_ID.jfrog.io/d" ~/.npmrc
+        # Removes the token from .npmrc after the script
+        sed -i '' "/$JFROG_ID.jfrog.io/d" ~/.npmrc
 
-#     - name: test_go
-#       run: |
-#         cat > go.mod <<EOL
-#         module github.com/eirikhanasand/lsm
-#         go 1.22.2
-#         EOL
-#         cat > main.go <<EOL
-#         package main
-#         import "fmt"
-#         func main() {
-#           fmt.Println("Hello, World!")
-#         }
-#         EOL
-#         go clean -modcache
-#         go mod tidy
-#         export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual
-#         go get github.com/gin-gonic/gin@v1.10.0 2>&1 | tee go_get.log || {
-#           if grep -q "404" go_get.log; then
-#             echo "404 success"
-#           else
-#             exit 1
-#           fi
-#         }
+    - name: test_go
+      run: |
+        cat > go.mod <<EOL
+        module github.com/eirikhanasand/lsm
+        go 1.22.2
+        EOL
+        cat > main.go <<EOL
+        package main
+        import "fmt"
+        func main() {
+          fmt.Println("Hello, World!")
+        }
+        EOL
+        go clean -modcache
+        go mod tidy
+        export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual
+        go get github.com/gin-gonic/gin@v1.10.0 2>&1 | tee go_get.log || {
+          if grep -q "404" go_get.log; then
+            echo "404 success"
+          else
+            exit 1
+          fi
+        }
     
-#     - name: test_go_dangerous
-#       run: |
-#         cat > go.mod <<EOL
-#         module github.com/eirikhanasand/lsm
-#         go 1.22.2
-#         EOL
-#         cat > main.go <<EOL
-#         package main
-#         import "fmt"
-#         func main() {
-#           fmt.Println("Hello, World!")
-#         }
-#         EOL
-#         go clean -modcache
-#         go mod tidy
-#         export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual
-#         go get github.com/golang/glog@v1.0.0 2>&1 | tee go_get.log || {
-#           if grep -q "404" go_get.log; then
-#             echo "404 success"
-#           else
-#             exit 1
-#           fi
-#         }
+    - name: test_go_dangerous
+      run: |
+        cat > go.mod <<EOL
+        module github.com/eirikhanasand/lsm
+        go 1.22.2
+        EOL
+        cat > main.go <<EOL
+        package main
+        import "fmt"
+        func main() {
+          fmt.Println("Hello, World!")
+        }
+        EOL
+        go clean -modcache
+        go mod tidy
+        export GOPROXY=https://:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-virtual
+        go get github.com/golang/glog@v1.0.0 2>&1 | tee go_get.log || {
+          if grep -q "404" go_get.log; then
+            echo "404 success"
+          else
+            exit 1
+          fi
+        }
 
-#     - name: test_python
-#       run: |
-#         python3 -m venv pvenv
-#         cat > pvenv/pip.conf <<EOL
-#         [global]
-#         index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
-#         EOL
-#         source pvenv/bin/activate
-#         python3 -m pip install numpy --no-cache-dir 2>&1 | tee python.log || {
-#           if grep -q "409" python.log; then
-#             echo "409 success"
-#           else
-#             exit 1
-#           fi
-#         }
+    - name: test_python
+      run: |
+        python3 -m venv pvenv
+        cat > pvenv/pip.conf <<EOL
+        [global]
+        index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
+        EOL
+        source pvenv/bin/activate
+        python3 -m pip install numpy --no-cache-dir 2>&1 | tee python.log || {
+          if grep -q "409" python.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
-#     - name: test_python_dangerous
-#       run: |
-#         python3 -m venv pvenv
-#         cat > pvenv/pip.conf <<EOL
-#         [global]
-#         index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
-#         EOL
-#         source pvenv/bin/activate
-#         python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir 2>&1 | tee python.log || {
-#           if grep -q "409" python.log; then
-#             echo "409 success"
-#           else
-#             exit 1
-#           fi
-#         }
+    - name: test_python_dangerous
+      run: |
+        python3 -m venv pvenv
+        cat > pvenv/pip.conf <<EOL
+        [global]
+        index-url = https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/pypi/python/simple
+        EOL
+        source pvenv/bin/activate
+        python3 -m pip install strawberry-graphql==0.182.0 --no-cache-dir 2>&1 | tee python.log || {
+          if grep -q "409" python.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
-#     - name: test_ruby
-#       run: |
-#         OUTPUT=$(gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/ 2>&1 || true)
-#         echo "$OUTPUT"
+    - name: test_ruby
+      run: |
+        OUTPUT=$(gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/ 2>&1 || true)
+        echo "$OUTPUT"
 
-#         if echo "$OUTPUT" | grep -q "409"; then
-#           echo "Expected 409 error, test passed."
-#           exit 0
-#         else
-#           echo "Unexpected success: Package downloaded successfully"
-#           exit 1
-#         fi
+        if echo "$OUTPUT" | grep -q "409"; then
+          echo "Expected 409 error, test passed."
+          exit 0
+        else
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        fi
         
-#         # THIS IS SUPPOSED TO BE REQUIRED, ITS FAILING ON THE REGISTRY NOT THE INSTALL NOW
-#         # gem install bundler
+        # THIS IS SUPPOSED TO BE REQUIRED, ITS FAILING ON THE REGISTRY NOT THE INSTALL NOW
+        # gem install bundler
     
-#     - name: test_ruby_dangerous
-#       run: |
-#         OUTPUT=$(gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/ 2>&1 || true)
-#         echo "$OUTPUT"
+    - name: test_ruby_dangerous
+      run: |
+        OUTPUT=$(gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/ 2>&1 || true)
+        echo "$OUTPUT"
 
-#         if echo "$OUTPUT" | grep -q "409"; then
-#           echo "Expected 409 error, test passed."
-#           exit 0
-#         else
-#           echo "Unexpected success: Package downloaded successfully"
-#           exit 1
-#         fi
+        if echo "$OUTPUT" | grep -q "409"; then
+          echo "Expected 409 error, test passed."
+          exit 0
+        else
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        fi
         
-#         # THIS IS SUPPOSED TO BE REQUIRED, ITS FAILING ON THE REGISTRY NOT THE INSTALL NOW
-#         # gem install actionpack -v 5.2.0
+        # THIS IS SUPPOSED TO BE REQUIRED, ITS FAILING ON THE REGISTRY NOT THE INSTALL NOW
+        # gem install actionpack -v 5.2.0
     
-#     # - name: test_gradle
-#     #   run: |
-#     #     # GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java 
-#     #     # JFROG_USERNAME=$JFROG_USERNAME
-#     #     # JFROG_TOKEN=$JFROG_TOKEN
-#     #     # JFROG_ID=$JFROG_ID.jfrog.io/artifactory
-#     #     # chmod +x ../tests/gradle/gradlew
-#     #     # ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4"
+    # - name: test_gradle
+    #   run: |
+    #     # GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java 
+    #     # JFROG_USERNAME=$JFROG_USERNAME
+    #     # JFROG_TOKEN=$JFROG_TOKEN
+    #     # JFROG_ID=$JFROG_ID.jfrog.io/artifactory
+    #     # chmod +x ../tests/gradle/gradlew
+    #     # ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4"
     
-#     # - name: test_gradle_dangerous
-#     #   run: |
-#     #     echo "GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.1"
+    # - name: test_gradle_dangerous
+    #   run: |
+    #     echo "GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.1"
 
-#     # - name: test_maven
-#     #   run: |
-#     #     echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.4"
+    # - name: test_maven
+    #   run: |
+    #     echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.4"
 
-#     # - name: test_maven_dangerous
-#     #   run: |
-#     #     echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1"
+    # - name: test_maven_dangerous
+    #   run: |
+    #     echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1"
 
-#     - name: test_rust
-#       run: |
-#         mkdir -p src
-#         mkdir -p .cargo
-#         cat > src/main.rs <<EOL
-#         use ferris_says::say;
-#         use std::io::{stdout, BufWriter};
+    - name: test_rust
+      run: |
+        mkdir -p src
+        mkdir -p .cargo
+        cat > src/main.rs <<EOL
+        use ferris_says::say;
+        use std::io::{stdout, BufWriter};
 
-#         fn main() {
-#             let stdout = stdout();
-#             let message = String::from("Hello fellow Rustaceans!");
-#             let width = message.chars().count();
+        fn main() {
+            let stdout = stdout();
+            let message = String::from("Hello fellow Rustaceans!");
+            let width = message.chars().count();
 
-#             let mut writer = BufWriter::new(stdout.lock());
-#             say(&message, width, &mut writer).unwrap();
-#         }
-#         EOL
-#         cat > .cargo/.env <<EOL
-#         $JFROG_TOKEN
-#         EOL
-#         cat > .cargo/config.toml <<EOL
-#         [registry]
-#         default = "artifactory"
-#         global-credential-providers = ["cargo:token"]
+            let mut writer = BufWriter::new(stdout.lock());
+            say(&message, width, &mut writer).unwrap();
+        }
+        EOL
+        cat > .cargo/.env <<EOL
+        $JFROG_TOKEN
+        EOL
+        cat > .cargo/config.toml <<EOL
+        [registry]
+        default = "artifactory"
+        global-credential-providers = ["cargo:token"]
 
-#         [registries.artifactory]
-#         index = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
+        [registries.artifactory]
+        index = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
 
-#         [source.artifactory]
-#         registry = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
+        [source.artifactory]
+        registry = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
 
-#         [source.crates-io]
-#         replace-with = "artifactory-remote"
-#         EOL
-#         cat > .cargo/credentials.toml <<EOL
-#         [registries.artifactory]
-#         token = "$JFROG_TOKEN"
+        [source.crates-io]
+        replace-with = "artifactory-remote"
+        EOL
+        cat > .cargo/credentials.toml <<EOL
+        [registries.artifactory]
+        token = "$JFROG_TOKEN"
 
-#         [source.artifactory]
-#         token = "$JFROG_TOKEN"
-#         EOL
-#         cat > Cargo.toml <<EOL
-#         [package]
-#         name = "rust"
-#         version = "0.1.0"
-#         edition = "2021"
-#         publish = ["artifactory"]
+        [source.artifactory]
+        token = "$JFROG_TOKEN"
+        EOL
+        cat > Cargo.toml <<EOL
+        [package]
+        name = "rust"
+        version = "0.1.0"
+        edition = "2021"
+        publish = ["artifactory"]
 
-#         [dependencies]
-#         clap = "4.5.26"
-#         tokio = "1.43.0"
-#         EOL
-#         echo "Bearer $JFROG_TOKEN" | cargo login
-#         CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote 
-#         cargo add serde 2>&1 | tee rust.log || {
-#           if grep -q "409" rust.log; then
-#             echo "409 success"
-#           else
-#             exit 1
-#           fi
-#         }
+        [dependencies]
+        clap = "4.5.26"
+        tokio = "1.43.0"
+        EOL
+        echo "Bearer $JFROG_TOKEN" | cargo login
+        CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote 
+        cargo add serde 2>&1 | tee rust.log || {
+          if grep -q "409" rust.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
-#     - name: test_rust_dangerous
-#       run: |
-#         mkdir -p src
-#         mkdir -p .cargo
-#         cat > src/main.rs <<EOL
-#         use ferris_says::say;
-#         use std::io::{stdout, BufWriter};
+    - name: test_rust_dangerous
+      run: |
+        mkdir -p src
+        mkdir -p .cargo
+        cat > src/main.rs <<EOL
+        use ferris_says::say;
+        use std::io::{stdout, BufWriter};
 
-#         fn main() {
-#             let stdout = stdout();
-#             let message = String::from("Hello fellow Rustaceans!");
-#             let width = message.chars().count();
+        fn main() {
+            let stdout = stdout();
+            let message = String::from("Hello fellow Rustaceans!");
+            let width = message.chars().count();
 
-#             let mut writer = BufWriter::new(stdout.lock());
-#             say(&message, width, &mut writer).unwrap();
-#         }
-#         EOL
-#         cat > .cargo/.env <<EOL
-#         $JFROG_TOKEN
-#         EOL
-#         cat > .cargo/config.toml <<EOL
-#         [registry]
-#         default = "artifactory"
-#         global-credential-providers = ["cargo:token"]
+            let mut writer = BufWriter::new(stdout.lock());
+            say(&message, width, &mut writer).unwrap();
+        }
+        EOL
+        cat > .cargo/.env <<EOL
+        $JFROG_TOKEN
+        EOL
+        cat > .cargo/config.toml <<EOL
+        [registry]
+        default = "artifactory"
+        global-credential-providers = ["cargo:token"]
 
-#         [registries.artifactory]
-#         index = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
+        [registries.artifactory]
+        index = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
 
-#         [source.artifactory]
-#         registry = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
+        [source.artifactory]
+        registry = "sparse+https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote/index/"
 
-#         [source.crates-io]
-#         replace-with = "artifactory-remote"
-#         EOL
-#         cat > .cargo/credentials.toml <<EOL
-#         [registries.artifactory]
-#         token = "$JFROG_TOKEN"
+        [source.crates-io]
+        replace-with = "artifactory-remote"
+        EOL
+        cat > .cargo/credentials.toml <<EOL
+        [registries.artifactory]
+        token = "$JFROG_TOKEN"
 
-#         [source.artifactory]
-#         token = "$JFROG_TOKEN"
-#         EOL
-#         cat > Cargo.toml <<EOL
-#         [package]
-#         name = "rust"
-#         version = "0.1.0"
-#         edition = "2021"
-#         publish = ["artifactory"]
+        [source.artifactory]
+        token = "$JFROG_TOKEN"
+        EOL
+        cat > Cargo.toml <<EOL
+        [package]
+        name = "rust"
+        version = "0.1.0"
+        edition = "2021"
+        publish = ["artifactory"]
 
-#         [dependencies]
-#         clap = "4.5.26"
-#         tokio = "1.43.0"
-#         EOL
-#         echo "Bearer $JFROG_TOKEN" | cargo login
-#         CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote 
-#         cargo add serde-json-wasm@1.0.0 2>&1 | tee rust.log || {
-#           if grep -q "409" rust.log; then
-#             echo "409 success"
-#           else
-#             exit 1
-#           fi
-#         }
+        [dependencies]
+        clap = "4.5.26"
+        tokio = "1.43.0"
+        EOL
+        echo "Bearer $JFROG_TOKEN" | cargo login
+        CARGO_REGISTRIES_DEFAULT=https://$JFROG_ID.jfrog.io/artifactory/api/cargo/cargo-remote 
+        cargo add serde-json-wasm@1.0.0 2>&1 | tee rust.log || {
+          if grep -q "409" rust.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
   
-#     - name: Set up Terraform
-#       uses: hashicorp/setup-terraform@v2
-#       with:
-#         terraform_version: latest
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: latest
 
-#     - name: test_terraform
-#       run: |
-#         mkdir -p ~/.terraform.d
-#         cat > ~/.terraformrc <<EOL
-#         provider_installation {
-#             direct {
-#                 exclude = ["registry.terraform.io/*/*"]
-#             }
-#             network_mirror {
-#                 url = "https://$JFROG_ID.jfrog.io/artifactory/api/terraform/terraform/providers/"
-#             }
-#         }
-#         EOL
+    - name: test_terraform
+      run: |
+        mkdir -p ~/.terraform.d
+        cat > ~/.terraformrc <<EOL
+        provider_installation {
+            direct {
+                exclude = ["registry.terraform.io/*/*"]
+            }
+            network_mirror {
+                url = "https://$JFROG_ID.jfrog.io/artifactory/api/terraform/terraform/providers/"
+            }
+        }
+        EOL
 
-#         # Creates the Terraform credentials file
-#         mkdir -p .terraform.d
-#         cat > main.tf <<EOL
-#         terraform {
-#             required_providers {
-#                 artifactory = {
-#                     source = "jfrog/artifactory"
-#                     version = "7.0.0"
-#                 }
-#             }
-#         }
+        # Creates the Terraform credentials file
+        mkdir -p .terraform.d
+        cat > main.tf <<EOL
+        terraform {
+            required_providers {
+                artifactory = {
+                    source = "jfrog/artifactory"
+                    version = "7.0.0"
+                }
+            }
+        }
 
-#         module "vpc" {
-#             source  = "terraform-aws-modules/vpc/aws"
-#             version = "5.0.0"
+        module "vpc" {
+            source  = "terraform-aws-modules/vpc/aws"
+            version = "5.0.0"
 
-#             name = "test-vpc"
-#             cidr = "10.0.0.0/16"
+            name = "test-vpc"
+            cidr = "10.0.0.0/16"
 
-#             azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
-#             private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-#             public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+            azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
+            private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+            public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
-#             enable_nat_gateway = true
-#             single_nat_gateway = true
-#         }
+            enable_nat_gateway = true
+            single_nat_gateway = true
+        }
 
-#         module "s3_bucket" {
-#             source  = "github.com/terraform-aws-modules/terraform-aws-s3-bucket"
+        module "s3_bucket" {
+            source  = "github.com/terraform-aws-modules/terraform-aws-s3-bucket"
             
-#             bucket = "example-artifactory-test-bucket"
-#             acl    = "private"
-#         }
-#         EOL
+            bucket = "example-artifactory-test-bucket"
+            acl    = "private"
+        }
+        EOL
 
-#         cat > ~/.terraform.d/credentials.tfrc.json <<EOL
-#         {
-#             "credentials": {
-#                 "$JFROG_ID.jfrog.io": {
-#                     "token": "$JFROG_TOKEN"
-#                 }
-#             }
-#         }
-#         EOL
+        cat > ~/.terraform.d/credentials.tfrc.json <<EOL
+        {
+            "credentials": {
+                "$JFROG_ID.jfrog.io": {
+                    "token": "$JFROG_TOKEN"
+                }
+            }
+        }
+        EOL
 
-#         # Initializes
-#         terraform init 2>&1 | tee terraform.log || {
-#           if grep -q "409" terraform.log; then
-#             echo "409 success"
-#           else
-#             exit 1
-#           fi
-#         }
+        # Initializes
+        terraform init 2>&1 | tee terraform.log || {
+          if grep -q "409" terraform.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
-#     - name: test_cocoapods
-#       run: |
-#         if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOkEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'; then
-#           echo "Unexpected success: Package downloaded successfully"
-#           exit 1
-#         else
-#           echo "Expected failure: Received HTTP 409 error, test passed."
-#           exit 0
-#         fi
+    - name: test_cocoapods
+      run: |
+        if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOkEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'; then
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 409 error, test passed."
+          exit 0
+        fi
 
-#     # - name: test_ansible
-#     #   run: |
-#     #     echo "dotenv -e '../.env' -- bash -c 'cd ../tests/ansible; chmod +x setup.sh; ./setup.sh'"
+    # - name: test_ansible
+    #   run: |
+    #     echo "dotenv -e '../.env' -- bash -c 'cd ../tests/ansible; chmod +x setup.sh; ./setup.sh'"
 
     - name: test_bower
       run: |
@@ -486,60 +486,60 @@ jobs:
           fi
         }
 
-#     - name: test_debian
-#       run: |
-#         if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/debian/dists/focal/InRelease'; then
-#           echo "Unexpected success: Package downloaded successfully"
-#           exit 1
-#         else
-#           echo "Expected failure: Received HTTP 409 error, test passed."
-#           exit 0
-#         fi
+    - name: test_debian
+      run: |
+        if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/debian/dists/focal/InRelease'; then
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 409 error, test passed."
+          exit 0
+        fi
 
-#     - name: test_alpine
-#       run: |
-#         if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/alpine/v3.21/main/x86_64/APKINDEX.tar.gz'; then
-#           echo "Unexpected success: Package downloaded successfully"
-#           exit 1
-#         else
-#           echo "Expected failure: Received HTTP 409 error, test passed."
-#           exit 0
-#         fi
+    - name: test_alpine
+      run: |
+        if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/alpine/v3.21/main/x86_64/APKINDEX.tar.gz'; then
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 409 error, test passed."
+          exit 0
+        fi
 
-#     # - name: test_sbt
-#     #   run: |
-#     #     JFROG_ID=$JFROG_ID DEPENDENCY=org.apache.mina:mina-core:2.2.4 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
+    # - name: test_sbt
+    #   run: |
+    #     JFROG_ID=$JFROG_ID DEPENDENCY=org.apache.mina:mina-core:2.2.4 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
 
-#     # - name: test_sbt_dangerous
-#     #   run: |
-#     #     JFROG_ID=$JFROG_ID DEPENDENCY=org.apache.mina:mina-core:2.2.1 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
+    # - name: test_sbt_dangerous
+    #   run: |
+    #     JFROG_ID=$JFROG_ID DEPENDENCY=org.apache.mina:mina-core:2.2.1 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
 
-#     # - name: test_composer
-#     #   run: |
-#     #     cd ../tests/composer; chmod +x setup.sh; ./setup.sh
+    # - name: test_composer
+    #   run: |
+    #     cd ../tests/composer; chmod +x setup.sh; ./setup.sh
 
-#     # - name: test_composer_dangerous
-#     #   run: |
-#     #     cd ../tests/composer; chmod +x setup-dangerous.sh; ./setup-dangerous.sh
+    # - name: test_composer_dangerous
+    #   run: |
+    #     cd ../tests/composer; chmod +x setup-dangerous.sh; ./setup-dangerous.sh
 
-#     # - name: test_vcs
-#     #   run: |
-#     #     cd ../tests/vcs; chmod +x setup.sh; ./setup.sh
+    # - name: test_vcs
+    #   run: |
+    #     cd ../tests/vcs; chmod +x setup.sh; ./setup.sh
 
-#     # - name: test_vcs_dangerous
-#     #   run: |
-#     #     cd ../tests/vcs; chmod +x setup-dangerous.sh; ./setup-dangerous.sh
+    # - name: test_vcs_dangerous
+    #   run: |
+    #     cd ../tests/vcs; chmod +x setup-dangerous.sh; ./setup-dangerous.sh
 
-#     # - name: test_chef
-#     #   run: |
-#     #     cd ../tests/chef; chmod +x setup.sh; ./setup.sh
+    # - name: test_chef
+    #   run: |
+    #     cd ../tests/chef; chmod +x setup.sh; ./setup.sh
 
-#     - name: test_generic
-#       run: |
-#         if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'; then
-#           echo "Unexpected success: Package downloaded successfully"
-#           exit 1
-#         else
-#           echo "Expected failure: Received HTTP 409 error, test passed."
-#           exit 0
-#         fi
+    - name: test_generic
+      run: |
+        if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'; then
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 409 error, test passed."
+          exit 0
+        fi
