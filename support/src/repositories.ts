@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { repositories, dependantRepositories, } from '../data/repositories.js'
 
-dotenv.config()
+dotenv.config({path: '../.env'})
 
 if (!('JFROG_TOKEN' in process.env) || !process.env.JFROG_TOKEN?.length) {
     throw new Error("Missing JFROG_TOKEN in env.")
