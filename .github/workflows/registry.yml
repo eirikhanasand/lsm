@@ -439,9 +439,15 @@ jobs:
     #   run: |
     #     echo "dotenv -e '../.env' -- bash -c 'cd ../tests/bower; chmod +x setup.sh; ./setup.sh'"
 
-    # - name: test_debian
-    #   run: |
-    #     echo "cd ../tests/alpine; chmod +x setup.sh; ./setup.sh"
+    - name: test_debian
+      run: |
+        if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/debian/dists/focal/InRelease'; then
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 409 error, test passed."
+          exit 0
+        fi
 
     - name: test_alpine
       run: |
