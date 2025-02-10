@@ -4,75 +4,6 @@ import { BeforeDownload } from './interfaces.js';
 
 const OSV_URL = "http://129.241.150.86:8080/api/osv"
 
-const NPMtestDataGood = {
-    "repoPath": {
-      "key": "npm",
-      "path": "@types/estree/-/estree-1.0.6.tgz",
-      "id": "npm:@types/estree/-/estree-1.0.6.tgz"
-    },
-    "originalRepoPath": {
-      "key": "npm",
-      "path": "@types/estree/-/estree-1.0.6.tgz",
-      "id": "npm:@types/estree/-/estree-1.0.6.tgz"
-    },
-    "name": "estree-1.0.6.tgz",
-    "servletContextUrl": "https://<id>.jfrog.io/artifactory",
-    "uri": "/artifactory/npm/@types/estree/-/estree-1.0.6.tgz",
-    "clientAddress": "18.214.241.149",
-    "repoType": 2
-}
-
-const NPMtestDataBad = {
-    "repoPath": {
-        "key": "npm",
-        "path": "mathlive/-/mathlive-0.103.0.tgz",
-        "id": "npm:mathlive/-/mathlive-0.103.0.tgz"
-    },
-    "originalRepoPath": {
-        "key": "npm",
-        "path": "mathlive/-/mathlive-0.103.0.tgz",
-        "id": "npm:mathlive/-/mathlive-0.103.0.tgz"
-    },
-    "name": "mathlive-0.103.0.tgz",
-    "ifModifiedSince": -1,
-    "clientAddress": "88.95.182.216",
-    "repoType": 2
-}
-
-const DOCKERtestData = {
-   "repoPath": {
-      "key": "docker",
-      "path": "library/ubuntu/latest/list.manifest.json",
-      "id": "docker:library/ubuntu/latest/list.manifest.json"
-    },
-    "originalRepoPath": {
-      "key": "docker",
-      "path": "library/ubuntu/latest/list.manifest.json",
-      "id": "docker:library/ubuntu/latest/list.manifest.json"
-    },
-    "name": "list.manifest.json",
-    "ifModifiedSince": -1,
-    "clientAddress": "88.95.182.216",
-    "repoType": 2
-}
-
-const PYTHONtestData = {
-    "repoPath": {
-      "key": "python",
-      "path": "c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
-      "id": "python:c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl"
-    },
-    "originalRepoPath": {
-      "key": "python",
-      "path": "c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
-      "id": "python:c0/2a/fb0a27f846cb857cef0c4c92bef89f133a3a1abb4e16bba1c4dace2e9b49/numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl"
-    },
-    "name": "numpy-2.2.1-cp313-cp313-macosx_14_0_arm64.whl",
-    "ifModifiedSince": -1,
-    "clientAddress": "88.95.182.216",
-    "repoType": 2
-}
-
 const GOtestData = {
     "repoPath": {
       "key": "go",
@@ -162,13 +93,9 @@ const TERRAFORMtestData = {
     "repoType": 2
 }
 
-// const metadata = NPMtestData
-// const metadata = DOCKERtestData
-// const metadata = PYTHONtestData
 // const metadata = GRADLEtestData
 // const metadata = GOtestData
 // const metadata = RUBYtestData
-// const metadata = NPMtestDataBad
 // const metadata = CONDAtestData
 // const metadata = TERRAFORMtestData
 
