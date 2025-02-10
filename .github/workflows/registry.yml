@@ -412,7 +412,13 @@ jobs:
         EOL
 
         # Initializes
-        terraform init
+        terraform init 2>&1 | tee terraform.log || {
+          if grep -q "409" terraform.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
     # - name: test_cocoapods
     #   run: |
