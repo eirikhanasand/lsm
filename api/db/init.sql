@@ -69,8 +69,7 @@ CREATE TABLE IF NOT EXISTS blacklist_repositories (
 
 -- Creates vulnerability table
 CREATE TABLE IF NOT EXISTS vulnerabilities (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
+    name TEXT PRIMARY KEY,
     package_name TEXT NOT NULL,
     ecosystem TEXT NOT NULL,
     version_introduced TEXT NOT NULL,

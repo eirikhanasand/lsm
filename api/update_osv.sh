@@ -33,8 +33,16 @@ find osv -name '*.json' -print0 | xargs -P 32 -0 -I {} sh -c '
 ' _ "$temp_file"
 
 echo "Populating vulnerabilities..."
-$PSQL "CREATE TABLE vulnerabilities_new (name TEXT PRIMARY KEY, ecosystem TEXT, version TEXT, data JSONB);"
-$PSQL "\COPY vulnerabilities_new (name, ecosystem, version, data) FROM '$temp_file' WITH (FORMAT csv, DELIMITER ',', QUOTE '\"', ESCAPE '\"');"
+$PSQL "CREATE TABLE vulnerabilities_new (
+    name TEXT PRIMARY KEY,
+    package_name TEXT NOT NULL,
+    ecosystem TEXT NOT NULL,
+    version_introduced TEXT NOT NULL,
+    version_fixed TEXT NOT NULL,
+    data JSONB NOT NULL,
+    CONSTRAINT unique_name_ecosystem_version UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
+);"
+$PSQL "\COPY vulnerabilities_new (name, package_name, ecosystem, version_introduced, version_fixed, data) FROM '$temp_file' WITH (FORMAT csv, DELIMITER ',', QUOTE '\"', ESCAPE '\"');"
 
 $PSQL_MULTILINE <<EOF
 BEGIN;
