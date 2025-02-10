@@ -1,6 +1,6 @@
 // import dotenv from 'dotenv'
-import pg from 'pg';
-const { Pool } = pg;
+import pg from 'pg'
+const { Pool } = pg
 
 // dotenv.config({ path: '../../.env' })
 
