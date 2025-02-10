@@ -354,6 +354,17 @@ jobs:
 
     - name: test_terraform
       run: |
+        cat > ~/.terraformrc <<EOL
+        provider_installation {
+            direct {
+                exclude = ["registry.terraform.io/*/*"]
+            }
+            network_mirror {
+                url = "https://$JFROG_ID.jfrog.io/artifactory/api/terraform/terraform/providers/"
+            }
+        }
+        EOL
+
         # Creates the Terraform credentials file
         mkdir -p .terraform.d
         cat > main.tf <<EOL
