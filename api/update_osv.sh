@@ -33,25 +33,36 @@ find osv -name '*.json' -print0 | xargs -P 32 -0 -I {} sh -c '
 ' _ "$temp_file"
 
 echo "Populating vulnerabilities..."
-$PSQL "CREATE TABLE vulnerabilities_new (
+
+$PSQL "ALTER TABLE IF EXISTS vulnerabilities DROP CONSTRAINT IF EXISTS unique_name_ecosystem_version;"
+
+$PSQL "DROP TABLE IF EXISTS vulnerabilities_new CASCADE;"
+
+$PSQL "
+CREATE TABLE vulnerabilities_new (
     name TEXT PRIMARY KEY,
     package_name TEXT NOT NULL,
     ecosystem TEXT NOT NULL,
     version_introduced TEXT NOT NULL,
     version_fixed TEXT NOT NULL,
     data JSONB NOT NULL,
-    CONSTRAINT unique_name_ecosystem_version UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
-);"
-$PSQL "\COPY vulnerabilities_new (name, package_name, ecosystem, version_introduced, version_fixed, data) FROM '$temp_file' WITH (FORMAT csv, DELIMITER ',', QUOTE '\"', ESCAPE '\"');"
+    CONSTRAINT unique_name_ecosystem_version
+      UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
+);
+"
+
+$PSQL "\COPY vulnerabilities_new (name, package_name, ecosystem, version_introduced, version_fixed, data)
+       FROM '$temp_file'
+       WITH (FORMAT csv, DELIMITER ',', QUOTE '\"', ESCAPE '\"');"
 
 $PSQL_MULTILINE <<EOF
 BEGIN;
-ALTER TABLE vulnerabilities RENAME TO vulnerabilities_old;
-ALTER TABLE vulnerabilities_new RENAME TO vulnerabilities;
-DROP TABLE vulnerabilities_old;
+    ALTER TABLE IF EXISTS vulnerabilities RENAME TO vulnerabilities_old;
+    ALTER TABLE vulnerabilities_new RENAME TO vulnerabilities;
+    DROP TABLE IF EXISTS vulnerabilities_old;
 COMMIT;
 EOF
 
-rm -rf osv $temp_file
+rm -rf osv "$temp_file"
 
 echo "Database ready."

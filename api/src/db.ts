@@ -11,7 +11,7 @@ const { Pool } = pg
 
 const pool = new Pool({
     user: "osvuser",
-    host: "pgbouncer",
+    host: "lsm_database",
     database: "osvdb",
     password: 'osvpassword',
     // password: DB_PASSWORD,
