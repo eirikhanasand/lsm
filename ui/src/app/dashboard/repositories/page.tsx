@@ -18,7 +18,7 @@ export default async function Repositories() {
     return (
         <main className="flex h-full w-full flex-col bg-white p-4">
             <h1 className="text-3xl font-bold text-blue-600">Repositories</h1>
-            <p className="mt-2 text-gray-700">List over repositories in Artifactory.</p>
+            <p className="mt-2 text-gray-700 mb-2">List of repositories in Artifactory.</p>
             <div className="grid grid-cols-8 bg-stone-200 w-full h-[50px] items-center pl-4 text-gray-700">
                 <h1>Key</h1>
                 <h1>Type</h1>
