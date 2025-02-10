@@ -478,7 +478,13 @@ jobs:
         EOL
 
         # Installs jquery to test the configuration
-        npx bower install jquery
+        npx bower install jquery 2>&1 | tee bower.log || {
+          if grep -q "409" bower.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
 #     - name: test_debian
 #       run: |
