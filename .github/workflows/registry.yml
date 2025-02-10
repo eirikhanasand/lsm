@@ -91,7 +91,6 @@ jobs:
         # Removes the token from .npmrc after the script
         sed -i '' "/$JFROG_ID.jfrog.io/d" ~/.npmrc
         npm config delete registry
-        npm config get registry
 
     - name: test_go
       run: |
@@ -440,7 +439,6 @@ jobs:
     - name: test_bower
       run: |
         npm config delete registry
-        npm config get registry   
         cat > package.json <<EOL
         {
           "dependencies": {
