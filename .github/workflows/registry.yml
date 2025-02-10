@@ -354,6 +354,7 @@ jobs:
 
     - name: test_terraform
       run: |
+        mkdir -p ~/.terraform.d
         cat > ~/.terraformrc <<EOL
         provider_installation {
             direct {
