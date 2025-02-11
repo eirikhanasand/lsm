@@ -1,13 +1,7 @@
 "use client"
+import addPackage from "@/utils/filtering/addPackage"
+import removePackage from "@/utils/filtering/removePackage"
 import { useState } from "react"
-
-type Package = {
-    id: number
-    name: string
-    version: string
-    ecosystem: string
-    comment: string
-}
 
 export default function BlacklistedPackages() {
     const [packages, setPackages] = useState<Package[]>([])
@@ -19,21 +13,6 @@ export default function BlacklistedPackages() {
         ecosystem: "",
         comment: "",
     })
-
-    function addPackage() {
-        if (!newPackage.name || !newPackage.version || !newPackage.ecosystem || !newPackage.comment) {
-            alert("Please fill in all fields.")
-            return
-        }
-
-        setPackages([...packages, { ...newPackage, id: Date.now() }])
-        setShowForm(false)
-        setNewPackage({ id: 0, name: "", version: "", ecosystem: "", comment: "" })
-    }
-
-    function deletePackage(id: number) {
-        setPackages(packages.filter((pkg) => pkg.id !== id))
-    }
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
@@ -80,7 +59,10 @@ export default function BlacklistedPackages() {
                         className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     />
                     <div className="mt-4 flex justify-between">
-                        <button onClick={addPackage} className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600">
+                        <button 
+                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages})} 
+                            className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600"
+                        >
                             Add
                         </button>
                         <button onClick={() => setShowForm(false)} className="bg-red-500 px-4 py-2 rounded-md text-white hover:bg-red-600">
@@ -100,7 +82,7 @@ export default function BlacklistedPackages() {
                             <div className="text-sm text-gray-500">{pkg.ecosystem}</div>
                             <div className="text-sm text-gray-600 italic mt-1">&quot;{pkg.comment}&quot;</div>
                             <button
-                                onClick={() => deletePackage(pkg.id)}
+                                onClick={() => removePackage({id: pkg.id, setPackages, packages})}
                                 className="mt-2 text-red-500 hover:underline self-end"
                             >
                                 Remove
