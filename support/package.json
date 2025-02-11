@@ -11,7 +11,6 @@
     "test-gradle": "cross-env GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory chmod +x ../tests/gradle/gradlew; ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4",
     "test-gradle-dangerous": "cross-env GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN JFROG_ID=$JFROG_ID.jfrog.io/artifactory ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.1",
     "test-ansible": "dotenv -e '../.env' -- bash -c 'cd ../tests/ansible; chmod +x setup.sh; ./setup.sh'",
-    "test-bower": "dotenv -e '../.env' -- bash -c 'cd ../tests/bower; chmod +x setup.sh; ./setup.sh'",
     "test-sbt": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.4 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
     "test-sbt-dangerous": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.1 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
 
