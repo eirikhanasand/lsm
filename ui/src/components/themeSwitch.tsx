@@ -39,36 +39,37 @@ export default function ThemeSwitch() {
     }
 
     function toggleTheme() {
-        if (theme) {
-            const newTheme = theme === 'dark' ? 'light' : 'dark'
-            setCookie('theme', newTheme)
-            applyTheme(newTheme)
-            setTheme(newTheme)
-            document.body.classList.remove(...Object.values(COLOR_THEMES))
-            document.body.classList.add(theme)
-        }
+        const newTheme = theme === 'dark' ? 'light' : 'dark'
+        setCookie('theme', newTheme)
+        applyTheme(newTheme)
+        setTheme(newTheme)
+        document.body.classList.remove(...Object.values(COLOR_THEMES))
+        document.body.classList.add(theme || 'dark')
     }
 
     return (
-        <label htmlFor="theme-toggle" className="bg-red-500 h-[20px] w-[20px]">
-            <input
-                type="checkbox"
-                id="theme-toggle"
-                checked={theme === 'dark'}
-                onChange={toggleTheme}
-                className="sr-only"
-            />
-            <ThemeIcon />
-        </label>
+        <div className='grid place-items-center justify-end'>
+            <label htmlFor="theme-toggle">
+                <input
+                    type="checkbox"
+                    id="theme-toggle"
+                    checked={theme === 'dark'}
+                    onChange={toggleTheme}
+                    className="sr-only"
+                />
+                <ThemeIcon />
+            </label>
+        </div>
     )
 }
 
 function ThemeIcon() {
     return (
         <svg
-            className="theme-toggle_svg h-[20px] w-[20px]"
+            className="theme-toggle_svg"
             viewBox="0 0 100 100"
             xmlns="http://www.w3.org/2000/svg"
+            fill="#ffff00"
         >
             <mask id="theme-toggle_clip-path">
                 <rect x="0" y="0" width="100" height="100" fill="white" />
@@ -77,7 +78,6 @@ function ThemeIcon() {
                     cx="68"
                     cy="40"
                     r="18"
-                    fill="black"
                 />
             </mask>
             <circle
