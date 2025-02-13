@@ -36,27 +36,27 @@ export default function WhitelistedPackages() {
                         placeholder="Package Name"
                         value={newPackage.name}
                         onChange={(e) => setNewPackage({ ...newPackage, name: e.target.value })}
-                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     />
                     <input
                         type="text"
                         placeholder="Version"
                         value={newPackage.version}
                         onChange={(e) => setNewPackage({ ...newPackage, version: e.target.value })}
-                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     />
                     <input
                         type="text"
                         placeholder="Ecosystem (e.g., npm, pip, maven)"
                         value={newPackage.ecosystem}
                         onChange={(e) => setNewPackage({ ...newPackage, ecosystem: e.target.value })}
-                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     />
                     <textarea
                         placeholder="Comment / Reasoning"
                         value={newPackage.comment}
                         onChange={(e) => setNewPackage({ ...newPackage, comment: e.target.value })}
-                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     />
                     <div className="mt-4 flex justify-between">
                         <button 
@@ -77,7 +77,7 @@ export default function WhitelistedPackages() {
                     <p className="text-gray-500 text-center">No whitelisted packages yet.</p>
                 ) : (
                     packages.map((pkg) => (
-                        <li key={pkg.id} className="flex flex-col bg-white p-4 my-2 rounded-md shadow border border-gray-200">
+                        <li key={pkg.id} className="flex flex-col bg-white p-4 my-2 rounded-md shadow-sm border border-gray-200">
                             <div className="text-lg font-semibold text-gray-700">{pkg.name} ({pkg.version})</div>
                             <div className="text-sm text-gray-500">{pkg.ecosystem}</div>
                             <div className="text-sm text-gray-600 italic mt-1">&quot;{pkg.comment}&quot;</div>
