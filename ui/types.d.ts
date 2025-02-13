@@ -5,3 +5,8 @@ type Package = {
     ecosystem: string
     comment: string
 }
+
+type Cookie = {
+    name: string
+    value: string
+}
