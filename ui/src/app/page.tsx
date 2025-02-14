@@ -4,7 +4,7 @@ export default function Home() {
     return (
         <main className="h-full grid place-items-center p-4">
             <div>
-                <h1 className="text-3xl font-bold text-blue-600 text-center">Library Safety Manager</h1>
+                <h1 className="text-2xl font-bold text-blue-600 text-center">Library Safety Manager</h1>
                 <p className="mt-2 text-gray-700">A plugin for JFrog&apos;s Artifactory to check for vulnerabilities in packages.</p>
                 
                 <Link href="/dashboard" className="grid place-items-center">
