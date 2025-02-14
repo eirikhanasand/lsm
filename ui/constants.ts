@@ -9,9 +9,9 @@ const {
 } = process.env
 
 // Document check to bypass client side check
-if (!ENV_JFROG_ID || !ENV_JFROG_TOKEN || !ENV_API) {
-    throw new Error("Missing JFROG_ID, JFROG_TOKEN or API env variables.")
-}
+// if (!ENV_JFROG_ID || !ENV_JFROG_TOKEN || !ENV_API) {
+//     throw new Error("Missing JFROG_ID, JFROG_TOKEN or API env variables.")
+// }
 
 export const JFROG_ID = ENV_JFROG_ID
 export const JFROG_TOKEN = ENV_JFROG_TOKEN
