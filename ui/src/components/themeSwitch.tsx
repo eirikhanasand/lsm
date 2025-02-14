@@ -4,56 +4,31 @@ import { useEffect, useState } from 'react'
 import { getCookie, setCookie } from '@/utils/cookies'
 import "./toggle.css"
 
-export const COLOR_THEMES = {
-    LIGHT: 'light',
-    DARK: 'dark',
-}
-
 export default function ThemeSwitch() {
-    const [theme, setTheme] = useState<string | null>(null)
+    const [theme, setTheme] = useState<'dark' | 'light'>('dark')
 
     useEffect(() => {
-        const savedTheme = getCookie('theme')
+        const savedTheme = getCookie('theme') as 'dark' | 'light'
         if (savedTheme) {
             setTheme(savedTheme)
-            applyTheme(savedTheme, true)
-        } else {
-            applyTheme('dark')
         }
-    }, [])
 
-    function applyTheme(newTheme: string, force?: boolean) {
-        if (theme || force) {
-            const root = document.documentElement
-    
-            if (newTheme === 'dark') {
-                root.style.setProperty('--foreground-rgb', '255, 255, 255')
-                root.style.setProperty('--background-start-rgb', '24, 24, 24')
-                root.style.setProperty('--background-end-rgb', '24, 24, 24')
-            } else {
-                root.style.setProperty('--foreground-rgb', '0, 0, 0')
-                root.style.setProperty('--background-start-rgb', '24, 24, 24')
-                root.style.setProperty('--background-end-rgb', '24, 24, 24')
-            }
-        }
-    }
+        document.documentElement.classList.remove('dark', 'light')
+        document.documentElement.classList.add(theme)
+    }, [theme])
 
     function toggleTheme() {
         const newTheme = theme === 'dark' ? 'light' : 'dark'
         setCookie('theme', newTheme)
-        applyTheme(newTheme)
         setTheme(newTheme)
-        document.body.classList.remove(...Object.values(COLOR_THEMES))
-        document.body.classList.add(theme || 'dark')
     }
 
     return (
         <div className='grid place-items-center justify-end'>
-            <label htmlFor="theme-toggle">
+            <label>
                 <input
                     type="checkbox"
-                    id="theme-toggle"
-                    checked={theme === 'dark'}
+                    checked={theme === 'light'}
                     onChange={toggleTheme}
                     className="sr-only"
                 />
@@ -66,10 +41,9 @@ export default function ThemeSwitch() {
 function ThemeIcon() {
     return (
         <svg
-            className="theme-toggle_svg"
+            className={"theme-toggle_svg"}
             viewBox="0 0 100 100"
             xmlns="http://www.w3.org/2000/svg"
-            fill="#fff"
         >
             <mask id="theme-toggle_clip-path">
                 <rect x="0" y="0" width="100" height="100" fill="white" />

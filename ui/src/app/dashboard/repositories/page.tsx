@@ -16,10 +16,10 @@ type RepositoryProps = {
 export default async function Repositories() {
     const repositories: Repository[] = await fetchRepositories()
     return (
-        <main className="flex h-full w-full flex-col bg-white p-4">
+        <main className="min-h-full w-full flex flex-col p-4">
             <h1 className="text-3xl font-bold text-blue-600">Repositories</h1>
             <p className="mt-2 text-gray-700 mb-2">List of repositories in Artifactory.</p>
-            <div className="grid grid-cols-8 bg-stone-200 w-full h-[50px] items-center pl-4 text-gray-700">
+            <div className="grid grid-cols-8 bg-normal w-full h-[50px] items-center pl-4 text-gray-700">
                 <h1>Key</h1>
                 <h1>Type</h1>
                 <h1 className="col-span-2">URL</h1>
@@ -38,9 +38,9 @@ export default async function Repositories() {
 }
 
 function Repository({repository, index}: RepositoryProps) {
-    const color = index % 2 !== 0 ? 'bg-stone-200' : ''
+    const color = index % 2 !== 0 ? 'bg-normal' : ''
     return (
-        <div className={`h-full w-full grid grid-cols-8 w-full ${color} p-4 text-gray-700`}>
+        <div className={`w-full grid grid-cols-8 ${color} p-4 text-gray-700`}>
             <h1>{repository.key}</h1>
             <h1>{repository.type}</h1>
             <h1 className="col-span-2">{repository.url}</h1>

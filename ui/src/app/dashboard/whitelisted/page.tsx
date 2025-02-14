@@ -15,7 +15,7 @@ export default function WhitelistedPackages() {
     })
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
+        <main className="flex min-h-full flex-col items-center justify-center p-6">
             <h1 className="text-3xl font-bold text-blue-600">Whitelisted Packages</h1>
             <p className="mt-2 text-gray-700">Manage the list of safe packages.</p>
 

@@ -1,34 +1,13 @@
-.theme-toggle {
-    display: block;
-    cursor: pointer;
-    border-radius: var(--border-radius);
-    background: none;
-    border: none;
-}
-
-.theme-toggle:hover {
-    background-color: rgb(90,90,90,0.1);
-}
-
 .theme-toggle_svg {
     height: 3rem;
     padding: .8rem .8rem;
 }
 
-.light .theme-toggle_svg {
-    fill: #000
-}
-
-.light .topbar--open .theme-toggle_svg {
-    fill: #fff
-}
-
 .dark .theme-toggle_svg {
-    fill: #fff
+    fill: white
 }
 
 .theme-toggle_sun-ray {
-    transition: .4s;
     transition: .4s;
 }
 
@@ -42,7 +21,6 @@
 
 .theme-toggle_mask-circle {
     transition: .4s;
-    z-index: 999;
 }
 
 .dark .theme-toggle_mask-circle {
@@ -56,4 +34,10 @@
 
 .light .theme-toggle_sun-moon {
     transform: scale(1.9);
+    fill: white;
+}
+
+.dark .theme-toggle_sun-moon {
+    transform: scale(1);
+    fill: white;
 }
