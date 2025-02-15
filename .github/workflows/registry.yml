@@ -203,16 +203,101 @@ jobs:
         
         # THIS IS SUPPOSED TO BE REQUIRED, ITS FAILING ON THE REGISTRY NOT THE INSTALL NOW
         # gem install actionpack -v 5.2.0
-    
-    # - name: test_gradle
-    #   run: |
-    #     # GRADLE_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java 
-    #     # JFROG_USERNAME=$JFROG_USERNAME
-    #     # JFROG_TOKEN=$JFROG_TOKEN
-    #     # JFROG_ID=$JFROG_ID.jfrog.io/artifactory
-    #     # chmod +x ../tests/gradle/gradlew
-    #     # ../tests/gradle/gradlew --project-dir ../tests/gradle clean addDependencyAndBuild --refresh-dependencies -DrepoUrl=$GRADLE_REPO_URL -Pdependency=org.apache.mina:mina-core:2.2.4"
-    
+    - name: test_gradle
+      run: |
+        set -e  # Exit on error
+        
+        mkdir -p gradle/src/main/kotlin
+        mkdir -p .gradle
+
+        cat > gradle/src/main/kotlin/Main.kt <<EOF
+        fun main() {
+          println("Hello, Gradle!")
+        }
+        EOF
+        
+        cat > gradle/settings.gradle.kts <<EOF
+        rootProject.name = "gradle-project"
+        
+        pluginManagement {
+        repositories {
+        maven {
+        url = uri("https://\${System.getenv("JFROG_ID")}.jfrog.io/artifactory/java")
+        credentials {
+        username = System.getenv("JFROG_EMAIL")
+        password = System.getenv("JFROG_TOKEN")
+        }
+        }
+        gradlePluginPortal()
+        }
+        }
+        
+        dependencyResolutionManagement {
+          repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+            repositories {
+            maven {
+              url = uri("https://\${System.getenv("JFROG_ID")}.jfrog.io/artifactory/java")
+              credentials {
+                username = "$JFROG_EMAIL"
+                password = "$JFROG_TOKEN"
+              }
+            }
+          }
+        }
+        EOF
+        
+        cat > gradle/build.gradle.kts <<EOF
+        plugins {
+          id("java")
+          id("com.jfrog.artifactory") version "5.2.5"  // JFrog Artifactory
+          kotlin("jvm") version "1.9.22"
+        }
+        
+        buildscript {
+          dependencies {
+            classpath("org.jfrog.buildinfo:build-info-extractor-gradle:4+")
+          }
+        }
+        
+        apply(plugin = "com.jfrog.artifactory")
+        
+        artifactory {
+          setContextUrl("https://\${System.getenv("JFROG_ID")}.jfrog.io/artifactory")
+        
+          publish {
+            repository {
+              repoKey = "java"
+              username = System.getenv("JFROG_EMAIL")
+              password = System.getenv("JFROG_TOKEN")
+            }
+          }
+        }
+        
+        dependencies {
+          implementation("org.apache.mina:mina-core:2.2.4")
+        }
+        
+        sourceSets {
+          main {
+            kotlin.srcDir("src/main/kotlin")  // Specify the location of Kotlin source files
+          }
+        }
+        EOF
+
+        cd gradle
+        gradle wrapper
+        cd ..
+        
+        export GRADLE_USER_HOME=.gradle
+        
+        # Run the build with no daemon, no build cache, and refreshing dependencies
+        ./gradle/gradlew --project-dir ./gradle --no-daemon --no-build-cache --refresh-dependencies clean build | tee gradle.log || {
+          if grep -q "409" gradle.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
     - name: test_gradle_dangerous
       run: |
         set -e  # Exit on error
@@ -309,11 +394,130 @@ jobs:
           fi
         }
 
-
-
-# - name: test_maven
-    #   run: |
-    #     echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.4"
+    - name: test_maven
+      run: |
+        set -e  # Exit on error
+        
+        # Create project structure
+        mkdir -p maven/src/main/java
+        
+        # Create a simple Java class
+        cat > maven/src/main/java/Main.java <<EOF
+        public class Main {
+          public static void main(String[] args) {
+            System.out.println("Hello, Maven!");
+          }
+        }
+        EOF
+        
+        # Create `pom.xml`
+        cat > maven/pom.xml <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+        
+        <groupId>org.example</groupId>
+        <artifactId>maven-project</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        
+        <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        </properties>
+        
+        <repositories>
+        <repository>
+        <id>artifactory</id>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </repository>
+        </repositories>
+        
+        <dependencies>
+        <dependency>
+        <groupId>org.apache.mina</groupId>
+        <artifactId>mina-core</artifactId>
+        <version>2.0.5</version>
+        <scope>provided</scope>
+        </dependency>
+        </dependencies>
+        </project>
+        EOF
+        
+        # Create `settings.xml`
+        cat > maven/settings.xml <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 http://maven.apache.org/xsd/settings-1.2.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <servers>
+        <server>
+        <username>$JFROG_EMAIL</username>
+        <password>$JFROG_TOKEN</password>
+        <id>central</id>
+        </server>
+        <server>
+        <username>$JFROG_EMAIL</username>
+        <password>$JFROG_TOKEN</password>
+        <id>snapshots</id>
+        </server>
+        </servers>
+        <profiles>
+        <profile>
+        <repositories>
+        <repository>
+        <snapshots>
+        <enabled>false</enabled>
+        </snapshots>
+        <id>central</id>
+        <name>maven</name>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </repository>
+        <repository>
+        <snapshots />
+        <id>snapshots</id>
+        <name>maven</name>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </repository>
+        </repositories>
+        <pluginRepositories>
+        <pluginRepository>
+        <snapshots>
+        <enabled>false</enabled>
+        </snapshots>
+        <id>central</id>
+        <name>maven</name>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </pluginRepository>
+        <pluginRepository>
+        <snapshots />
+        <id>snapshots</id>
+        <name>maven</name>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </pluginRepository>
+        </pluginRepositories>
+        <id>artifactory</id>
+        </profile>
+        </profiles>
+        <activeProfiles>
+        <activeProfile>artifactory</activeProfile>
+        </activeProfiles>
+        <usePluginRegistry>false</usePluginRegistry>
+        </settings>
+        EOF
+        
+        # Run the build
+        cd maven
+        mkdir -p temp-files
+        
+        mvn clean package -s settings.xml -U -Dbuild.cache.enabled=false -Dmaven.repo.local=temp-files -Dmaven.repo.remote=https://$JFROG_ID.jfrog.io/artifactory/java | tee maven.log || {
+        if grep -q "409" maven.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
 
     # - name: test_maven_dangerous
     #   run: |
