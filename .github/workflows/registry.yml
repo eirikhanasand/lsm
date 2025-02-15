@@ -439,7 +439,7 @@ jobs:
         <dependency>
         <groupId>org.apache.mina</groupId>
         <artifactId>mina-core</artifactId>
-        <version>2.0.5</version>
+        <version>2.2.4</version>
         <scope>provided</scope>
         </dependency>
         </dependencies>
@@ -519,10 +519,130 @@ jobs:
           fi
         }
 
-    # - name: test_maven_dangerous
-    #   run: |
-    #     echo "MAVEN_REPO_URL=https://$JFROG_ID.jfrog.io/artifactory/java JFROG_USERNAME=$JFROG_USERNAME JFROG_TOKEN=$JFROG_TOKEN mvn clean install -U -Dbuild.cache.enabled=false -Dmaven.repo.remote=$MAVEN_REPO_URL -Ddependency=org.apache.mina:mina-core:2.2.4 -s ../tests/maven/settings.xml -f ../tests/maven/pom.xml -Ddynamic.dependency.groupId=org.apache.mina -Ddynamic.dependency.artifactId=mina-core -Ddynamic.dependency.version=2.2.1"
-
+    - name: test_maven_dangerous
+      run: |
+        set -e  # Exit on error
+        
+        # Create project structure
+        mkdir -p maven/src/main/java
+        
+        # Create a simple Java class
+        cat > maven/src/main/java/Main.java <<EOF
+        public class Main {
+          public static void main(String[] args) {
+            System.out.println("Hello, Maven!");
+          }
+        }
+        EOF
+        
+        # Create `pom.xml`
+        cat > maven/pom.xml <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+        
+        <groupId>org.example</groupId>
+        <artifactId>maven-project</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        
+        <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        </properties>
+        
+        <repositories>
+        <repository>
+        <id>artifactory</id>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </repository>
+        </repositories>
+        
+        <dependencies>
+        <dependency>
+        <groupId>org.apache.mina</groupId>
+        <artifactId>mina-core</artifactId>
+        <version>2.0.5</version>
+        <scope>provided</scope>
+        </dependency>
+        </dependencies>
+        </project>
+        EOF
+        
+        # Create `settings.xml`
+        cat > maven/settings.xml <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 http://maven.apache.org/xsd/settings-1.2.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <servers>
+        <server>
+        <username>$JFROG_EMAIL</username>
+        <password>$JFROG_TOKEN</password>
+        <id>central</id>
+        </server>
+        <server>
+        <username>$JFROG_EMAIL</username>
+        <password>$JFROG_TOKEN</password>
+        <id>snapshots</id>
+        </server>
+        </servers>
+        <profiles>
+        <profile>
+        <repositories>
+        <repository>
+        <snapshots>
+        <enabled>false</enabled>
+        </snapshots>
+        <id>central</id>
+        <name>maven</name>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </repository>
+        <repository>
+        <snapshots />
+        <id>snapshots</id>
+        <name>maven</name>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </repository>
+        </repositories>
+        <pluginRepositories>
+        <pluginRepository>
+        <snapshots>
+        <enabled>false</enabled>
+        </snapshots>
+        <id>central</id>
+        <name>maven</name>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </pluginRepository>
+        <pluginRepository>
+        <snapshots />
+        <id>snapshots</id>
+        <name>maven</name>
+        <url>https://$JFROG_ID.jfrog.io/artifactory/java</url>
+        </pluginRepository>
+        </pluginRepositories>
+        <id>artifactory</id>
+        </profile>
+        </profiles>
+        <activeProfiles>
+        <activeProfile>artifactory</activeProfile>
+        </activeProfiles>
+        <usePluginRegistry>false</usePluginRegistry>
+        </settings>
+        EOF
+        
+        # Run the build
+        cd maven
+        mkdir -p temp-files
+        
+        mvn clean package -s settings.xml -U -Dbuild.cache.enabled=false -Dmaven.repo.local=temp-files -Dmaven.repo.remote=https://$JFROG_ID.jfrog.io/artifactory/java | tee maven.log || {
+        if grep -q "409" maven.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
     - name: test_rust
       run: |
         mkdir -p src
