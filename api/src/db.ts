@@ -35,7 +35,7 @@ export default async function run(query: string, params: string[]) {
 
 export async function runInTransaction<T>(
     callback: (client: pg.PoolClient) => Promise<T>
-  ): Promise<T> {
+): Promise<T> {
     const client = await pool.connect()
     try {
       await client.query("BEGIN")
@@ -48,4 +48,4 @@ export async function runInTransaction<T>(
     } finally {
       client.release()
     }
-  }
+}
