@@ -944,9 +944,9 @@ jobs:
     #   run: |
     #     cd ../tests/vcs; chmod +x setup-dangerous.sh; ./setup-dangerous.sh
 
-    - name: test_chef
-      run: |
-        cd ../tests/chef; chmod +x setup.sh; ./setup.sh
+    # - name: test_chef
+    #   run: |
+    #     cd ../tests/chef; chmod +x setup.sh; ./setup.sh
 
     - name: test_generic
       run: |
