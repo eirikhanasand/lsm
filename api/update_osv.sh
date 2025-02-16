@@ -21,8 +21,8 @@ find osv -name '*.json' -print0 | xargs -P 32 -0 -I {} sh -c '
     vuln_name="${file##*/}"
     vuln_name="${vuln_name%.json}"
     json_data=$(jq -c . "$file" | sed '"'"'s/"/""/g'"'"')
-    package_name=$(jq -r ".affected[0].package.name" "$file")
-    ecosystem=$(jq -r ".affected[0].package.ecosystem" "$file")
+    package_name=$(jq -r ".affected[0].package.name" "$file" | tr "[:upper:]" "[:lower:]")
+    ecosystem=$(jq -r ".affected[0].package.ecosystem" "$file" | tr "[:upper:]" "[:lower:]")
     version_introduced=$(jq -r ".affected[0].ranges[0].events[-1].introduced" "$file")
     version_fixed=$(jq -r ".affected[0].ranges[0].events[-1].fixed" "$file")
     package_name=${package_name:-"unknown"}
@@ -46,14 +46,16 @@ CREATE TABLE vulnerabilities_new (
     version_introduced TEXT NOT NULL,
     version_fixed TEXT NOT NULL,
     data JSONB NOT NULL,
-    CONSTRAINT unique_name_ecosystem_version
-      UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
+CONSTRAINT unique_name_ecosystem_version
+UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
 );
 "
 
-$PSQL "\COPY vulnerabilities_new (name, package_name, ecosystem, version_introduced, version_fixed, data)
-       FROM '$temp_file'
-       WITH (FORMAT csv, DELIMITER ',', QUOTE '\"', ESCAPE '\"');"
+$PSQL "
+\COPY vulnerabilities_new (name, package_name, ecosystem, version_introduced, version_fixed, data)
+FROM '$temp_file'
+WITH (FORMAT csv, DELIMITER ',', QUOTE '\"', ESCAPE '\"');
+"
 
 $PSQL_MULTILINE <<EOF
 BEGIN;
