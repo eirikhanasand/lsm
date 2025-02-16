@@ -10,3 +10,7 @@ type Cookie = {
     name: string
     value: string
 }
+
+type ClientPageProps = {
+    packages: Package[]
+}

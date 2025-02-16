@@ -6,18 +6,26 @@ backend default {
 }
 
 sub vcl_recv {
+    if (req.http.Cookie) {
+        set req.http.X-Theme = regsub(req.http.Cookie, ".*theme=([^;]+);?.*", "\1");
+    }
     return (hash);
 }
 
+sub vcl_hash {
+    # Hashes the theme
+    hash_data(req.http.X-Theme);
+}
+
 sub vcl_backend_response {
-    set beresp.ttl = 3600s;
+    set beresp.ttl = 52w;
     return (deliver);
 }
 
 sub vcl_deliver {
     # Set headers to indicate whether the content was served from cache
     if (obj.hits > 0) {
-        set resp.http.X-Cache = "HIT";
+        set resp.http.X-Cache = "HIT:" + obj.hits;
     } else {
         set resp.http.X-Cache = "MISS";
     }
