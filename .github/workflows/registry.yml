@@ -622,6 +622,20 @@ jobs:
         echo "export PATH=$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH" >> $HOME/.bashrc
         echo "export PATH=$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH" >> $GITHUB_ENV
         echo "$HOME/.local/share/gem/ruby/3.2.0/bin" >> $GITHUB_PATH
+        export GEM_HOME="$HOME/.gems"
+        export PATH="$GEM_HOME/bin:$PATH"
+        
+        # Persist these changes for subsequent steps
+        echo "GEM_HOME=$GEM_HOME" >> $GITHUB_ENV
+        echo "$GEM_HOME/bin" >> $GITHUB_PATH
+
+        # Now install the gem
+        gem install knife-art
+
+        # Verify installation
+        echo "Gem home: $(gem env home)"
+        ls -la $GEM_HOME/bin/knife
+        knife --version
         gem install knife-art --user-install
 
 
