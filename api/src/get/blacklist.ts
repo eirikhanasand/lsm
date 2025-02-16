@@ -3,13 +3,19 @@ import run from "../db.js"
 
 export default async function blacklistIndexHandler(_: FastifyRequest, res: FastifyReply) {
     try {
-        // const result = await run(`SELECT ecosystem, name, version FROM blacklist;`, [])
-        const result = await run(`SELECT name FROM blacklist;`, [])
+        const result = await run(`
+            SELECT b.name, 
+            COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) as versions, 
+            COALESCE((SELECT array_agg(ecosystem) FROM blacklist_ecosystems WHERE name = b.name), '{}'::TEXT[]) as ecosystems, 
+            COALESCE((SELECT array_agg(repository) FROM blacklist_repositories WHERE name = b.name), '{}'::TEXT[]) as repositories, 
+            COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments 
+            FROM blacklist b;
+        `, [])
         if (result.rows.length === 0) {
             return res.status(404).send({ error: "Blacklist empty." })
         }
 
-        return res.send(result.rows[0])
+        return res.send(result.rows)
     } catch (error) {
         console.error("Database error:", error)
         return res.status(500).send({ error: "Internal Server Error" })

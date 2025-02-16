@@ -20,7 +20,8 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
         list,
         ecosystem: newPackage.ecosystem,
         version: newPackage.version,
-        name: newPackage.name
+        name: newPackage.name,
+        comment: newPackage.comment
     })
     
     if (response === 500) {

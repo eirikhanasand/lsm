@@ -5,6 +5,7 @@ type PostListProps = {
     ecosystem: string
     version: string
     name: string
+    comment: string
 }
 
 export default async function postPackage({list, ecosystem, name, version}: PostListProps) {
