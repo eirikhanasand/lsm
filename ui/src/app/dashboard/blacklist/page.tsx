@@ -8,7 +8,6 @@ export default function BlacklistedPackages() {
     const [showForm, setShowForm] = useState(false)
     const formStyle = "w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
     const [newPackage, setNewPackage] = useState<Package>({
-        id: 0,
         name: "",
         version: "",
         ecosystem: "",
@@ -86,12 +85,12 @@ export default function BlacklistedPackages() {
                     <p className="text-gray-500 text-center">No blacklisted packages yet.</p>
                 ) : (
                     packages.map((pkg) => (
-                        <li key={pkg.id} className="flex flex-col bg-white p-4 my-2 rounded-md shadow-sm border border-gray-200">
+                        <li key={pkg.name} className="flex flex-col bg-white p-4 my-2 rounded-md shadow-sm border border-gray-200">
                             <div className="text-lg font-semibold text-foreground">{pkg.name} ({pkg.version})</div>
                             <div className="text-sm text-gray-500">{pkg.ecosystem}</div>
                             <div className="text-sm text-gray-600 italic mt-1">&quot;{pkg.comment}&quot;</div>
                             <button
-                                onClick={() => removePackage({id: pkg.id, setPackages, packages, newPackage, list:'blacklist'})}
+                                onClick={() => removePackage({setPackages, packages, newPackage, list:'blacklist'})}
                                 className="mt-2 text-red-500 hover:underline self-end"
                             >
                                 Remove

@@ -2,21 +2,17 @@ import { API } from "@constants"
 
 type PostListProps = {
     list: 'whitelist' | 'blacklist'
-    ecosystem: string
-    version: string
-    name: string
-    comment: string
-    repository: string | null
+    newPackage: Package
 }
 
-export default async function postPackage({list, ecosystem, name, version}: PostListProps) {
+export default async function postPackage({list, newPackage}: PostListProps) {
     try {
         const response = await fetch(`${API}/${list}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ecosystem, version, name})
+            body: JSON.stringify({...newPackage})
         })
 
         if (!response.ok) {

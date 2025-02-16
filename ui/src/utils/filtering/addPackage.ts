@@ -16,21 +16,14 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
         return
     }
 
-    const response = await postPackage({
-        list,
-        ecosystem: newPackage.ecosystem,
-        version: newPackage.version,
-        name: newPackage.name,
-        repository: newPackage.repository,
-        comment: newPackage.comment
-    })
+    const response = await postPackage({list, newPackage})
     
     if (response === 500) {
         alert("Failed to add package. API error.")
         return
     }
 
-    setPackages([...packages, { ...newPackage, id: Date.now() }])
+    setPackages([...packages, { ...newPackage }])
     setShowForm(false)
-    setNewPackage({ id: 0, name: "", version: "", ecosystem: "", comment: "", repository: null })
+    setNewPackage({ name: "", version: "", ecosystem: "", comment: "", repository: null })
 }
