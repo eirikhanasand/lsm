@@ -7,7 +7,7 @@ type PostListProps = {
     name: string
 }
 
-export default async function postPackage({list, ecosystem, version, name}: PostListProps) {
+export default async function postPackage({list, ecosystem, name, version}: PostListProps) {
     try {
         const response = await fetch(`${API}/${list}`, {
             method: 'POST',
