@@ -12,9 +12,9 @@ export default async function blacklistPutHandler(
   req: FastifyRequest<{ Params: BlacklistUpdateBody }>,
   res: FastifyReply
 ) {
-  const { name, oldVersion, newVersion, ecosystem } = req.params
+  const { ecosystem, name, oldVersion, newVersion } = req.params
 
-  if (!name || !oldVersion || !newVersion || !ecosystem) {
+  if (!ecosystem || !name || !oldVersion || !newVersion) {
     return res
       .status(400)
       .send({ error: "Missing name, oldVersion, newVersion, or ecosystem." })

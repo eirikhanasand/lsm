@@ -3,7 +3,7 @@ import addPackage from "@/utils/filtering/addPackage"
 import removePackage from "@/utils/filtering/removePackage"
 import { useState } from "react"
 
-export default function BlacklistedPackages() {
+export default function WhitelistedPackages() {
     const [packages, setPackages] = useState<Package[]>([])
     const [showForm, setShowForm] = useState(false)
     const [newPackage, setNewPackage] = useState<Package>({
@@ -16,8 +16,8 @@ export default function BlacklistedPackages() {
 
     return (
         <main className="flex min-h-full flex-col items-center justify-center p-6">
-            <h1 className="text-3xl font-bold text-blue-600">Blacklisted Packages</h1>
-            <p className="mt-2 text-foreground">Manage the list of unsafe packages.</p>
+            <h1 className="text-3xl font-bold text-blue-600">Whitelisted Packages</h1>
+            <p className="mt-2 text-foreground">Manage the list of safe packages.</p>
 
             {!showForm && (
                 <button
@@ -60,7 +60,7 @@ export default function BlacklistedPackages() {
                     />
                     <div className="mt-4 flex justify-between">
                         <button 
-                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages})} 
+                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list:'whitelist'})}
                             className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600"
                         >
                             Add
@@ -74,7 +74,7 @@ export default function BlacklistedPackages() {
 
             <ul className="mt-6 w-96">
                 {packages.length === 0 ? (
-                    <p className="text-gray-500 text-center">No blacklisted packages yet.</p>
+                    <p className="text-gray-500 text-center">No whitelisted packages yet.</p>
                 ) : (
                     packages.map((pkg) => (
                         <li key={pkg.id} className="flex flex-col bg-white p-4 my-2 rounded-md shadow-sm border border-gray-200">
@@ -82,7 +82,7 @@ export default function BlacklistedPackages() {
                             <div className="text-sm text-gray-500">{pkg.ecosystem}</div>
                             <div className="text-sm text-gray-600 italic mt-1">&quot;{pkg.comment}&quot;</div>
                             <button
-                                onClick={() => removePackage({id: pkg.id, setPackages, packages})}
+                                onClick={() => removePackage({id: pkg.id,newPackage, setPackages, packages, list:'whitelist'})}
                                 className="mt-2 text-red-500 hover:underline self-end"
                             >
                                 Remove

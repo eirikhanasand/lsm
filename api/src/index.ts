@@ -7,9 +7,8 @@ const fastify = Fastify({
 })
 
 fastify.register(cors, {
-    origin: (_, cb) => {
-        cb(null, true)
-    },
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']
 })
 
 fastify.register(apiRoutes, { prefix: "/api" })

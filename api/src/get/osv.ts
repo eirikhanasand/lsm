@@ -1,12 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import versionAffected from "../../utils/version.js"
 import run from "../db.js"
-//Test
-type OSVHandlerParams = {
-    name: string
-    version: string
-    ecosystem: string
-}
 
 export default async function osvHandler(req: FastifyRequest, res: FastifyReply) {
     const { name, version, ecosystem } = req.params as OSVHandlerParams

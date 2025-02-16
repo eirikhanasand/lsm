@@ -38,14 +38,14 @@ export async function runInTransaction<T>(
 ): Promise<T> {
     const client = await pool.connect()
     try {
-      await client.query("BEGIN")
-      const result = await callback(client)
-      await client.query("COMMIT")
-      return result
+        await client.query("BEGIN")
+        const result = await callback(client)
+        await client.query("COMMIT")
+        return result
     } catch (error) {
-      await client.query("ROLLBACK")
-      throw error
+        await client.query("ROLLBACK")
+        throw error
     } finally {
-      client.release()
+        client.release()
     }
 }
