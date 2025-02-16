@@ -16,11 +16,11 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
     }
 
     try {
-        console.log(`Fetching vulnerabilities: name=${name}, version=${version}, ecosystem=${ecosystem}`)
+        console.log(`Fetching vulnerabilities: name=%${name}%, version=${version}, ecosystem=${ecosystem}`)
 
         const result = await run(`
             SELECT * FROM vulnerabilities
-            WHERE package_name LIKE '%$1%'
+            WHERE package_name LIKE $1
             AND ecosystem = $2
         `, [name, ecosystem, version]);
         // AND version_fixed = $3
