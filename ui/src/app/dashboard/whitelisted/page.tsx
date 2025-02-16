@@ -60,7 +60,7 @@ export default function WhitelistedPackages() {
                     />
                     <div className="mt-4 flex justify-between">
                         <button 
-                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages})} 
+                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list:'whitelist'})}
                             className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600"
                         >
                             Add
@@ -82,7 +82,7 @@ export default function WhitelistedPackages() {
                             <div className="text-sm text-gray-500">{pkg.ecosystem}</div>
                             <div className="text-sm text-gray-600 italic mt-1">&quot;{pkg.comment}&quot;</div>
                             <button
-                                onClick={() => removePackage({id: pkg.id, setPackages, packages})}
+                                onClick={() => removePackage({id: pkg.id,newPackage, setPackages, packages, list:'whitelist'})}
                                 className="mt-2 text-red-500 hover:underline self-end"
                             >
                                 Remove
