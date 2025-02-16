@@ -1,5 +1,4 @@
 import indexHandler from "./get/index.js"
-
 import osvHandler from "./get/osv.js"
 import whitelistIndexHandler, { whitelistHandler } from "./get/whitelist.js"
 import blacklistIndexHandler, { blacklistHandler } from "./get/blacklist.js"
