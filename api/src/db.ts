@@ -26,7 +26,6 @@ export default async function run(query: string, params: string[]) {
     try {
         return await client.query(query, params)
     } catch (error) {
-        client.release()
         throw error
     } finally {
         client.release()
