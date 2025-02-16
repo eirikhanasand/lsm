@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import versionAffected from "../../utils/version.js"
 import run from "../db.js"
-
+// Test
 type OSVHandlerParams = {
     name: string
     version: string
