@@ -1,7 +1,21 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 
-export default async function whitelistHandler(req: FastifyRequest, res: FastifyReply) {
+export default async function whitelistIndexHandler(_: FastifyRequest, res: FastifyReply) {
+    try {
+        const result = await run(`SELECT ecosystem, name, version FROM whitelist;`, [])
+        if (result.rows.length === 0) {
+            return res.status(404).send({ error: "Whitelist entry not found." })
+        }
+
+        return res.send(result.rows[0])
+    } catch (error) {
+        console.error("Database error:", error)
+        return res.status(500).send({ error: "Internal Server Error" })
+    }
+}
+
+export async function whitelistHandler(req: FastifyRequest, res: FastifyReply) {
     const { ecosystem, name, version } = req.params as OSVHandlerParams
 
     if (!ecosystem || !name || !version) {
