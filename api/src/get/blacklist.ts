@@ -3,9 +3,10 @@ import run from "../db.js"
 
 export default async function blacklistIndexHandler(_: FastifyRequest, res: FastifyReply) {
     try {
-        const result = await run(`SELECT ecosystem, name, version FROM blacklist;`, [])
+        // const result = await run(`SELECT ecosystem, name, version FROM blacklist;`, [])
+        const result = await run(`SELECT name FROM blacklist;`, [])
         if (result.rows.length === 0) {
-            return res.status(404).send({ error: "Blacklist entry not found." })
+            return res.status(404).send({ error: "Blacklist empty." })
         }
 
         return res.send(result.rows[0])

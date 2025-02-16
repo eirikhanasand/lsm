@@ -3,9 +3,10 @@ import run from "../db.js"
 
 export default async function whitelistIndexHandler(_: FastifyRequest, res: FastifyReply) {
     try {
-        const result = await run(`SELECT ecosystem, name, version FROM whitelist;`, [])
+        const result = await run(`SELECT name FROM whitelist;`, [])
+        // const result = await run(`SELECT ecosystem, name, version FROM whitelist;`, [])
         if (result.rows.length === 0) {
-            return res.status(404).send({ error: "Whitelist entry not found." })
+            return res.status(404).send({ error: "Whitelist empty." })
         }
 
         return res.send(result.rows[0])
