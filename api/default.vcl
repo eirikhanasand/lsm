@@ -6,7 +6,7 @@ backend default {
 }
 
 sub vcl_recv {
-    if (req.method == "POST" || req.method == "PUT" || req.method == "DELETE") {
+    if (req.method == "POST" || req.method == "PUT" || req.method == "HEAD" || req.method == "OPTIONS" || req.method == "DELETE") {
         return (pass);
     }
     return (hash);
