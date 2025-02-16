@@ -22,7 +22,7 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
             SELECT * FROM vulnerabilities
             WHERE package_name LIKE $1
             AND ecosystem = $2
-        `, [`%${name}%`, ecosystem, version]);
+        `, [`%${name}%`, ecosystem]);
         // AND version_fixed = $3
 
         if (result.rows.length === 0) {
