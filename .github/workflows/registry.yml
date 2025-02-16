@@ -619,7 +619,8 @@ jobs:
     - name: test_chef
       run: |
         # Install required Chef components
-        # gem install knife-art
+        gem install knife-art --user-install
+        export PATH="$HOME/.gem/ruby/3.2.0/bin:$PATH"
 
         # Create necessary Chef directories
         mkdir -p ~/.chef
