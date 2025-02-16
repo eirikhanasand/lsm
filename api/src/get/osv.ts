@@ -20,11 +20,10 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
 
         const result = await run(`
             SELECT * FROM vulnerabilities
-            WHERE package_name = $1
+            WHERE package_name LIKE '%$1%'
             AND ecosystem = $2
-            AND version_fixed = $3
         `, [name, ecosystem, version]);
-        
+        // AND version_fixed = $3
 
         if (result.rows.length === 0) {
             return res.status(404).send({})
