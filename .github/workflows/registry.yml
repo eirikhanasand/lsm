@@ -620,7 +620,8 @@ jobs:
       run: |
         # Install required Chef components
         gem install knife-art --user-install
-        export PATH="$HOME/.gem/ruby/3.2.0/bin:$PATH"
+        echo "export PATH=$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH" >> $HOME/.bashrc
+        echo "export PATH=$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH" >> $GITHUB_ENV
 
         # Create necessary Chef directories
         mkdir -p ~/.chef
