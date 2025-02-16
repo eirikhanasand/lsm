@@ -2,11 +2,11 @@ services:
   frontend:
     container_name: lsm_frontend
     build:
-      context: ./ui
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./ui/Dockerfile
     ports:
       - "3000:3000"
-
+  
   postgres:
     image: postgres:15
     container_name: lsm_database

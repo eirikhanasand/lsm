@@ -29,42 +29,48 @@ CREATE TABLE IF NOT EXISTS blacklist (
 CREATE TABLE IF NOT EXISTS whitelist_versions (
     name TEXT NOT NULL,
     version TEXT,
-    FOREIGN KEY (name) REFERENCES whitelist(name)
+    FOREIGN KEY (name) REFERENCES whitelist(name),
+    PRIMARY KEY (name, version)
 );
 
 -- Table for ecosystem specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_ecosystems (
     name TEXT NOT NULL,
     ecosystem TEXT,
-    FOREIGN KEY (name) REFERENCES whitelist(name)
+    FOREIGN KEY (name) REFERENCES whitelist(name),
+    PRIMARY KEY (name, ecosystem)
 );
 
 -- Table for repository specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_repositories (
     name TEXT NOT NULL,
     repository TEXT,
-    FOREIGN KEY (name) REFERENCES whitelist(name)
+    FOREIGN KEY (name) REFERENCES whitelist(name),
+    PRIMARY KEY (name, repository)
 );
 
 -- Table for version specific blacklisted dependencies
 CREATE TABLE IF NOT EXISTS blacklist_versions (
     name TEXT NOT NULL,
     version TEXT,
-    FOREIGN KEY (name) REFERENCES blacklist(name)
+    FOREIGN KEY (name) REFERENCES blacklist(name),
+    PRIMARY KEY (name, version)
 );
 
 -- Table for ecosystem specific blacklisted dependencies
 CREATE TABLE IF NOT EXISTS blacklist_ecosystems (
     name TEXT NOT NULL,
     ecosystem TEXT,
-    FOREIGN KEY (name) REFERENCES blacklist(name)
+    FOREIGN KEY (name) REFERENCES blacklist(name),
+    PRIMARY KEY (name, ecosystem)
 );
 
 -- Table for repository specific blacklisted dependencies
 CREATE TABLE IF NOT EXISTS blacklist_repositories (
     name TEXT NOT NULL,
     repository TEXT,
-    FOREIGN KEY (name) REFERENCES blacklist(name)
+    FOREIGN KEY (name) REFERENCES blacklist(name),
+    PRIMARY KEY (name, repository)
 );
 
 -- Creates vulnerability table

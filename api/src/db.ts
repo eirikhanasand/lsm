@@ -11,7 +11,7 @@ const { Pool } = pg
 
 const pool = new Pool({
     user: "osvuser",
-    host: "pgbouncer",
+    host: "lsm_database",
     database: "osvdb",
     password: 'osvpassword',
     // password: DB_PASSWORD,
@@ -32,3 +32,20 @@ export default async function run(query: string, params: string[]) {
         client.release()
     }
 }
+
+export async function runInTransaction<T>(
+    callback: (client: pg.PoolClient) => Promise<T>
+  ): Promise<T> {
+    const client = await pool.connect()
+    try {
+      await client.query("BEGIN")
+      const result = await callback(client)
+      await client.query("COMMIT")
+      return result
+    } catch (error) {
+      await client.query("ROLLBACK")
+      throw error
+    } finally {
+      client.release()
+    }
+  }
