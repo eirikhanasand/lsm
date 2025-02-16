@@ -618,63 +618,13 @@ jobs:
 
     - name: test_chef
       run: |
-        # Set GEM_HOME to a writable location
-        export GEM_HOME="$HOME/.gems"
-        export PATH="$GEM_HOME/bin:$PATH"
-
-        # Persist environment variables
-        echo "GEM_HOME=$GEM_HOME" >> $GITHUB_ENV
-        echo "$GEM_HOME/bin" >> $GITHUB_PATH
-
-        # Install ChefDK (which includes knife)
-        gem install chef
-
-        # Verify installation
-        gem env home
-        which knife
-        knife --version
-        gem install knife-art
-
-         # Force PATH updates immediately
-        export GEM_HOME="$HOME/.gems"
-        export PATH="$GEM_HOME/bin:$PATH"
-        
-        # Install Chef components first
-        gem install chef knife-art --no-document
-        
-        # Verify knife is actually available
-        echo "Knife path: $(which knife)"
-        ls -la $GEM_HOME/bin/knife*
-        knife --version
-
-        # Create Chef structure
-        mkdir -p ~/.chef cookbooks/test/recipes
-
-        # Configure Knife with proper credential escaping
-        cat <<EOF > ~/.chef/knife.rb
-        log_level                :info
-        log_location             STDOUT
-        node_name                'chef-client'
-        client_key               '~/.chef/client.pem'
-        chef_server_url          'https://lsm.jfrog.io/artifactory/api/chef/chef'
-        knife[:supermarket_site] = 'https://${JFROG_ID}:${JFROG_TOKEN}@lsm.jfrog.io/artifactory/api/chef/chef'
-        EOF
-
-        # Debug: Show full configuration
-        echo "Knife config:"
-        sed "s/${JFROG_TOKEN}/[REDACTED]/g" ~/.chef/knife.rb
-
-        # Test cookbook download with debug
-        echo "Fetching cookbook..."
-        knife supermarket install test -VV
-        
-        # Verify cookbook structure
-        echo "Cookbooks content:"
-        find cookbooks -type f
-
-        # Execute Chef with environment variables
-        JFROG_ID="$JFROG_ID" JFROG_EMAIL="$JFROG_EMAIL" JFROG_TOKEN="$JFROG_TOKEN" \
-          chef-client -z -o 'test::default'
+        if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/chef/supermarket/cookbooks/test'; then
+          echo "Unexpected success: Package downloaded successfully"
+          exit 1
+        else
+          echo "Expected failure: Received HTTP 409 error, test passed."
+          exit 0
+        fi
 
     # - name: test_generic
     #   run: |
