@@ -12,7 +12,7 @@ export default async function whitelistIndexHandler(_: FastifyRequest, res: Fast
             FROM whitelist b;
         `, [])
         if (result.rows.length === 0) {
-            return res.status(404).send({ error: "Whitelist empty." })
+            return res.send([])
         }
 
         return res.send(result.rows)

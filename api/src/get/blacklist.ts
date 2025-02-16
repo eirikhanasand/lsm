@@ -12,7 +12,7 @@ export default async function blacklistIndexHandler(_: FastifyRequest, res: Fast
             FROM blacklist b;
         `, [])
         if (result.rows.length === 0) {
-            return res.status(404).send({ error: "Blacklist empty." })
+            return res.send([])
         }
 
         return res.send(result.rows)

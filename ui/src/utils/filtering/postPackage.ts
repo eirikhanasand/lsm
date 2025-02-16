@@ -6,6 +6,7 @@ type PostListProps = {
     version: string
     name: string
     comment: string
+    repository: string | null
 }
 
 export default async function postPackage({list, ecosystem, name, version}: PostListProps) {

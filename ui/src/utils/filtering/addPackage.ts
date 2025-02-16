@@ -21,6 +21,7 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
         ecosystem: newPackage.ecosystem,
         version: newPackage.version,
         name: newPackage.name,
+        repository: newPackage.repository,
         comment: newPackage.comment
     })
     
@@ -31,5 +32,5 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
 
     setPackages([...packages, { ...newPackage, id: Date.now() }])
     setShowForm(false)
-    setNewPackage({ id: 0, name: "", version: "", ecosystem: "", comment: "" })
+    setNewPackage({ id: 0, name: "", version: "", ecosystem: "", comment: "", repository: null })
 }

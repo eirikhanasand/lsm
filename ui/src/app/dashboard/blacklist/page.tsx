@@ -6,11 +6,13 @@ import { useState } from "react"
 export default function BlacklistedPackages() {
     const [packages, setPackages] = useState<Package[]>([])
     const [showForm, setShowForm] = useState(false)
+    const formStyle = "w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
     const [newPackage, setNewPackage] = useState<Package>({
         id: 0,
         name: "",
         version: "",
         ecosystem: "",
+        repository: null,
         comment: "",
     })
 
@@ -36,27 +38,34 @@ export default function BlacklistedPackages() {
                         placeholder="Package Name"
                         value={newPackage.name}
                         onChange={(e) => setNewPackage({ ...newPackage, name: e.target.value })}
-                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className={formStyle}
                     />
                     <input
                         type="text"
                         placeholder="Version"
                         value={newPackage.version}
                         onChange={(e) => setNewPackage({ ...newPackage, version: e.target.value })}
-                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className={formStyle}
                     />
                     <input
                         type="text"
                         placeholder="Ecosystem (e.g., npm, pip, maven)"
                         value={newPackage.ecosystem}
                         onChange={(e) => setNewPackage({ ...newPackage, ecosystem: e.target.value })}
-                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className={formStyle}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Artifactory Repository (or leave empty for all)"
+                        value={newPackage.repository || ""}
+                        onChange={(e) => setNewPackage({ ...newPackage, repository: e.target.value })}
+                        className={formStyle}
                     />
                     <textarea
                         placeholder="Comment / Reasoning"
                         value={newPackage.comment}
                         onChange={(e) => setNewPackage({ ...newPackage, comment: e.target.value })}
-                        className="w-full mt-2 p-3 border border-gray-500 rounded-md text-gray-900 focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className={formStyle}
                     />
                     <div className="mt-4 flex justify-between">
                         <button 

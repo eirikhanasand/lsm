@@ -2,13 +2,13 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 
 export default async function whitelistPostHandler(req: FastifyRequest, res: FastifyReply) {
-    const { ecosystem, name, version } = req.body as OSVHandlerParams
-    if (!ecosystem || !name || !version) {
-        return res.status(400).send({ error: "Missing name, version, or ecosystem." })
+    const { ecosystem, name, version, repository, comment } = req.body as OSVHandlerParams
+    if (!ecosystem || !name || !version || !repository || !comment) {
+        return res.status(400).send({ error: "Missing name, version, ecosystem, repository, comment." })
     }
 
     try {
-        console.log(`Adding to whitelist: name=${name}, version=${version}, ecosystem=${ecosystem}`)
+        console.log(`Adding to whitelist: name=${name}, version=${version}, ecosystem=${ecosystem}, repository=${repository}, comment=${comment}`)
 
         await run(
             `INSERT INTO whitelist (name) 
@@ -26,6 +26,18 @@ export default async function whitelistPostHandler(req: FastifyRequest, res: Fas
             `INSERT INTO whitelist_ecosystems (name, ecosystem) 
              SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_ecosystems WHERE name = $1 AND ecosystem = $2);`, 
             [name, ecosystem]
+        )
+
+        await run(
+            `INSERT INTO whitelist_repositories (name, repository) 
+             SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_repositories WHERE name = $1 AND repository = $2);`, 
+            [name, repository]
+        )
+
+        await run(
+            `INSERT INTO whitelist_comments (name, comment) 
+             SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_comments WHERE name = $1 AND comment = $2);`, 
+            [name, comment]
         )
 
         return res.send({ message: "Added to whitelist successfully." })
