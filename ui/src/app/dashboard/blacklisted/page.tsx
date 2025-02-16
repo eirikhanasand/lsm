@@ -17,7 +17,7 @@ export default function BlacklistedPackages() {
     return (
         <main className="flex min-h-full flex-col items-center justify-center p-6">
             <h1 className="text-3xl font-bold text-blue-600">Blacklisted Packages</h1>
-            <p className="mt-2 text-gray-700">Manage the list of unsafe packages.</p>
+            <p className="mt-2 text-foreground">Manage the list of unsafe packages.</p>
 
             {!showForm && (
                 <button
@@ -30,7 +30,7 @@ export default function BlacklistedPackages() {
 
             {showForm && (
                 <div className="mt-4 w-96 bg-white p-4 rounded-lg shadow-md border border-gray-300">
-                    <h2 className="text-lg font-semibold text-gray-700">Add New Package</h2>
+                    <h2 className="text-lg font-semibold text-foreground">Add New Package</h2>
                     <input
                         type="text"
                         placeholder="Package Name"
@@ -78,7 +78,7 @@ export default function BlacklistedPackages() {
                 ) : (
                     packages.map((pkg) => (
                         <li key={pkg.id} className="flex flex-col bg-white p-4 my-2 rounded-md shadow-sm border border-gray-200">
-                            <div className="text-lg font-semibold text-gray-700">{pkg.name} ({pkg.version})</div>
+                            <div className="text-lg font-semibold text-foreground">{pkg.name} ({pkg.version})</div>
                             <div className="text-sm text-gray-500">{pkg.ecosystem}</div>
                             <div className="text-sm text-gray-600 italic mt-1">&quot;{pkg.comment}&quot;</div>
                             <button
