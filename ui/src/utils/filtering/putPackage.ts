@@ -1,4 +1,4 @@
-import { API } from "../../../constants"
+import { API } from "@constants"
 
 type PutListProps = {
     list: 'whitelist' | 'blacklist'
