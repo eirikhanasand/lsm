@@ -1,6 +1,6 @@
 name: Test Registry
 
-on: [push, fork, merge, pull]
+on: [push, merge]
 
 jobs:
   build:
