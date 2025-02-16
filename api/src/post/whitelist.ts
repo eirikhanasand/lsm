@@ -1,33 +1,34 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 
-export default async function whitelistPutHandler(req: FastifyRequest, res: FastifyReply) {
+export default async function whitelistPostHandler(req: FastifyRequest, res: FastifyReply) {
     const { ecosystem, name, version } = req.body as OSVHandlerParams
     if (!ecosystem || !name || !version) {
         return res.status(400).send({ error: "Missing name, version, or ecosystem." })
     }
 
     try {
-        console.log(`Updating whitelist: name=${name}, version=${version}, ecosystem=${ecosystem}`)
+        console.log(`Adding to whitelist: name=${name}, version=${version}, ecosystem=${ecosystem}`)
 
-        const checkExists = await run("SELECT name FROM whitelist WHERE name = $1;", [name])
-        if (checkExists.rowCount === 0) {
-            return res.status(404).send({ error: "Whitelist entry not found." })
-        }
+        await run(
+            `INSERT INTO whitelist (name) 
+             SELECT $1 WHERE NOT EXISTS (SELECT 1 FROM whitelist WHERE name = $1);`, 
+            [name]
+        )
 
-        await run(`
-            INSERT INTO whitelist_versions (name, version)
-            VALUES ($1, $2)
-            ON CONFLICT (name) DO UPDATE SET version = EXCLUDED.version;
-        `, [name, version])
+        await run(
+            `INSERT INTO whitelist_versions (name, version) 
+             SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_versions WHERE name = $1 AND version = $2);`, 
+            [name, version]
+        )
 
-        await run(`
-            INSERT INTO whitelist_ecosystems (name, ecosystem)
-            VALUES ($1, $2)
-            ON CONFLICT (name) DO UPDATE SET ecosystem = EXCLUDED.ecosystem;
-        `, [name, ecosystem])
+        await run(
+            `INSERT INTO whitelist_ecosystems (name, ecosystem) 
+             SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_ecosystems WHERE name = $1 AND ecosystem = $2);`, 
+            [name, ecosystem]
+        )
 
-        return res.send({ message: "Whitelist entry updated successfully." })
+        return res.send({ message: "Added to whitelist successfully." })
     } catch (error) {
         console.error("Database error:", error)
         return res.status(500).send({ error: "Internal Server Error" })
