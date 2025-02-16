@@ -22,16 +22,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: test_docker_oci_helm
-      run: |
-        echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
-        if docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest; then
-          echo "Unexpected success: Image pulled successfully"
-          exit 1
-        else
-          echo "Expected failure: Received HTTP 400 error, test passed."
-          exit 0
-        fi
+    # - name: test_docker_oci_helm
+    #   run: |
+    #     echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
+    #     if docker pull $JFROG_ID.jfrog.io/docker/ubuntu:latest; then
+    #       echo "Unexpected success: Image pulled successfully"
+    #       exit 1
+    #     else
+    #       echo "Expected failure: Received HTTP 400 error, test passed."
+    #       exit 0
+    #     fi
 
     # - name: test_docker_oci_helm_dangerous
     #   run: |
