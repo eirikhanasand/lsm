@@ -637,7 +637,7 @@ jobs:
 
         # Create necessary Chef directories
         mkdir -p ~/.chef
-        mkdir -p cookbooks/test_download/recipes
+        mkdir -p cookbooks/test/recipes
 
         # Configure Knife
         cat <<EOF > ~/.chef/knife.rb
@@ -654,13 +654,13 @@ jobs:
         cat ~/.chef/knife.rb
 
         # Fetch cookbook from Artifactory
-        knife supermarket install test_download
+        knife supermarket install test
 
         # DEBUG - List installed cookbooks
         ls -R cookbooks
 
         # Run Chef with downloaded cookbook
-        JFROG_ID=$JFROG_ID JFROG_EMAIL=$JFROG_EMAIL JFROG_TOKEN=$JFROG_TOKEN chef-client -z -o 'test_download::default'
+        JFROG_ID=$JFROG_ID JFROG_EMAIL=$JFROG_EMAIL JFROG_TOKEN=$JFROG_TOKEN chef-client -z -o 'test::default'
 
     # - name: test_generic
     #   run: |
