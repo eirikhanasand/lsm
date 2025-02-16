@@ -1,16 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 
-type WhitelistEntry = {
-    name: string
-    version: string
-    ecosystem: string
-}
-
-export default async function whitelistPutHandler(req: FastifyRequest<{ Body: WhitelistEntry }>, res: FastifyReply) {
-    const { name, version, ecosystem } = req.body
-
-    if (!name || !version || !ecosystem) {
+export default async function whitelistPutHandler(req: FastifyRequest, res: FastifyReply) {
+    const { ecosystem, name, version } = req.body as OSVHandlerParams
+    if (!ecosystem || !name || !version) {
         return res.status(400).send({ error: "Missing name, version, or ecosystem." })
     }
 

@@ -15,8 +15,8 @@ export default async function apiRoutes(fastify: FastifyInstance, options: Fasti
     // GET handlers
     fastify.get("/", indexHandler)
     fastify.get("/osv/:ecosystem/:name/:version", osvHandler)
-    fastify.get("/whitelist/:name/:version/:ecosystem", whitelistHandler)
-    fastify.get("/blacklist/:name/:version/:ecosystem", blacklistHandler)
+    fastify.get("/whitelist/:ecosystem/:name/:version", whitelistHandler)
+    fastify.get("/blacklist/:ecosystem/:name/:version", blacklistHandler)
 
     // POST handlers
     fastify.post("/whitelist", whitelistPostHandler)

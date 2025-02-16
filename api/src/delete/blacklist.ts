@@ -2,12 +2,8 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import {runInTransaction } from "../db.js"
 import run from "../db.js"
 
-
-export default async function blacklistDeleteHandler(
-  req: FastifyRequest<{ Params: { name: string; version?: string } }>,
-  res: FastifyReply
-) {
-  const { name, version } = req.params
+export default async function blacklistDeleteHandler(req: FastifyRequest, res: FastifyReply) {
+  const { ecosystem, name, version } = req.params as OSVHandlerParams
   if (!name) {
     return res.status(400).send({ error: "Missing name parameter." })
   }
