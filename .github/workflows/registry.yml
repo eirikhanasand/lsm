@@ -635,32 +635,46 @@ jobs:
         knife --version
         gem install knife-art
 
-        # Create necessary Chef directories
-        mkdir -p ~/.chef
-        mkdir -p cookbooks/test/recipes
+         # Force PATH updates immediately
+        export GEM_HOME="$HOME/.gems"
+        export PATH="$GEM_HOME/bin:$PATH"
+        
+        # Install Chef components first
+        gem install chef knife-art --no-document
+        
+        # Verify knife is actually available
+        echo "Knife path: $(which knife)"
+        ls -la $GEM_HOME/bin/knife*
+        knife --version
 
-        # Configure Knife
+        # Create Chef structure
+        mkdir -p ~/.chef cookbooks/test/recipes
+
+        # Configure Knife with proper credential escaping
         cat <<EOF > ~/.chef/knife.rb
         log_level                :info
         log_location             STDOUT
         node_name                'chef-client'
         client_key               '~/.chef/client.pem'
         chef_server_url          'https://lsm.jfrog.io/artifactory/api/chef/chef'
-        knife[:supermarket_site] = 'https://$JFROG_ID:$JFROG_TOKEN@lsm.jfrog.io/artifactory/api/chef/chef'
+        knife[:supermarket_site] = 'https://${JFROG_ID}:${JFROG_TOKEN}@lsm.jfrog.io/artifactory/api/chef/chef'
         EOF
 
-        # DEBUG - Verify knife configuration
-        echo "Knife configuration:"
-        cat ~/.chef/knife.rb
+        # Debug: Show full configuration
+        echo "Knife config:"
+        sed "s/${JFROG_TOKEN}/[REDACTED]/g" ~/.chef/knife.rb
 
-        # Fetch cookbook from Artifactory
-        knife supermarket install test
+        # Test cookbook download with debug
+        echo "Fetching cookbook..."
+        knife supermarket install test -VV
+        
+        # Verify cookbook structure
+        echo "Cookbooks content:"
+        find cookbooks -type f
 
-        # DEBUG - List installed cookbooks
-        ls -R cookbooks
-
-        # Run Chef with downloaded cookbook
-        JFROG_ID=$JFROG_ID JFROG_EMAIL=$JFROG_EMAIL JFROG_TOKEN=$JFROG_TOKEN chef-client -z -o 'test::default'
+        # Execute Chef with environment variables
+        JFROG_ID="$JFROG_ID" JFROG_EMAIL="$JFROG_EMAIL" JFROG_TOKEN="$JFROG_TOKEN" \
+          chef-client -z -o 'test::default'
 
     # - name: test_generic
     #   run: |
