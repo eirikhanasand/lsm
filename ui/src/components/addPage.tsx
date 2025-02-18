@@ -4,7 +4,7 @@ import removePackage from "@/utils/filtering/removePackage"
 import { SetStateAction, useState } from "react"
 import Trash from "./svg/trash"
 import Pencil from "./svg/pencil"
-import editPackage from "@/utils/filtering/editPackage"
+import Edit from "./edit"
 import "./addPage.css"
 
 type PackageProps = {
@@ -109,8 +109,11 @@ export default function AddPage({list, packages: serverPackages}: ClientPageProp
 }
 
 function Package({pkg, setPackages, packages, list}: PackageProps) {
+    const [editing, setEditing] = useState(false)
+
     return (
         <li className="flex flex-col bg-background p-4 my-2 rounded-md shadow-sm border border-blue-500">
+            {editing && <Edit pkg={pkg} setEditing={setEditing} />}
             <div className="text-lg text-foreground flex justify-between">
                 <h1 className="text-sm text-foreground font-semibold">
                     {pkg.name} ({pkg.versions})
@@ -125,10 +128,11 @@ function Package({pkg, setPackages, packages, list}: PackageProps) {
             </h1>
             <div className="self-end">
                 <button
-                    onClick={() => editPackage({pkg, setPackages, packages, list})}
+                    onClick={(() => setEditing(true))}
+                    // onClick={() => editPackage({pkg, setPackages, packages, list})}
                     className="h-[20px] w-[20px] self-end"
                 >
-                    <Pencil 
+                    <Pencil
                         fill="pencil-icon cursor-pointer" 
                         className="pencil-icon max-w-[16px] max-h-[16px] mb-[1.7px]"
                     />
