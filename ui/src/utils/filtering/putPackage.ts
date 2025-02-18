@@ -2,20 +2,17 @@ import { API } from "@constants"
 
 type PutListProps = {
     list: 'whitelist' | 'blacklist'
-    name: string
-    oldVersion: string
-    newVersion: string
-    ecosystem: string
+    pkg: APIPackage
 }
 
-export default async function putPackage({list, name, oldVersion, newVersion, ecosystem}: PutListProps) {
+export default async function putPackage({list, pkg}: PutListProps) {
     try {
         const response = await fetch(`${API}/${list}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ecosystem, oldVersion, newVersion, name})
+            body: JSON.stringify({...pkg})
         })
 
         if (!response.ok) {

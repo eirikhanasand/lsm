@@ -1,8 +1,18 @@
 "use client"
 import addPackage from "@/utils/filtering/addPackage"
 import removePackage from "@/utils/filtering/removePackage"
-import { useState } from "react"
+import { SetStateAction, useState } from "react"
 import Trash from "./svg/trash"
+import Pencil from "./svg/pencil"
+import editPackage from "@/utils/filtering/editPackage"
+import "./addPage.css"
+
+type PackageProps = {
+    pkg: APIPackage
+    list: 'whitelist' | 'blacklist'
+    setPackages: (value: SetStateAction<APIPackage[]>) => void
+    packages: APIPackage[]
+}
 
 export default function AddPage({list, packages: serverPackages}: ClientPageProps) {
     const [packages, setPackages] = useState<APIPackage[]>([...serverPackages])
@@ -85,24 +95,51 @@ export default function AddPage({list, packages: serverPackages}: ClientPageProp
                 {packages.length === 0 ? (
                     <p className="text-foreground text-center">No {list === 'whitelist' ? "whitelisted" : "blacklisted"} packages yet.</p>
                 ) : (
-                    packages.map((pkg: APIPackage) => (
-                        <li key={pkg.name} className="flex flex-col bg-background p-4 my-2 rounded-md shadow-sm border border-blue-500">
-                            <div className="text-lg text-foreground flex justify-between">
-                                <h1 className="text-sm text-foreground font-semibold">{pkg.name} ({pkg.versions})</h1>
-                                <h1 className="text-sm text-foreground">{Array.isArray(pkg.repositories) && pkg.repositories.length ? pkg.repositories : "Global"}</h1>
-                            </div>
-                            <h1 className="text-sm text-foreground">{pkg.ecosystems}</h1>
-                            <h1 className="text-sm text-shallow italic mt-1">{Array.isArray(pkg.repositories) && pkg.repositories.length ? `"${pkg.comments}"` : ""}</h1>
-                            <button
-                                onClick={() => removePackage({name: pkg.name, setPackages, packages, list})}
-                                className="h-[20px] w-[20px] self-end"
-                            >
-                                <Trash fill="fill-shallow hover:fill-red-500" className="w-full h-full" />
-                            </button>
-                        </li>
-                    ))
+                    packages.map((pkg: APIPackage) => <Package 
+                        key={pkg.name}
+                        pkg={pkg}
+                        list={list}
+                        setPackages={setPackages}
+                        packages={packages}
+                    />)
                 )}
             </ul>
         </main>
+    )
+}
+
+function Package({pkg, setPackages, packages, list}: PackageProps) {
+    return (
+        <li className="flex flex-col bg-background p-4 my-2 rounded-md shadow-sm border border-blue-500">
+            <div className="text-lg text-foreground flex justify-between">
+                <h1 className="text-sm text-foreground font-semibold">
+                    {pkg.name} ({pkg.versions})
+                </h1>
+                <h1 className="text-sm text-foreground">
+                    {Array.isArray(pkg.repositories) && pkg.repositories.length ? pkg.repositories : "Global"}
+                </h1>
+            </div>
+            <h1 className="text-sm text-foreground">{pkg.ecosystems}</h1>
+            <h1 className="text-sm text-shallow italic mt-1">
+                {Array.isArray(pkg.repositories) && pkg.repositories.length ? `"${pkg.comments}"` : ""}
+            </h1>
+            <div className="self-end">
+                <button
+                    onClick={() => editPackage({pkg, setPackages, packages, list})}
+                    className="h-[20px] w-[20px] self-end"
+                >
+                    <Pencil 
+                        fill="pencil-icon cursor-pointer" 
+                        className="pencil-icon max-w-[16px] max-h-[16px] mb-[1.7px]"
+                    />
+                </button>
+                <button
+                    onClick={() => removePackage({name: pkg.name, setPackages, packages, list})}
+                    className="h-[20px] w-[20px] self-end"
+                >
+                    <Trash fill="fill-shallow hover:fill-red-500 cursor-pointer" className="w-full h-full" />
+                </button>
+            </div>
+        </li>
     )
 }

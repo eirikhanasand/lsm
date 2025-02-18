@@ -12,7 +12,7 @@ export default async function removePackage({name, setPackages, packages, list}:
     const response = await deletePackage({list, name})
 
     if (response === 500) {
-        alert("Failed to add package. API error.")
+        alert("Failed to delete package. API error.")
         return
     }
 
