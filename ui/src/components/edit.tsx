@@ -1,5 +1,4 @@
 import { SetStateAction, useState } from "react"
-import Pencil from "./svg/pencil"
 import editPackage from "@/utils/filtering/editPackage"
 
 type EditProps = {
@@ -8,12 +7,6 @@ type EditProps = {
     list: 'whitelist' | 'blacklist'
     packages: APIPackage[]
     setPackages: (value: SetStateAction<APIPackage[]>) => void
-}
-
-type FieldProps = {
-    text: string
-    data: string[]
-    setData: (value: SetStateAction<APIPackage[]>) => void
 }
 
 export default function Edit({pkg, setEditing, setPackages, packages, list}: EditProps) {
