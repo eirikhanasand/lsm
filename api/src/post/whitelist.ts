@@ -3,8 +3,8 @@ import run from "../db.js"
 
 export default async function whitelistPostHandler(req: FastifyRequest, res: FastifyReply) {
     const { ecosystem, name, version, repository, comment } = req.body as OSVHandlerParams
-    if (!ecosystem || !name || !version || !repository || !comment) {
-        return res.status(400).send({ error: "Missing name, version, ecosystem, repository, comment." })
+    if (!ecosystem || !name || !version || !comment) {
+        return res.status(400).send({ error: "Missing name, version, ecosystem, comment." })
     }
 
     try {
@@ -28,11 +28,13 @@ export default async function whitelistPostHandler(req: FastifyRequest, res: Fas
             [name, ecosystem]
         )
 
-        await run(
-            `INSERT INTO whitelist_repositories (name, repository) 
-             SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_repositories WHERE name = $1 AND repository = $2);`, 
-            [name, repository]
-        )
+        if (repository) {
+            await run(
+                `INSERT INTO whitelist_repositories (name, repository) 
+                 SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_repositories WHERE name = $1 AND repository = $2);`, 
+                [name, repository]
+            )
+        }
 
         await run(
             `INSERT INTO whitelist_comments (name, comment) 

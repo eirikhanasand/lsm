@@ -6,11 +6,11 @@ type BlacklistUpdateBody = {
     version: string
     ecosystem: string
     comment: string
+    repository: string
 }
 
 export default async function blacklistPutHandler(req: FastifyRequest, res: FastifyReply) {
-    const { ecosystem, name, version, comment } = req.body as BlacklistUpdateBody
-
+    const { ecosystem, name, version, comment, repository } = req.body as BlacklistUpdateBody
     if (!ecosystem || !name || !version || !comment) {
         return res
           .status(400)
@@ -19,7 +19,7 @@ export default async function blacklistPutHandler(req: FastifyRequest, res: Fast
 
     try {
         console.log(
-            `Replacing blacklist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}`
+            `Replacing blacklist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}, repository=${repository}`
         )
 
         await runInTransaction(async (client) => {
@@ -56,6 +56,15 @@ export default async function blacklistPutHandler(req: FastifyRequest, res: Fast
                     SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM blacklist_comments WHERE name = $1 AND comment = $2);
                 `,
                 [name, comment]
+            )
+
+            await client.query("DELETE FROM blacklist_repositories WHERE name = $1;", [name])
+            await client.query(
+                `
+                    INSERT INTO blacklist_repositories (name, repository)
+                    SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM blacklist_repositories WHERE name = $1 AND repository = $2);
+                `,
+                [name, repository]
             )
         })
 

@@ -6,11 +6,11 @@ type WhitelistUpdateBody = {
     version: string
     ecosystem: string
     comment: string
+    repository: string
 }
 
 export default async function whitelistPutHandler(req: FastifyRequest, res: FastifyReply) {
-    const { ecosystem, name, version, comment } = req.body as WhitelistUpdateBody
-
+    const { ecosystem, name, version, comment, repository } = req.body as WhitelistUpdateBody
     if (!ecosystem || !name || !version || !comment) {
         return res
           .status(400)
@@ -19,7 +19,7 @@ export default async function whitelistPutHandler(req: FastifyRequest, res: Fast
 
     try {
         console.log(
-            `Replacing whitelist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}`
+            `Replacing whitelist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}, repository=${repository}`
         )
 
         await runInTransaction(async (client) => {
@@ -56,6 +56,15 @@ export default async function whitelistPutHandler(req: FastifyRequest, res: Fast
                     SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_comments WHERE name = $1 AND comment = $2);
                 `,
                 [name, comment]
+            )
+
+            await client.query("DELETE FROM whitelist_repositories WHERE name = $1;", [name])
+            await client.query(
+                `
+                    INSERT INTO whitelist_repositories (name, repository)
+                    SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_repositories WHERE name = $1 AND repository = $2);
+                `,
+                [name, repository]
             )
         })
 
