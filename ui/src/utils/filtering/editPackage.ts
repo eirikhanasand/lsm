@@ -22,12 +22,5 @@ export default async function editPackage({pkg, setPackages, packages, list}: Re
         return
     }
 
-    setPackages(packages.filter((p) => p.name !== pkg.name))
-    // setPackages([...packages, {
-    //     name: pkg.name,
-    //     ecosystems: pkg.ecosystems,
-    //     versions: pkg.versions,
-    //     comments: pkg.comments,
-    //     repositories: pkg.repositories
-    // }])
+    setPackages(packages.map((p) =>p.name === pkg.name ? pkg : p));
 }
