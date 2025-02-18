@@ -30,7 +30,5 @@ export default async function apiRoutes(fastify: FastifyInstance, options: Fasti
     // DELETE handlers
     fastify.delete("/whitelist/:name", whitelistDeleteHandler)
     fastify.delete("/blacklist/:name", blacklistDeleteHandler)
-    fastify.delete("/whitelist/:name/:version", whitelistDeleteHandler)
-    fastify.delete("/blacklist/:name/:version", blacklistDeleteHandler)
 }
 
