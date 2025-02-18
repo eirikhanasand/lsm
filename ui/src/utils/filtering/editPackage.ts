@@ -9,7 +9,13 @@ type RemovePackageProps = {
 }
 
 export default async function editPackage({pkg, setPackages, packages, list}: RemovePackageProps) {
-    const response = await putPackage({list, pkg})
+    const response = await putPackage({list, pkg: {
+        name: pkg.name,
+        ecosystem: pkg.ecosystems.join(','),
+        version: pkg.versions.join(','),
+        comment: pkg.comments.join(','),
+        repository: pkg.repositories.join(',')
+    }})
 
     if (response === 500) {
         alert("Failed to edit package. API error.")
@@ -17,4 +23,11 @@ export default async function editPackage({pkg, setPackages, packages, list}: Re
     }
 
     setPackages(packages.filter((p) => p.name !== pkg.name))
+    // setPackages([...packages, {
+    //     name: pkg.name,
+    //     ecosystems: pkg.ecosystems,
+    //     versions: pkg.versions,
+    //     comments: pkg.comments,
+    //     repositories: pkg.repositories
+    // }])
 }

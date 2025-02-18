@@ -3,16 +3,15 @@ import { runInTransaction } from "../db.js"
 
 type WhitelistUpdateBody = {
     name: string
-    oldVersion: string
-    newVersion: string
+    version: string
     ecosystem: string
     comment: string
 }
 
 export default async function whitelistPutHandler(req: FastifyRequest, res: FastifyReply) {
-    const { ecosystem, name, oldVersion, newVersion, comment } = req.body as WhitelistUpdateBody
+    const { ecosystem, name, version, comment } = req.body as WhitelistUpdateBody
 
-    if (!ecosystem || !name || !oldVersion || !newVersion || !comment) {
+    if (!ecosystem || !name || !version || !comment) {
         return res
           .status(400)
           .send({ error: "Missing name, oldVersion, newVersion, ecosystem, comment." })
@@ -20,7 +19,7 @@ export default async function whitelistPutHandler(req: FastifyRequest, res: Fast
 
     try {
         console.log(
-            `Replacing whitelist version: name=${name}, oldVersion=${oldVersion}, newVersion=${newVersion}, ecosystem=${ecosystem}, comment=${comment}`
+            `Replacing whitelist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}`
         )
 
         await runInTransaction(async (client) => {
@@ -32,34 +31,31 @@ export default async function whitelistPutHandler(req: FastifyRequest, res: Fast
                 throw new Error("whitelist entry not found.")
             }
 
-            const updateResult = await client.query(
-                `
-                  UPDATE whitelist_versions
-                  SET version = $3
-                  WHERE name = $1
-                    AND version = $2;
-                `,
-                [name, oldVersion, newVersion]
-            )
-
-            if (updateResult.rowCount === 0) {
-                await client.query(
-                  `
-                    INSERT INTO whitelist_versions (name, version)
-                    VALUES ($1, $2);
-                  `,
-                  [name, newVersion]
-                )
-            }
-
+            await client.query("DELETE FROM whitelist_versions WHERE name = $1;", [name])
             await client.query(
                 `
-                  INSERT INTO whitelist_ecosystems (name, ecosystem)
-                  VALUES ($1, $2)
-                  ON CONFLICT (name, ecosystem)
-                    DO UPDATE SET ecosystem = EXCLUDED.ecosystem;
+                    INSERT INTO whitelist_versions (name, version)
+                    SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_versions WHERE name = $1 AND version = $2);
+                `,
+                [name, version]
+            )
+
+            await client.query("DELETE FROM whitelist_ecosystems WHERE name = $1;", [name])
+            await client.query(
+                `
+                    INSERT INTO whitelist_ecosystems (name, ecosystem)
+                    SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_ecosystems WHERE name = $1 AND ecosystem = $2);
                 `,
                 [name, ecosystem]
+            )
+
+            await client.query("DELETE FROM whitelist_comments WHERE name = $1;", [name])
+            await client.query(
+                `
+                    INSERT INTO whitelist_comments (name, comment)
+                    SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_comments WHERE name = $1 AND comment = $2);
+                `,
+                [name, comment]
             )
         })
 

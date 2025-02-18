@@ -24,7 +24,13 @@ export default function Edit({pkg, setEditing, setPackages, packages, list}: Edi
 
     function handleSave() {
         if (isEdited()) {
-            editPackage({pkg, setPackages, packages, list})
+            editPackage({pkg: {
+                name: pkg.name,
+                versions,
+                ecosystems,
+                repositories,
+                comments
+            }, setPackages, packages, list})
         }
     }
 
