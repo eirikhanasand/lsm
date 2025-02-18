@@ -15,7 +15,6 @@ export default async function getPackages({list, side}: GetListProps) {
         }
 
         const data = await response.json()
-        console.log("returning", data)
         return data
     } catch (error) {
         console.error(error)
