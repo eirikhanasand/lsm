@@ -113,7 +113,13 @@ function Package({pkg, setPackages, packages, list}: PackageProps) {
 
     return (
         <li className="flex flex-col bg-background p-4 my-2 rounded-md shadow-sm border border-blue-500">
-            {editing && <Edit pkg={pkg} setEditing={setEditing} />}
+            {editing && <Edit 
+                pkg={pkg}
+                setEditing={setEditing}
+                list={list}
+                packages={packages}
+                setPackages={setPackages}
+            />}
             <div className="text-lg text-foreground flex justify-between">
                 <h1 className="text-sm text-foreground font-semibold">
                     {pkg.name} ({pkg.versions})
