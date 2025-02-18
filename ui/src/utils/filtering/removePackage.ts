@@ -2,19 +2,19 @@ import { SetStateAction } from "react"
 import deletePackage from "./deletePackage"
 
 type RemovePackageProps = {
-    newPackage: Package
-    setPackages: (value: SetStateAction<Package[]>) => void
-    packages: Package[]
+    name: string
+    setPackages: (value: SetStateAction<APIPackage[]>) => void
+    packages: APIPackage[]
     list: 'whitelist' | 'blacklist'
 }
 
-export default async function removePackage({newPackage, setPackages, packages, list}: RemovePackageProps) {
-    const response = await deletePackage({list, name: newPackage.name, version: newPackage.version})
+export default async function removePackage({name, setPackages, packages, list}: RemovePackageProps) {
+    const response = await deletePackage({list, name})
 
     if (response === 500) {
         alert("Failed to add package. API error.")
         return
     }
 
-    setPackages(packages.filter((pkg) => pkg.name !== newPackage.name))
+    setPackages(packages.filter((pkg) => pkg.name !== name))
 }

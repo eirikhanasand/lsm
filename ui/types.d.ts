@@ -6,11 +6,20 @@ type Package = {
     comment: string
 }
 
+type APIPackage = {
+    name: string
+    versions: string[]
+    ecosystems: string[]
+    repositories: string[]
+    comments: string[]
+}
+
 type Cookie = {
     name: string
     value: string
 }
 
 type ClientPageProps = {
-    packages: Package[]
+    list: 'whitelist' | 'blacklist'
+    packages: APIPackage[]
 }

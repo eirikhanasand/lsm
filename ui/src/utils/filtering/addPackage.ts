@@ -3,10 +3,10 @@ import postPackage from "./postPackage"
 
 type AddPackageProps = {
     newPackage: Package
-    setPackages: (value: SetStateAction<Package[]>) => void
+    setPackages: (value: SetStateAction<APIPackage[]>) => void
     setShowForm: (value: SetStateAction<boolean>) => void
     setNewPackage: (value: SetStateAction<Package>) => void
-    packages: Package[]
+    packages: APIPackage[]
     list: 'whitelist' | 'blacklist'
 }
 
@@ -23,7 +23,13 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
         return
     }
 
-    setPackages([...packages, { ...newPackage }])
+    setPackages([...packages, { 
+        name: newPackage.name,
+        versions: [newPackage.version],
+        ecosystems: [newPackage.ecosystem],
+        repositories: newPackage.repository !== null ? [newPackage.repository] : [],
+        comments: [newPackage.comment]
+    }])
     setShowForm(false)
     setNewPackage({ name: "", version: "", ecosystem: "", comment: "", repository: null })
 }

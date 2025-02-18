@@ -2,9 +2,10 @@
 import addPackage from "@/utils/filtering/addPackage"
 import removePackage from "@/utils/filtering/removePackage"
 import { useState } from "react"
+import Trash from "./svg/trash"
 
-export default function ClientPage({packages: serverPackages}: ClientPageProps) {
-    const [packages, setPackages] = useState<Package[]>([...serverPackages])
+export default function AddPage({list, packages: serverPackages}: ClientPageProps) {
+    const [packages, setPackages] = useState<APIPackage[]>([...serverPackages])
     const [showForm, setShowForm] = useState(false)
     const formStyle = "w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
     const [newPackage, setNewPackage] = useState<Package>({
@@ -17,8 +18,8 @@ export default function ClientPage({packages: serverPackages}: ClientPageProps) 
 
     return (
         <main className="flex min-h-full flex-col items-center justify-center p-6">
-            <h1 className="text-3xl font-bold text-blue-600">Blacklisted Packages</h1>
-            <p className="mt-2 text-foreground">Manage the list of unsafe packages.</p>
+            <h1 className="text-3xl font-bold text-blue-600">{list === 'whitelist' ? "Whitelisted" : "Blacklisted"} Packages</h1>
+            <p className="mt-2 text-foreground">Manage the list of {list === 'whitelist' ? "safe" : "dangerous"} packages.</p>
 
             {!showForm && (
                 <button
@@ -61,14 +62,14 @@ export default function ClientPage({packages: serverPackages}: ClientPageProps) 
                         className={formStyle}
                     />
                     <textarea
-                        placeholder="Comment / Reasoning"
+                        placeholder="Reason"
                         value={newPackage.comment}
                         onChange={(e) => setNewPackage({ ...newPackage, comment: e.target.value })}
                         className={formStyle}
                     />
                     <div className="mt-4 flex justify-between">
                         <button 
-                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list:'blacklist'})}
+                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list:'whitelist'})}
                             className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600"
                         >
                             Add
@@ -82,18 +83,21 @@ export default function ClientPage({packages: serverPackages}: ClientPageProps) 
 
             <ul className="mt-6 w-96">
                 {packages.length === 0 ? (
-                    <p className="text-gray-500 text-center">No blacklisted packages yet.</p>
+                    <p className="text-foreground text-center">No {list === 'whitelist' ? "whitelisted" : "blacklisted"} packages yet.</p>
                 ) : (
-                    packages.map((pkg) => (
-                        <li key={pkg.name} className="flex flex-col bg-background p-4 my-2 rounded-md shadow-sm border border-dark">
-                            <div className="text-lg font-semibold text-foreground">{pkg.name} ({pkg.version})</div>
-                            <div className="text-sm text-gray-500">{pkg.ecosystem}</div>
-                            <div className="text-sm text-gray-600 italic mt-1">&quot;{pkg.comment}&quot;</div>
+                    packages.map((pkg: APIPackage) => (
+                        <li key={pkg.name} className="flex flex-col bg-background p-4 my-2 rounded-md shadow-sm border border-blue-500">
+                            <div className="text-lg text-foreground flex justify-between">
+                                <h1 className="text-sm text-foreground font-semibold">{pkg.name} ({pkg.versions})</h1>
+                                <h1 className="text-sm text-foreground">{Array.isArray(pkg.repositories) && pkg.repositories.length ? pkg.repositories : "Global"}</h1>
+                            </div>
+                            <h1 className="text-sm text-foreground">{pkg.ecosystems}</h1>
+                            <h1 className="text-sm text-shallow italic mt-1">{Array.isArray(pkg.repositories) && pkg.repositories.length ? `"${pkg.comments}"` : ""}</h1>
                             <button
-                                onClick={() => removePackage({setPackages, packages, newPackage, list:'blacklist'})}
-                                className="mt-2 text-red-500 hover:underline self-end"
+                                onClick={() => removePackage({name: pkg.name, setPackages, packages, list})}
+                                className="h-[20px] w-[20px] self-end"
                             >
-                                Remove
+                                <Trash fill="fill-shallow hover:fill-red-500" className="w-full h-full" />
                             </button>
                         </li>
                     ))
