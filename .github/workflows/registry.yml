@@ -203,8 +203,6 @@ jobs:
         # gem install actionpack -v 5.2.0
     - name: test_gradle
       run: |
-        set -e  # Exit on error
-        
         mkdir -p gradle/src/main/kotlin
         mkdir -p .gradle
 
@@ -393,8 +391,6 @@ jobs:
 
     - name: test_maven
       run: |
-        set -e  # Exit on error
-        
         # Create project structure
         mkdir -p maven/src/main/java
         
@@ -518,8 +514,6 @@ jobs:
 
     - name: test_maven_dangerous
       run: |
-        set -e  # Exit on error
-        
         # Create project structure
         mkdir -p maven/src/main/java
         
