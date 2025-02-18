@@ -938,30 +938,6 @@ jobs:
           exit 0
         fi
 
-    # - name: test_sbt
-    #   run: |
-    #     JFROG_ID=$JFROG_ID DEPENDENCY=org.apache.mina:mina-core:2.2.4 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
-
-    # - name: test_sbt_dangerous
-    #   run: |
-    #     JFROG_ID=$JFROG_ID DEPENDENCY=org.apache.mina:mina-core:2.2.1 cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile
-
-    # - name: test_composer
-    #   run: |
-    #     cd ../tests/composer; chmod +x setup.sh; ./setup.sh
-
-    # - name: test_vcs
-    #   run: |
-    #     cd ../tests/vcs; chmod +x setup.sh; ./setup.sh
-
-    # - name: test_vcs_dangerous
-    #   run: |
-    #     cd ../tests/vcs; chmod +x setup-dangerous.sh; ./setup-dangerous.sh
-
-    # - name: test_chef
-    #   run: |
-    #     cd ../tests/chef; chmod +x setup.sh; ./setup.sh
-
     - name: test_generic
       run: |
         if curl --fail 'https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/github/Alamofire'; then
