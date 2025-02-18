@@ -21,13 +21,6 @@ const repositories = [
         "rclass": "virtual",
         "repoLayoutRef": "maven-2-default"
     },
-    {
-        "key": "sbt",
-        "packageType": "sbt",
-        "includesPattern": "**/*",
-        "rclass": "virtual",
-        "repoLayoutRef": "sbt-default"
-    },
 
     // local
     {
@@ -172,15 +165,6 @@ const repositories = [
         "repoLayoutRef": "simple-default",
         "url": "https://github.com/",
         "gitRegistryUrl": "https://registry.bower.io",
-    },
-    {
-        "key": "composer",
-        "packageType": "composer",
-        "includesPattern": "**/*",
-        "rclass": "remote",
-        "repoLayoutRef": "composer-default",
-        "url": "https://github.com/",
-        "gitRegistryUrl": "https://packagist.org",
     },
     {
         "key": "chef",

@@ -389,7 +389,7 @@ jobs:
         }
 
 
-    - name: test_maven
+    - name: test_maven_sbt
       run: |
         # Create project structure
         mkdir -p maven/src/main/java
@@ -512,7 +512,7 @@ jobs:
           fi
         }
 
-    - name: test_maven_dangerous
+    - name: test_maven_sbt_dangerous
       run: |
         # Create project structure
         mkdir -p maven/src/main/java
