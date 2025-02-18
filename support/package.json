@@ -11,7 +11,7 @@
     "test-ansible": "dotenv -e '../.env' -- bash -c 'cd ../tests/ansible; chmod +x setup.sh; ./setup.sh'",
     "test-sbt": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.4 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
     "test-sbt-dangerous": "cross-env JFROG_ID=trials9g9m1 DEPENDENCY=org.apache.mina:mina-core:2.2.1 powershell -Command \"cd ../tests/sbt; sbt --no-share --batch --color=always clean update compile\"",
-    "test-composer": "dotenv -e '../.env' -- bash -c 'cd ../tests/composer; chmod +x setup.sh; ./setup.sh'",
+    "test-composer": "dotenv -e '../.env' -- bash -c 'cd ../tests/composer; chmod +x setup.sh; ./setup.sh'"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
