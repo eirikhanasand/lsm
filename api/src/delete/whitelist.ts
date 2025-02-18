@@ -4,7 +4,7 @@ import { runInTransaction } from "../db.js"
 export default async function whitelistDeleteHandler(req: FastifyRequest, res: FastifyReply) {
     const { name } = req.params as { name: string }
     if (!name) {
-      return res.status(400).send({ error: "Missing name parameter." })
+        return res.status(400).send({ error: "Missing name parameter." })
     }
 
     try {

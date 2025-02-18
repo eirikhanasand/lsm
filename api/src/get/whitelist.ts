@@ -37,8 +37,8 @@ export async function whitelistHandler(req: FastifyRequest, res: FastifyReply) {
              FROM whitelist w
              LEFT JOIN whitelist_versions wv ON w.name = wv.name
              LEFT JOIN whitelist_ecosystems we ON w.name = we.name
-             WHERE w.name = $1 AND wv.version = $2 AND we.ecosystem = $3;`,
-            [name, version, ecosystem]
+             WHERE w.name = $1 AND wv.version = $2 AND we.ecosystem = $3;
+            `, [name, version, ecosystem]
         )
 
         if (result.rows.length === 0) {

@@ -2,11 +2,11 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import { runInTransaction } from "../db.js"
 
 type BlacklistUpdateBody = {
-  name: string
-  oldVersion: string
-  newVersion: string
-  ecosystem: string
-  comment: string
+    name: string
+    oldVersion: string
+    newVersion: string
+    ecosystem: string
+    comment: string
 }
 
 export default async function blacklistPutHandler(req: FastifyRequest, res: FastifyReply) {

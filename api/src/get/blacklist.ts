@@ -36,8 +36,8 @@ export async function blacklistHandler(req: FastifyRequest, res: FastifyReply) {
              FROM blacklist b
              LEFT JOIN blacklist_versions bv ON b.name = bv.name
              LEFT JOIN blacklist_ecosystems be ON b.name = be.name
-             WHERE b.name = $1 AND bv.version = $2 AND be.ecosystem = $3;`,
-            [name, version, ecosystem]
+             WHERE b.name = $1 AND bv.version = $2 AND be.ecosystem = $3;
+            `, [name, version, ecosystem]
         )
 
         if (result.rows.length === 0) {
