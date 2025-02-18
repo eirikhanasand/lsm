@@ -3,12 +3,13 @@
 @config '../../tailwind.config.ts';
 
 @theme {
-  --color-dark: #f8f8f8;
-  --color-normal: #e0e0e0;
-  --color-light: #d6d6d6;
-  --color-extralight: #c4c4c4;
-  --color-superlight: #b0b0b0;
-  --color-bright: black;
+  --color-dark: none;
+  --color-normal: none;
+  --color-light: none;
+  --color-extralight: none;
+  --color-superlight: none;
+  --color-bright: none;
+  --color-shallow: none;
 }
 
 @utility noscroll {
@@ -38,6 +39,7 @@
   --color-extralight: #323232;
   --color-superlight: #424242;
   --color-bright: white;
+  --color-shallow: gray;
 }
 
 .light {
@@ -49,6 +51,7 @@
   --color-extralight: #c4c4c4;
   --color-superlight: #b0b0b0;
   --color-bright: black;
+  --color-shallow: rgb(116, 116, 116);
 }
 
 body {
