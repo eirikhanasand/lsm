@@ -17,6 +17,8 @@ if [[ -f ".composer/config.json" ]]; then
   rm .composer/config.json
 fi
 
+mkdir -p .composer
+
 # Composer Auth
 cat > .composer/auth.json <<EOL
 {
@@ -39,8 +41,20 @@ cat > .composer/config.json <<EOL
     ]
 }
 
+EOL
+
+cat > composer.json <<EOL
+{
+    "name": "test-project/jfrog-test",
+    "description": "A test project to validate Composer and JFrog Artifactory integration",
+    "require": {
+        "monolog/monolog": "^2.0"
+    }
+}
 
 EOL
+
+
 
 brew install php
 
@@ -53,3 +67,5 @@ chmod +x /usr/local/bin/composer
 
 # Installs composer.json dependencies to test the configuration
 composer install --prefer-dist
+
+rm -r .composer vendor composer.lock composer.json
