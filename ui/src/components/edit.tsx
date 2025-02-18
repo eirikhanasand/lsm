@@ -13,8 +13,14 @@ export default function Edit({pkg, setEditing}: EditProps) {
     const [comments, setComments] = useState(pkg.comments)
 
     return (
-        <div className="w-full h-full absolute left-0 top-0 grid place-items-center bg-black/80" onClick={() => setEditing(false)}>
-            <div className="grid w-[35vw] h-[45vh] bg-dark rounded-lg p-8 overflow-auto noscroll">
+        <div 
+            className="w-full h-full absolute left-0 top-0 grid place-items-center bg-black/80"
+            onClick={() => setEditing(false)}
+        >
+            <div 
+                className="grid w-[35vw] h-[45vh] bg-dark rounded-lg p-8 overflow-auto noscroll"
+                onClick={(event) => event.stopPropagation()}
+            >
                 <h1 className="text-md text-center font-semibold mb-2">Editing package &quot;{pkg.name}&quot;</h1>
                 <div className="grid grid-cols-2">
                     <div className="w-[20px]">
@@ -26,28 +32,28 @@ export default function Edit({pkg, setEditing}: EditProps) {
                     <div className="w-full space-y-2">
                         <input
                             className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none caret-orange-500"
-                            value={versions}
+                            value={versions.join(',')}
                             type="text"
                             placeholder="Versions to whitelist"
                             onChange={(event) => setVersions(event.target.value.split(','))}
                         />
                         <input
                             className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none caret-orange-500"
-                            value={ecosystems}
+                            value={ecosystems.join(',')}
                             type="text"
                             placeholder="Versions to whitelist"
                             onChange={(event) => setEcosystems(event.target.value.split(','))}
                         />
                         <input
                             className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none caret-orange-500"
-                            value={repositories}
+                            value={repositories.join(',')}
                             type="text"
                             placeholder="Repositories affected"
                             onChange={(event) => setRepositories(event.target.value.split(','))}
                         />
                         <input
                             className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none caret-orange-500"
-                            value={comments}
+                            value={comments.join(',')}
                             type="text"
                             placeholder="Comment"
                             onChange={(event) => setComments(event.target.value.split(','))}
