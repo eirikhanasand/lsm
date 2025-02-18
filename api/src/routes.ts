@@ -24,8 +24,8 @@ export default async function apiRoutes(fastify: FastifyInstance, options: Fasti
     fastify.post("/blacklist", blacklistPostHandler)
 
     // PUT handlers 
-    fastify.put("/whitelist/:name/:oldVersion/:newVersion/:ecosystem", whitelistPutHandler)
-    fastify.put("/blacklist/:name/:oldVersion/:newVersion/:ecosystem", blacklistPutHandler)
+    fastify.put("/whitelist", whitelistPutHandler)
+    fastify.put("/blacklist", blacklistPutHandler)
 
     // DELETE handlers
     fastify.delete("/whitelist/:name", whitelistDeleteHandler)
