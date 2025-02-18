@@ -848,9 +848,29 @@ jobs:
           exit 0
         fi
 
-    # - name: test_ansible
-    #   run: |
-    #     echo "dotenv -e '../.env' -- bash -c 'cd ../tests/ansible; chmod +x setup.sh; ./setup.sh'"
+    - name: test_ansible
+      run: |
+        cat > test_proxy.yml <<EOL
+        ---
+        - name: Test Artifactory Proxy
+          hosts: localhost
+          tasks:
+            - name: Download a file via Artifactory proxy
+              ansible.builtin.get_url:
+                url: "https://{{ JFROG_EMAIL }}:{{ JFROG_TOKEN }}@{{ JFROG_ID }}.jfrog.io/artifactory/github/eirikhanasand/lsm/blob/main/README.md"
+                dest: ./README.md
+        EOL
+
+        # Runs the playbook with proxy settings
+        ansible-playbook test_proxy.yml -e "JFROG_ID=$JFROG_ID" -e "JFROG_EMAIL=$JFROG_EMAIL" -e "JFROG_TOKEN=$JFROG_TOKEN" 2>&1 | tee ansible.log || {
+          if grep -q "409" ansible.log; then
+            echo "409 success"
+          else
+            exit 1
+          fi
+        }
+
+        rm ansible.log test_proxy.yml
 
     - name: test_bower
       run: |
