@@ -1,5 +1,5 @@
-import run from "../db"
-import { FetchListProps } from "../interfaces"
+import run from "../db.js"
+import { FetchListProps } from "../interfaces.js"
 
 export default async function fetchBlackList({name, version, ecosystem, res}: FetchListProps) {
     console.log(`Fetching blacklist entry: name=${name}, version=${version}, ecosystem=${ecosystem}`)

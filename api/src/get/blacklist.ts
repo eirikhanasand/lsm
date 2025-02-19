@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
-import fetchBlackList from "../utils/fetchBlacklist"
+import fetchBlackList from "../utils/fetchBlacklist.js"
 
 export default async function blacklistIndexHandler(_: FastifyRequest, res: FastifyReply) {
     try {

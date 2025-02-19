@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
-import fetchWhiteList from "../utils/fetchWhitelist"
+import fetchWhiteList from "../utils/fetchWhitelist.js"
 
 export default async function whitelistIndexHandler(_: FastifyRequest, res: FastifyReply) {
     try {
