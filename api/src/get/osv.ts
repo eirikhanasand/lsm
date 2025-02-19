@@ -1,6 +1,14 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import versionAffected from "../../utils/version.js"
 import run from "../db.js"
+import fetchWhiteList from "../utils/fetchWhitelist.js"
+import fetchBlackList from "../utils/fetchBlacklist.js"
+
+type OSVResponse = {
+    filteredVulnerabilities: any[]
+    whitelist?: any[]
+    blacklist?: any[]
+}
 
 export default async function osvHandler(req: FastifyRequest, res: FastifyReply) {
     const { name, version, ecosystem } = req.params as OSVHandlerParams
@@ -26,8 +34,24 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
 
         const vulnerabilities = result.rows.map(row => row.data)
         const filteredVulnerabilities = vulnerabilities.filter(vuln => versionAffected(version, ecosystem, vuln))
+        if (!filteredVulnerabilities.length) {
+            return {}
+        }
+        
+        const response = {
+            filteredVulnerabilities
+        } as OSVResponse
 
-        return res.send(filteredVulnerabilities.length ? filteredVulnerabilities : {})
+        const whitelist = await fetchWhiteList({name, ecosystem, version})
+        const blacklist = await fetchBlackList({name, ecosystem, version})
+        if (whitelist.length) {
+            response['whitelist'] = whitelist
+        }
+        if (blacklist.length) {
+            response['blacklist'] = blacklist
+        }
+
+        return res.send(response)
     } catch (error) {
         console.error("Database error:", error)
         return res.status(500).send({ error: "Internal Server Error" })
