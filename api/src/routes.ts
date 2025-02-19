@@ -1,7 +1,7 @@
 import indexHandler from "./get/index.js"
 import osvHandler from "./get/osv.js"
-import whitelistIndexHandler, { whitelistHandler } from "./get/whitelist.js"
-import blacklistIndexHandler, { blacklistHandler } from "./get/blacklist.js"
+import whitelistIndexHandler, { whitelistHandler, whitelistByRepositoryHandler } from "./get/whitelist.js"
+import blacklistIndexHandler, { blacklistHandler, blacklistByRepositoryHandler } from "./get/blacklist.js"
 import whitelistPostHandler from "./post/whitelist.js"
 import blacklistPostHandler from "./post/blacklist.js"
 import whitelistPutHandler from "./put/whitelist.js"
@@ -18,6 +18,9 @@ export default async function apiRoutes(fastify: FastifyInstance, options: Fasti
     fastify.get("/blacklist", blacklistIndexHandler)
     fastify.get("/whitelist/:ecosystem/:name/:version", whitelistHandler)
     fastify.get("/blacklist/:ecosystem/:name/:version", blacklistHandler)
+    fastify.get("/whitelist/:repository", whitelistByRepositoryHandler)
+    fastify.get("/blacklist/:repository", blacklistByRepositoryHandler)
+    
 
     // POST handlers
     fastify.post("/whitelist", whitelistPostHandler)
