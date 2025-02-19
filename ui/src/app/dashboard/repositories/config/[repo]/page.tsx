@@ -7,8 +7,8 @@ export default async function RepoConfigPage({params}: {params: Promise<{ repo: 
     return (
         <main className="min-h-full w-full p-4">
             <div className="mb-4">
-                <Link href="/dashboard/repositories">
-                    <a className="text-blue-500 underline">← Back to Repositories</a>
+                <Link className="text-blue-500 underline" href="/dashboard/repositories">
+                    ← Back to Repositories
                 </Link>
             </div>
   
