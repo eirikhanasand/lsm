@@ -43,7 +43,7 @@ export default function Edit({pkg, setEditing, setPackages, packages, list}: Edi
                 className="grid w-[35vw] h-[45vh] bg-normal rounded-lg p-8 overflow-auto noscroll"
                 onClick={(event) => event.stopPropagation()}
             >
-                <div className="flex items-center justify-between px-4">
+                <div className="flex items-center justify-between">
                     <h1 className="text-md font-semibold flex-grow text-center">
                         Editing package &quot;{pkg.name}&quot;
                     </h1>
