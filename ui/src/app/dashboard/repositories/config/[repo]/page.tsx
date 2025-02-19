@@ -1,4 +1,3 @@
-import Link from "next/link"
 import fetchRepoConfig, { RepoWhitelistItem, RepoBlacklistItem } from "@/utils/fetchRepoConfig"
   
 export default async function RepoConfigPage({params}: {params: Promise<{ repo: string }>}){
@@ -6,12 +5,6 @@ export default async function RepoConfigPage({params}: {params: Promise<{ repo: 
     const { whitelist, blacklist } = await fetchRepoConfig(repo)
     return (
         <main className="min-h-full w-full p-4">
-            <div className="mb-4">
-                <Link className="text-blue-500 underline" href="/dashboard/repositories">
-                    ← Back to Repositories
-                </Link>
-            </div>
-  
             <h1 className="text-3xl font-bold mb-4">Repository Config: {repo}</h1>
   
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
