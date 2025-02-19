@@ -26,18 +26,9 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
             AND ecosystem = $2
             AND version_fixed = $3
         `, [name, ecosystem, version]);
-        
-
-        if (result.rows.length === 0) {
-            return res.status(404).send({})
-        }
 
         const vulnerabilities = result.rows.map(row => row.data)
         const filteredVulnerabilities = vulnerabilities.filter(vuln => versionAffected(version, ecosystem, vuln))
-        if (!filteredVulnerabilities.length) {
-            return {}
-        }
-        
         const response = {
             filteredVulnerabilities
         } as OSVResponse
@@ -49,6 +40,10 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
         }
         if (blacklist.length) {
             response['blacklist'] = blacklist
+        }
+
+        if ((result.rows.length === 0 || !filteredVulnerabilities.length) && (!('whitelist' in response) && !('blacklist' in response))) {
+            return res.send({})
         }
 
         return res.send(response)
