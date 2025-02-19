@@ -1,6 +1,6 @@
 import { JFROG_ID, JFROG_TOKEN } from "@constants"
 
-export default async function fetchRepositories() {
+export default async function fetchRepositories(): Promise<Repository[]> {
     try {
         const response = await fetch(`https://${JFROG_ID}.jfrog.io/artifactory/api/repositories`, {
             method: 'GET',
@@ -18,5 +18,6 @@ export default async function fetchRepositories() {
         return data
     } catch (error) {
         console.error(error)
+        return []
     }
 }

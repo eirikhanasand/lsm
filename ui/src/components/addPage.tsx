@@ -6,6 +6,7 @@ import Trash from "./svg/trash"
 import Pencil from "./svg/pencil"
 import Edit from "./edit"
 import "./addPage.css"
+import { ECOSYSTEMS } from "@parent/constants"
 
 type PackageProps = {
     pkg: APIPackage
@@ -14,7 +15,7 @@ type PackageProps = {
     packages: APIPackage[]
 }
 
-export default function AddPage({list, packages: serverPackages}: ClientPageProps) {
+export default function AddPage({list, packages: serverPackages, repositories}: ClientPageProps) {
     const [packages, setPackages] = useState<APIPackage[]>([...serverPackages])
     const [showForm, setShowForm] = useState(false)
     const formStyle = "w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
@@ -57,20 +58,30 @@ export default function AddPage({list, packages: serverPackages}: ClientPageProp
                         onChange={(e) => setNewPackage({ ...newPackage, version: e.target.value })}
                         className={formStyle}
                     />
-                    <input
-                        type="text"
-                        placeholder="Ecosystem (e.g., npm, pip, maven)"
-                        value={newPackage.ecosystem}
+                    <select
+                        value={newPackage.ecosystem || ""}
                         onChange={(e) => setNewPackage({ ...newPackage, ecosystem: e.target.value })}
-                        className={formStyle}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Artifactory Repository (or leave empty for all)"
+                        className= "select-repo w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">All Ecosystems</option>
+                        {ECOSYSTEMS.map((ecosystem: string) => (
+                            <option key={ecosystem} value={ecosystem}>
+                                {ecosystem}
+                            </option>
+                        ))}
+                    </select>
+                    <select
                         value={newPackage.repository || ""}
                         onChange={(e) => setNewPackage({ ...newPackage, repository: e.target.value })}
-                        className={formStyle}
-                    />
+                        className= "select-repo w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">All Repositories</option>
+                        {repositories.map((repo) => (
+                            <option key={`${repo.type}-${repo.key}`} value={repo.key}>
+                                [{repo.type}] {repo.key}
+                            </option>
+                        ))}
+                    </select>
                     <textarea
                         placeholder="Reason"
                         value={newPackage.comment}

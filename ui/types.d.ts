@@ -14,6 +14,14 @@ type APIPackage = {
     comments: string[]
 }
 
+type Repository = {
+    key: string
+    description: string
+    type: "LOCAL" | "REMOTE" | "VIRTUAL"
+    url: string
+    packageType: string
+}
+
 type Cookie = {
     name: string
     value: string
@@ -22,4 +30,36 @@ type Cookie = {
 type ClientPageProps = {
     list: 'whitelist' | 'blacklist'
     packages: APIPackage[]
+    repositories: Repository[]
 }
+
+type Ecosystem = 
+    "bower" | 
+    "cargo" |
+    "chef" |
+    "cocoapods" |
+    "composer" |
+    "conan" |
+    "cran" |
+    "debian" |
+    "docker" |
+    "gems" |
+    "gitlfs" |
+    "go" |
+    "gradle" |
+    "helm" |
+    "ivy" |
+    "maven" |
+    "nuget" |
+    "opkg" |
+    "p2" |
+    "pub" |
+    "puppet" |
+    "pypi" |
+    "rpm" |
+    "sbt" |
+    "swift" |
+    "terraform" |
+    "vagrant" |
+    "yum" |
+    "generic"

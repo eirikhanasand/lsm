@@ -6,3 +6,7 @@
 .pencil-icon:hover {
     fill: var(--color-bright);
 }
+
+.select-repo {
+    background: var(--background);
+}
