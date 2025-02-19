@@ -24,6 +24,12 @@ export default function Statistics() {
         lastScan: "2024-02-14",
     });
 
+    const [repositories, setRepositories] = useState([
+        { name: "Repo A", scanned: 120, vulnerabilities: 30, blocked: 10, safe: 80 },
+        { name: "Repo B", scanned: 200, vulnerabilities: 50, blocked: 20, safe: 130 },
+        { name: "Repo C", scanned: 180, vulnerabilities: 40, blocked: 15, safe: 125 },
+    ]);
+
     const [startDate, setStartDate] = useState("2024-02-10");
     const [endDate, setEndDate] = useState("2024-02-14");
 
