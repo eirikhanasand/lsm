@@ -43,7 +43,13 @@ export default function Edit({pkg, setEditing, setPackages, packages, list}: Edi
                 className="grid w-[35vw] h-[45vh] bg-dark rounded-lg p-8 overflow-auto noscroll"
                 onClick={(event) => event.stopPropagation()}
             >
-                <h1 className="text-md text-center font-semibold mb-2">Editing package &quot;{pkg.name}&quot;</h1>
+                <div className="flex items-center justify-between px-4">
+                    <h1 className="text-md font-semibold flex-grow text-center">
+                        Editing package &quot;{pkg.name}&quot;
+                    </h1>
+                    <h1 className="cursor-pointer">❌</h1>
+                </div>
+
                 <div className="flex">
                     <div className="w-[140px] max-w-[140px] space-y-2">
                         <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Versions</h1>

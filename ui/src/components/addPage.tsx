@@ -91,17 +91,19 @@ export default function AddPage({list, packages: serverPackages}: ClientPageProp
                 </div>
             )}
 
-            <ul className="mt-6 w-96">
+            <ul className="mt-6 w-full">
                 {packages.length === 0 ? (
                     <p className="text-foreground text-center">No {list === 'whitelist' ? "whitelisted" : "blacklisted"} packages yet.</p>
                 ) : (
-                    packages.map((pkg: APIPackage) => <Package 
-                        key={pkg.name}
-                        pkg={pkg}
-                        list={list}
-                        setPackages={setPackages}
-                        packages={packages}
-                    />)
+                    <div className="w-full grid grid-cols-3 gap-6">
+                        {packages.map((pkg: APIPackage) => <Package 
+                            key={pkg.name}
+                            pkg={pkg}
+                            list={list}
+                            setPackages={setPackages}
+                            packages={packages}
+                        />)}
+                    </div>
                 )}
             </ul>
         </main>
@@ -110,9 +112,8 @@ export default function AddPage({list, packages: serverPackages}: ClientPageProp
 
 function Package({pkg, setPackages, packages, list}: PackageProps) {
     const [editing, setEditing] = useState(false)
-
     return (
-        <li className="flex flex-col bg-background p-4 my-2 rounded-md shadow-sm border border-blue-500">
+        <li className="flex flex-col bg-background p-4 rounded-md shadow-sm border border-blue-500">
             {editing && <Edit 
                 pkg={pkg}
                 setEditing={setEditing}
@@ -130,7 +131,7 @@ function Package({pkg, setPackages, packages, list}: PackageProps) {
             </div>
             <h1 className="text-sm text-foreground">{pkg.ecosystems}</h1>
             <h1 className="text-sm text-shallow italic mt-1">
-                {Array.isArray(pkg.repositories) && pkg.repositories.length ? `"${pkg.comments}"` : ""}
+                {Array.isArray(pkg.comments) && pkg.comments.length ? `"${pkg.comments}"` : ""}
             </h1>
             <div className="self-end">
                 <button
