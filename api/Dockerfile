@@ -40,8 +40,5 @@ RUN echo '0 * * * * /bin/sh /app/update_osv.sh' >> /etc/crontabs/root
 # Exposes API port
 EXPOSE 8080
 
-# Downloads OSV
-RUN /app/update_osv.sh
-
 # Starts the update script and executes the entrypoint script
-CMD /app/entrypoint.sh
+CMD /bin/sh -c "bash /app/update_osv.sh && /app/entrypoint.sh"

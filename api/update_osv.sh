@@ -3,6 +3,8 @@
 export PGPASSWORD="osvpassword"
 PSQL="psql -h postgres -U osvuser -d osvdb -t -c"
 PSQL_MULTILINE="psql -h postgres -U osvuser -d osvdb -t"
+HEALTH_FILE="/tmp/health_status"
+echo "starting" > $HEALTH_FILE
 
 gsutil cp gs://osv-vulnerabilities/all.zip osv.zip
 mkdir -p osv
@@ -65,6 +67,5 @@ BEGIN;
 COMMIT;
 EOF
 
-rm -rf osv "$temp_file"
-
+echo "healthy" > $HEALTH_FILE
 echo "Database ready."
