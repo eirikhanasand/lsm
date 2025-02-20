@@ -53,8 +53,7 @@ UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
 );
 "
 
-$PSQL "
-\COPY vulnerabilities_new (name, package_name, ecosystem, version_introduced, version_fixed, data)
+$PSQL "\COPY vulnerabilities_new (name, package_name, ecosystem, version_introduced, version_fixed, data)
 FROM '$temp_file'
 WITH (FORMAT csv, DELIMITER ',', QUOTE '\"', ESCAPE '\"');
 "
