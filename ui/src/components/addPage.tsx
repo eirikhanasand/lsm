@@ -90,7 +90,7 @@ export default function AddPage({list, packages: serverPackages, repositories}: 
                     />
                     <div className="mt-4 flex justify-between">
                         <button 
-                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list:'whitelist'})}
+                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list})}
                             className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600"
                         >
                             Add
