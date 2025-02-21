@@ -5,7 +5,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Installs apk dependencies
-RUN apk add --no-cache python3 make g++ varnish postgresql-client jq py3-pip bash python3-dev gcc musl-dev
+RUN apk add --no-cache python3 make g++ varnish postgresql-client jq py3-pip bash python3-dev gcc musl-dev coreutils
 
 # Virtual environment for Python packages
 RUN python3 -m venv /opt/venv
