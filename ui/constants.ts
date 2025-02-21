@@ -34,6 +34,7 @@ export const ECOSYSTEMS = [
     "helm",
     "ivy",
     "maven",
+    "npm",
     "nuget",
     "opkg",
     "p2",
