@@ -50,6 +50,7 @@ type Ecosystem =
     "helm" |
     "ivy" |
     "maven" |
+    "npm" |
     "nuget" |
     "opkg" |
     "p2" |
