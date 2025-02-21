@@ -3,9 +3,7 @@ type GoogleStatus = {
     data: {
         whitelist?: any[]
         blacklist?: any[]
-        vulnerabilties: [
-            vulns: Vulnerability[]
-        ]
+        vulnerabilties: Vulnerability[]
     }
 }
 

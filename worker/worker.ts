@@ -210,7 +210,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         log('DOWNLOAD STOPPED: MALICIOUS', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
         if ('vulnerabilties' in osvData.data) {
             console.log('-----------------------------')
-            for (const vulnerability of osvData.data.vulnerabilties.vulns) {
+            for (const vulnerability of osvData.data.vulnerabilties) {
                 logDetails(vulnerability)
             }
         }
@@ -240,7 +240,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         if ('whitelist' in osvData.data && osvData.data.vulnerabilties.length) {
             if ('vulns' in osvData.data) {
                 console.log('-----------------------------')
-                for (const vulnerability of osvData.data.vulnerabilties[0].vulns) {
+                for (const vulnerability of osvData.data.vulnerabilties) {
                     logDetails(vulnerability)
                 }
             }
