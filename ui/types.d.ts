@@ -34,6 +34,8 @@ type ClientPageProps = {
 }
 
 type Ecosystem = 
+    "ansible" |
+    "alpine" |
     "bower" | 
     "cargo" |
     "chef" |
@@ -52,6 +54,7 @@ type Ecosystem =
     "maven" |
     "npm" |
     "nuget" |
+    "oci" |
     "opkg" |
     "p2" |
     "pub" |

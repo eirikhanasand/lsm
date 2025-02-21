@@ -17,7 +17,9 @@ export const JFROG_ID = ENV_JFROG_ID
 export const JFROG_TOKEN = ENV_JFROG_TOKEN
 export const API = ENV_API || 'http://localhost:8080/api'
 export const SERVER_API = "http://host.docker.internal:8080/api"
-export const ECOSYSTEMS = [    
+export const ECOSYSTEMS = [  
+    "ansible",
+    "alpine",
     "bower",
     "cargo",
     "chef",
@@ -36,6 +38,7 @@ export const ECOSYSTEMS = [
     "maven",
     "npm",
     "nuget",
+    "oci",
     "opkg",
     "p2",
     "pub",
