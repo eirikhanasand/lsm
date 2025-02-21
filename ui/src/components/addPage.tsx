@@ -102,11 +102,11 @@ export default function AddPage({list, packages: serverPackages, repositories}: 
                 </div>
             )}
 
-            <ul className="mt-6 w-full">
+            <div className="mt-6">
                 {packages.length === 0 ? (
                     <p className="text-foreground text-center">No {list === 'whitelist' ? "whitelisted" : "blacklisted"} packages yet.</p>
                 ) : (
-                    <div className="w-full grid grid-cols-3 gap-6">
+                    <ul className={`grid gap-6 justify-center`} style={{ gridTemplateColumns: `repeat(${Math.min(packages.length, 3)}, minmax(0, 1fr))` }}>
                         {packages.map((pkg: APIPackage) => <Package 
                             key={pkg.name}
                             pkg={pkg}
@@ -114,9 +114,9 @@ export default function AddPage({list, packages: serverPackages, repositories}: 
                             setPackages={setPackages}
                             packages={packages}
                         />)}
-                    </div>
+                    </ul>
                 )}
-            </ul>
+            </div>
         </main>
     )
 }
@@ -124,7 +124,7 @@ export default function AddPage({list, packages: serverPackages, repositories}: 
 function Package({pkg, setPackages, packages, list}: PackageProps) {
     const [editing, setEditing] = useState(false)
     return (
-        <li className="flex flex-col bg-background p-4 rounded-md shadow-sm border border-blue-500">
+        <li className="flex flex-col bg-background p-4 rounded-md shadow-sm border border-blue-500 min-w-100">
             {editing && <Edit 
                 pkg={pkg}
                 setEditing={setEditing}

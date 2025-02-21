@@ -24,7 +24,8 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
             SELECT * FROM vulnerabilities
             WHERE package_name = $1
             AND ecosystem = $2
-            AND version_fixed = $3
+            AND (COALESCE(string_to_array(version_introduced, '.')::int[], '{0}') <= string_to_array($3, '.')::int[] OR version_introduced IS NULL)
+            AND (COALESCE(string_to_array(version_fixed, '.')::int[], '{9999999}') >= string_to_array($3, '.')::int[] OR version_fixed IS NULL);
         `, [name, ecosystem, version]);
 
         const vulnerabilities = result.rows.map(row => row.data)

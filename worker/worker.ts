@@ -4,104 +4,28 @@ import { BeforeDownload } from './interfaces.js';
 
 const OSV_URL = "http://129.241.150.86:8080/api/osv"
 
-const GOtestData = {
+const NPMtestDataGood = {
     "repoPath": {
-      "key": "go",
-      "path": "github.com/mattermost/mattermost/@v/v10.3.1.info",
-      "id": "go:github.com/mattermost/mattermost/@v/v10.3.1.info"
+      "key": "npm",
+      "path": "@types/react/-/react-17.0.0.tgz",
+      "id": "npm:@types/react/-/react-17.0.0.tgz"
     },
     "originalRepoPath": {
-      "key": "go",
-      "path": "github.com/mattermost/mattermost/@v/v10.3.1.info",
-      "id": "go:github.com/mattermost/mattermost/@v/v10.3.1.info"
+      "key": "npm",
+      "path": "@types/react/-/react-17.0.0.tgz",
+      "id": "npm:@types/react/-/react-17.0.0.tgz"
     },
-    "name": "v10.3.1.info",
-    "ifModifiedSince": -1,
-    "clientAddress": "81.167.47.252",
-    "replaceHeadRequestWithGet": true,
-    "repoType": 2
-}
-
-const GRADLEtestData = {
-    "repoPath": {
-        "key": "java-cache",
-        "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
-        "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
-    },
-    "originalRepoPath": {
-        "key": "java-cache",
-        "path": "org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
-        "id": "java-cache:org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar"
-    },
-    "name": "kotlin-gradle-plugin-1.9.22-gradle82.jar",
-    "modificationTime": -1,
-    "lastModified": -1,
-    "ifModifiedSince": -1,
+    "name": "react-17.0.0.tgz",
     "servletContextUrl": "https://<id>.jfrog.io/artifactory",
-    "uri": "/artifactory/java-cache/org/jetbrains/kotlin/kotlin-gradle-plugin/1.9.22/kotlin-gradle-plugin-1.9.22-gradle82.jar",
-    "clientAddress": "127.0.0.1"
-}
-
-const RUBYtestData = {
-    "repoPath": {
-    "key": "ruby",
-    "path": "quick/Marshal.4.8/bundler-0.3.0.gemspec.rz",
-    "id": "ruby:quick/Marshal.4.8/bundler-0.3.0.gemspec.rz"
-    },
-    "originalRepoPath": {
-    "key": "ruby",
-    "path": "quick/Marshal.4.8/bundler-0.3.0.gemspec.rz",
-    "id": "ruby:quick/Marshal.4.8/bundler-0.3.0.gemspec.rz"
-    },
-    "name": "bundler-0.3.0.gemspec.rz",
-    "ifModifiedSince": -1,
-    "clientAddress": "129.241.236.195",
+    "uri": "/artifactory/npm/@types/react/-/react-17.0.0.tgz",
+    "clientAddress": "18.214.241.149",
     "repoType": 2
 }
-
-const CONDAtestData = {
-        "repoPath": {
-          "key": "conda",
-          "path": "win-64/pytz-2024.1-py312haa95532_0.conda",
-          "id": "conda:win-64/pytz-2024.1-py312haa95532_0.conda"
-        },
-        "originalRepoPath": {
-          "key": "conda",
-          "path": "win-64/pytz-2024.1-py312haa95532_0.conda",
-          "id": "conda:win-64/pytz-2024.1-py312haa95532_0.conda"
-        },
-        "name": "pytz-2024.1-py312haa95532_0.conda",
-        "ifModifiedSince": -1,
-        "clientAddress": "85.164.79.145",
-        "repoType": 2
-}
-
-const TERRAFORMtestData = {
-    "repoPath": {
-      "key": "terraform",
-      "path": "terraform-provider-aws/5.84.0/terraform-provider-aws_5.84.0_darwin_arm64.zip",
-      "id": "terraform:terraform-provider-aws/5.84.0/terraform-provider-aws_5.84.0_darwin_arm64.zip"
-    },
-    "originalRepoPath": {
-      "key": "terraform",
-      "path": "terraform-provider-aws/5.84.0/terraform-provider-aws_5.84.0_darwin_arm64.zip",
-      "id": "terraform:terraform-provider-aws/5.84.0/terraform-provider-aws_5.84.0_darwin_arm64.zip"
-    },
-    "name": "terraform-provider-aws_5.84.0_darwin_arm64.zip",
-    "ifModifiedSince": -1,
-    "clientAddress": "100.72.90.23",
-    "repoType": 2
-}
-
-// const metadata = GRADLEtestData
-// const metadata = GOtestData
-// const metadata = RUBYtestData
-// const metadata = CONDAtestData
-// const metadata = TERRAFORMtestData
 
 export default async function runWorker(context: PlatformContext, data: BeforeDownloadRequest): Promise<BeforeDownload> {
 
     const metadata = data.metadata
+    // const metadata = NPMtestDataGood
     let name: string | null = null
     let version: string | null = null
     let key: string = parseKey(metadata.repoPath.key)
@@ -268,10 +192,11 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         }
     }
 
-    const hashData = await checkHash(context, name, version, key)
-    if (hashData.status !== 200) {
-        prettyLog(['DOWNLOAD STOPPED: UNABLE TO FETCH', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`])
-        console.log(hashData)
+    const osvData = await fetchOSV(context, name, version, key)
+    console.log(osvData)
+    if (osvData.status !== 200) {
+        log('DOWNLOAD STOPPED: UNABLE TO FETCH OSV', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
+        console.log(osvData)
         return {
             status: DownloadStatus.DOWNLOAD_STOP,
             message: `DOWNLOAD STOPPED - Unable to fetch package info from OSV.`,
@@ -280,12 +205,12 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         }
     }
 
-    if ((hashData.data as any).length) {
+    if ((osvData.data as any).length) {
         // TITLE SECTION
-        prettyLog(['DOWNLOAD STOPPED: MALICIOUS', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`])
-        if ('vulns' in hashData.data) {
+        log('DOWNLOAD STOPPED: MALICIOUS', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
+        if ('vulnerabilties' in osvData.data) {
             console.log('-----------------------------')
-            for (const vulnerability of hashData.data.vulns) {
+            for (const vulnerability of osvData.data.vulnerabilties.vulns) {
                 logDetails(vulnerability)
             }
         }
@@ -296,25 +221,51 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             headers: {}
         }
     }
-
-    prettyLog(['DOWNLOAD CONTINUED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`])
     
-    if (JSON.stringify(hashData.data) !== '{}') {
-        console.log(hashData.data)
+    if (JSON.stringify(osvData.data) !== '{}') {
+        console.log("OSV data was not empty:")
+        console.log(osvData.data)
+
+        // Checking blacklist
+        if ('blacklist' in osvData.data) {
+            log('DOWNLOAD STOPPED: BLACKLISTED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
+            return {
+                status: DownloadStatus.DOWNLOAD_STOP,
+                message: `DOWNLOAD STOPPED: Blaclisted.`,
+                headers: {}
+            }
+        }
+
+        // Checking whitelist
+        if ('whitelist' in osvData.data && osvData.data.vulnerabilties.length) {
+            if ('vulns' in osvData.data) {
+                console.log('-----------------------------')
+                for (const vulnerability of osvData.data.vulnerabilties[0].vulns) {
+                    logDetails(vulnerability)
+                }
+            }
+            log('DOWNLOAD CONTINUED: MALICIOUS BUT WHITELISTED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
+            return {
+                status: DownloadStatus.DOWNLOAD_STOP,
+                // status: DownloadStatus.DOWNLOAD_PROCEED,
+                message: `DOWNLOAD CONTINUED: Malicious but whitelisted.`,
+                headers: {}
+            }
+        }
     }
     
+    log('DOWNLOAD CONTINUED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
     return {
         status: DownloadStatus.DOWNLOAD_STOP,
         // status: DownloadStatus.DOWNLOAD_PROCEED,
-        message: `DOWNLOAD CONTINUED: proceed with the download.`,
-        // @ts-ignore - Required field, doesnt exist locally but does exist remotely
+        message: `DOWNLOAD CONTINUED: Nothing observed.`,
         headers: {}
     }
 }
 
-async function checkHash(context: PlatformContext, name: string, version: string, ecosystem: string): Promise<GoogleStatus> {
+async function fetchOSV(context: PlatformContext, name: string, version: string, ecosystem: string): Promise<GoogleStatus> {
     try {
-        const response = await context.clients.axios.get(`${OSV_URL}/${ecosystem}/${name}/${version}/`) 
+        const response = await context.clients.axios.get(`${OSV_URL}/${ecosystem}/${name}/${version}`) 
         return {
             status: 200,
             data: response.data
@@ -346,7 +297,7 @@ function parseKey(key: string): string {
     return key
 }
 
-function prettyLog(logs: any[]): void {
+function log(...logs: any[]): void {
     for (const log of logs) {
         console.log(log)
     }
@@ -358,23 +309,23 @@ function logDetails(vulnerability: Vulnerability): void {
         console.log(`Severity ${vulnerability.database_specific.severity}`)
         for (const severity of vulnerability.severity) {
             if ('type' in severity && 'score' in severity) {
-                prettyLog([severity.type, severity.score, '-----------------------------'])
+                log(severity.type, severity.score, '-----------------------------')
             }
         }
-        prettyLog(["CWEs", vulnerability.database_specific.cwe_ids.join(', '), '-----------------------------'])
+        log("CWEs", vulnerability.database_specific.cwe_ids.join(', '), '-----------------------------')
     }
 
     // FIRST INFO SECTION
-    prettyLog([
+    log(
         `${vulnerability.id} - ${vulnerability.summary}`,
         `Published ${formatDate(vulnerability.published)}`,
         `Modified ${formatDate(vulnerability.modified)}`,
         '-----------------------------',
         ...vulnerability.details.split('\n')
-    ])
+    )
 
     if (vulnerability.aliases && vulnerability.aliases.length) {
-        prettyLog(["Aliases", ...vulnerability.aliases])
+        log("Aliases", ...vulnerability.aliases)
     }
 
     // VERSIONS SECTION
@@ -393,17 +344,17 @@ function logDetails(vulnerability: Vulnerability): void {
         console.log('-----------------------------')
         console.log("Specifics")
         for (const detail of vulnerability.database_specific["malicious-packages-origins"]) {
-            prettyLog([
+            log(
                 `SHA256: ${detail.sha256}`,
                 `Import time ${formatDate(detail.import_time)}`,
                 `Modified time ${formatDate(detail.modified_time)}`,
                 `Source: ${detail.source}`
-            ])
+            )
         }
     }
 
     if (vulnerability.references) {
-        prettyLog(["References", ...vulnerability.references])
+        log("References", ...vulnerability.references)
     }
 }
 

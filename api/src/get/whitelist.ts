@@ -12,7 +12,6 @@ export default async function whitelistIndexHandler(_: FastifyRequest, res: Fast
             COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
             FROM whitelist w;
         `, [])
-        console.log("whitelist", result)
         if (result.rows.length === 0) {
             return res.send([])
         }

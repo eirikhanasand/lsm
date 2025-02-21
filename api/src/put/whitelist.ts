@@ -18,9 +18,7 @@ export default async function whitelistPutHandler(req: FastifyRequest, res: Fast
     }
 
     try {
-        console.log(
-            `Replacing whitelist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}, repository=${repository}`
-        )
+        console.log(`Replacing whitelist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}, repository=${repository}`)
 
         await runInTransaction(async (client) => {
             const checkExists = await client.query(

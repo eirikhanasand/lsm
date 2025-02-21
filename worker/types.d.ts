@@ -1,7 +1,11 @@
 type GoogleStatus = {
     status: number
     data: {
-        vulns: Vulnerability[]
+        whitelist?: any[]
+        blacklist?: any[]
+        vulnerabilties: [
+            vulns: Vulnerability[]
+        ]
     }
 }
 

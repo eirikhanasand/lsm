@@ -8,7 +8,7 @@ export default async function blacklistPostHandler(req: FastifyRequest, res: Fas
     }
 
     try {
-        console.log(`Adding to blacklist: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}`)
+        console.log(`Adding to blacklist: name=${name}, version=${version}, ecosystem=${ecosystem}, repository=${repository}, comment=${comment}`)
 
         await run(
             `INSERT INTO blacklist (name) 
