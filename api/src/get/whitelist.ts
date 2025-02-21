@@ -5,13 +5,14 @@ import fetchWhiteList from "../utils/fetchWhitelist.js"
 export default async function whitelistIndexHandler(_: FastifyRequest, res: FastifyReply) {
     try {
         const result = await run(`
-            SELECT b.name, 
-            COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = b.name), '{}'::TEXT[]) as versions, 
-            COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = b.name), '{}'::TEXT[]) as ecosystems, 
-            COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = b.name), '{}'::TEXT[]) as repositories,
-            COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = b.name), '{}'::TEXT[]) as comments
-            FROM whitelist b;
+            SELECT w.name, 
+            COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions, 
+            COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) as ecosystems, 
+            COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) as repositories,
+            COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
+            FROM whitelist w;
         `, [])
+        console.log("whitelist", result)
         if (result.rows.length === 0) {
             return res.send([])
         }
@@ -49,14 +50,14 @@ export async function whitelistByRepositoryHandler(req: FastifyRequest, res: Fas
     
         const result = await run(
             `
-            SELECT b.name,
-                COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = b.name), '{}'::TEXT[]) as versions,
-                COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = b.name), '{}'::TEXT[]) as ecosystems,
-                COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = b.name), '{}'::TEXT[]) as repositories,
-                COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = b.name), '{}'::TEXT[]) as comments
-            FROM whitelist b
-            JOIN whitelist_repositories br ON b.name = br.name
-            WHERE br.repository = $1;
+            SELECT w.name,
+                COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions,
+                COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) as ecosystems,
+                COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) as repositories,
+                COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
+            FROM whitelist w
+            JOIN whitelist_repositories wr ON w.name = wr.name
+            WHERE wr.repository = $1;
             `,
             [repository]
         )
