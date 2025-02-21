@@ -1,5 +1,4 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import versionAffected from "../../utils/version.js"
 import run from "../db.js"
 import fetchWhiteList from "../utils/fetchWhitelist.js"
 import fetchBlackList from "../utils/fetchBlacklist.js"
@@ -24,14 +23,25 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
             SELECT * FROM vulnerabilities
             WHERE package_name = $1
             AND ecosystem = $2
-            AND (COALESCE(string_to_array(version_introduced, '.')::int[], '{0}') <= string_to_array($3, '.')::int[] OR version_introduced IS NULL)
-            AND (COALESCE(string_to_array(version_fixed, '.')::int[], '{9999999}') >= string_to_array($3, '.')::int[] OR version_fixed IS NULL);
+            AND (
+                version_introduced = 'unknown' OR
+                (
+                    version_introduced ~ '^[0-9]+(\.[0-9]+)*$'
+                    AND string_to_array(version_introduced, '.')::int[] 
+                    <= string_to_array($3, '.')::int[]
+                )
+            )
+            AND (
+                version_fixed = 'unknown' OR
+                (
+                    version_fixed ~ '^[0-9]+(\.[0-9]+)*$'
+                    AND string_to_array(version_fixed, '.')::int[] 
+                    >= string_to_array($3, '.')::int[]
+                )
+            );
         `, [name, ecosystem, version]);
-
-        const vulnerabilities = result.rows.map(row => row.data)
-        const filteredVulnerabilities = vulnerabilities.filter(vuln => versionAffected(version, ecosystem, vuln))
         const response = {
-            vulnerabilties: filteredVulnerabilities
+            vulnerabilties: result.rows
         } as OSVResponse
 
         const whitelist = await fetchWhiteList({name, ecosystem, version})
@@ -43,7 +53,7 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
             response['blacklist'] = blacklist
         }
 
-        if ((result.rows.length === 0 || !filteredVulnerabilities.length) && (!('whitelist' in response) && !('blacklist' in response))) {
+        if ((result.rows.length === 0 || !result.rows.length) && (!('whitelist' in response) && !('blacklist' in response))) {
             return res.send({})
         }
 
