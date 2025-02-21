@@ -5,13 +5,13 @@ export default async function fetchBlackList({name, version, ecosystem, res}: Fe
     console.log(`Fetching blacklist entry: name=${name}, version=${version}, ecosystem=${ecosystem}`)
 
     const result = await run(
-        `SELECT w.name, wv.version, we.ecosystem 
-         FROM blacklist w
-         LEFT JOIN blacklist_versions wv ON w.name = wv.name
-         LEFT JOIN blacklist_ecosystems we ON w.name = we.name
-         LEFT JOIN blacklist_comments wc ON w.name = wc.name
-         LEFT JOIN blacklist_repositories wr ON w.name = wr.name
-         WHERE w.name = $1 AND wv.version = $2 AND we.ecosystem = $3;
+        `SELECT b.name, bv.version, be.ecosystem, bc.comment, br.repository
+         FROM blacklist b
+         LEFT JOIN blacklist_versions bv ON b.name = bv.name
+         LEFT JOIN blacklist_ecosystems be ON b.name = be.name
+         LEFT JOIN blacklist_comments bc ON b.name = bc.name
+         LEFT JOIN blacklist_repositories br ON b.name = br.name
+         WHERE b.name = $1 AND bv.version = $2 AND be.ecosystem = $3;
         `, [name, version, ecosystem]
     )
 
@@ -22,6 +22,6 @@ export default async function fetchBlackList({name, version, ecosystem, res}: Fe
     }
 
     return res 
-        ? res.send(result.rows[0])
-        : result.rows[0]
+        ? res.send(result.rows)
+        : result.rows
 }

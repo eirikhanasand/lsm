@@ -5,6 +5,6 @@ import AddPage from "@/components/addPage"
 export default async function page() {
     const list = 'whitelist'
     const packages = await getPackages({list, side: 'server'})
-    const repositories = await fetchRepositories () || []
+    const repositories = await fetchRepositories()
     return <AddPage list={list} packages={packages} repositories={repositories} />
 }

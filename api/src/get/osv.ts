@@ -5,7 +5,7 @@ import fetchWhiteList from "../utils/fetchWhitelist.js"
 import fetchBlackList from "../utils/fetchBlacklist.js"
 
 type OSVResponse = {
-    filteredVulnerabilities: any[]
+    vulnerabilties: any[]
     whitelist?: any[]
     blacklist?: any[]
 }
@@ -30,7 +30,7 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
         const vulnerabilities = result.rows.map(row => row.data)
         const filteredVulnerabilities = vulnerabilities.filter(vuln => versionAffected(version, ecosystem, vuln))
         const response = {
-            filteredVulnerabilities
+            vulnerabilties: filteredVulnerabilities
         } as OSVResponse
 
         const whitelist = await fetchWhiteList({name, ecosystem, version})

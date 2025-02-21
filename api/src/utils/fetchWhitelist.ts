@@ -5,7 +5,7 @@ export default async function fetchWhiteList({name, version, ecosystem, res}: Fe
     console.log(`Fetching whitelist entry: name=${name}, version=${version}, ecosystem=${ecosystem}`)
 
     const result = await run(
-        `SELECT w.name, wv.version, we.ecosystem 
+        `SELECT w.name, wv.version, we.ecosystem, wc.comment, wr.repository
          FROM whitelist w
          LEFT JOIN whitelist_versions wv ON w.name = wv.name
          LEFT JOIN whitelist_ecosystems we ON w.name = we.name
@@ -22,6 +22,6 @@ export default async function fetchWhiteList({name, version, ecosystem, res}: Fe
     }
 
     return res 
-        ? res.send(result.rows[0])
-        : result.rows[0]
+        ? res.send(result.rows)
+        : result.rows
 }
