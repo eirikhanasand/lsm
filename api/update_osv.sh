@@ -13,15 +13,15 @@ gsutil cp gs://osv-vulnerabilities/all.zip osv.zip
 mkdir -p osv
 
 download_time=$(date +%s%N)
-download_ms=$(( (download_time - start_time) / 1000000 ))
-echo "Downloaded osv.zip in ${download_ms} ms."
+download_s=$(( (download_time - start_time) / 1000000000 ))
+echo "Downloaded osv.zip in ${download_s}s."
 
 echo "Unzipping vulnerabilities archive..."
 unzip -o osv.zip -d osv > /dev/null
 rm osv.zip
 unzip_time=$(date +%s%N)
-unzip_ms=$(( (unzip_time - download_time) / 1000000 ))
-echo "Unzip complete in ${unzip_ms} ms."
+unzip_s=$(( (unzip_time - download_time) / 1000000000 ))
+echo "Unzip complete in ${unzip_s}s."
 
 echo "Preparing bulk insert using $(nproc) cores..."
 csv="vuln_data.csv"
@@ -45,8 +45,8 @@ find "$temp_dir" -name '*.csv' -exec cat {} + >> "$csv"
 rm -rf "$temp_dir"
 
 processing_time=$(date +%s%N)
-processing_ms=$(( (processing_time - unzip_time) / 1000000 ))
-echo "Processing json to csv complete in ${processing_ms} ms."
+processing_s=$(( (processing_time - unzip_time) / 1000000000 ))
+echo "Processing json to csv complete in ${processing_s}s."
 echo "Populating vulnerabilities..."
 
 $PSQL "SET work_mem = '1GB';"
@@ -80,10 +80,10 @@ COMMIT;
 EOF
 
 insert_time=$(date +%s%N)
-insert_ms=$(( (insert_time - processing_time) / 1000000 ))
-echo "Insert complete in ${insert_ms} ms."
+insert_s=$(( (insert_time - processing_time) / 1000000000 ))
+echo "Insert complete in ${insert_s}s."
 
 end_time=$(date +%s%N)
-duration_ms=$(( (end_time - start_time) / 1000000 ))
+duration_s=$(( (end_time - start_time) / 1000000000 ))
 echo "healthy" > $HEALTH_FILE
-echo "Database ready in ${duration_ms} ms."
+echo "Database ready in ${duration_s}s."
