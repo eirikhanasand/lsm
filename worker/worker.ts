@@ -231,7 +231,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
             log('DOWNLOAD STOPPED: BLACKLISTED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
             return {
                 status: DownloadStatus.DOWNLOAD_STOP,
-                message: `DOWNLOAD STOPPED: Blaclisted.`,
+                message: `DOWNLOAD STOPPED: Blacklisted.`,
                 headers: {}
             }
         }
