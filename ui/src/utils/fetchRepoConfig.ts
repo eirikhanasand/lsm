@@ -1,4 +1,5 @@
-// src/utils/fetchRepoConfig.ts
+import { SERVER_API } from "@parent/constants"
+
 export interface RepoWhitelistItem {
     name: string
     versions: string[]       
@@ -22,16 +23,14 @@ export interface RepoConfig {
     blacklist: RepoBlacklistItem[]
 }
 
-export default async function fetchRepoConfig(
-    repository: string
-): Promise<RepoConfig> {
+export default async function fetchRepoConfig(repository: string): Promise<RepoConfig> {
     try {
         const [whitelistRes, blacklistRes] = await Promise.all([
             fetch(
-                `http://localhost:8080/api/whitelist/${repository}`
+                `${SERVER_API}/whitelist/${repository}`
             ),
             fetch(
-                `http://localhost:8080/api/blacklist/${repository}`
+                `${SERVER_API}/blacklist/${repository}`
             ),
         ])
 

@@ -63,12 +63,12 @@ export async function blacklistByRepositoryHandler(req: FastifyRequest, res: Fas
                 SELECT 
                     b.name,
                     COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) as versions,
-                    '{}'::TEXT[] as ecosystems, -- Global rule (no specific ecosystem)
-                    '{}'::TEXT[] as repositories, -- Global rule (applies to all repos)
+                    '{}'::TEXT[] as ecosystems,
+                    '{}'::TEXT[] as repositories,
                     COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments
                 FROM blacklist b
-                LEFT JOIN blacklist_ecosystems be ON b.name = be.name
-                WHERE be.ecosystem IS NULL OR be.ecosystem = ''
+                LEFT JOIN blacklist_repositories br ON b.name = br.name
+                WHERE br.repository IS NULL OR br.repository = ''
             )
             SELECT * FROM repo_blacklist
             UNION ALL

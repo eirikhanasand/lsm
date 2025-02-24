@@ -64,12 +64,12 @@ export async function whitelistByRepositoryHandler(req: FastifyRequest, res: Fas
                 SELECT 
                     w.name,
                     COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions,
-                    '{}'::TEXT[] as ecosystems, -- Global rule (no specific ecosystem)
-                    '{}'::TEXT[] as repositories, -- Global rule (applies to all repos)
+                    '{}'::TEXT[] as ecosystems,
+                    '{}'::TEXT[] as repositories,
                     COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
                 FROM whitelist w
-                LEFT JOIN whitelist_ecosystems we ON w.name = we.name
-                WHERE we.ecosystem IS NULL OR we.ecosystem = ''
+                LEFT JOIN whitelist_repositories wr ON w.name = wr.name
+                WHERE wr.repository IS NULL OR wr.repository = ''
             )
             SELECT * FROM repo_whitelist
             UNION ALL

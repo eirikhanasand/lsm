@@ -33,6 +33,29 @@ type ClientPageProps = {
     repositories: Repository[]
 }
 
+type RepoWhitelistItem = {
+    name: string
+    versions: string[]       
+    ecosystems: string[]  
+    repositories: string[]  
+    comments: string[] 
+    isGlobal?: boolean 
+}
+
+type RepoBlacklistItem = {
+    name: string
+    versions: string[]      
+    ecosystems: string[]    
+    repositories: string[]  
+    comments: string[]     
+    isGlobal?: boolean  
+}
+
+type RepoConfig = {
+    whitelist: RepoWhitelistItem[]
+    blacklist: RepoBlacklistItem[]
+}
+
 type Ecosystem = 
     "ansible" |
     "alpine" |
