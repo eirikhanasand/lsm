@@ -9,6 +9,11 @@ sub vcl_recv {
     if (req.http.Cookie) {
         set req.http.X-Theme = regsub(req.http.Cookie, ".*theme=([^;]+);?.*", "\1");
     }
+
+    if (req.url ~ "^/dashboard/(whitelist|blacklist)$") {
+        return (pass);
+    }
+
     return (hash);
 }
 
