@@ -4,7 +4,8 @@ export interface RepoWhitelistItem {
     versions: string[]       
     ecosystems: string[]  
     repositories: string[]  
-    comments: string[]  
+    comments: string[] 
+    isGlobal?: boolean 
 }
 
 export interface RepoBlacklistItem {
@@ -12,7 +13,8 @@ export interface RepoBlacklistItem {
     versions: string[]      
     ecosystems: string[]    
     repositories: string[]  
-    comments: string[]       
+    comments: string[]     
+    isGlobal?: boolean  
 }
 
 export interface RepoConfig {
@@ -42,11 +44,22 @@ export default async function fetchRepoConfig(
             throw new Error(`Error fetching blacklist: ${blacklistErrorText}`)
         }
 
-        const [whitelist, blacklist] = await Promise.all([
+        const [whitelistRaw, blacklistRaw] = await Promise.all([
             whitelistRes.json(),
-            blacklistRes.json(),
+            blacklistRes.json()
         ])
 
+        const whitelist = whitelistRaw.map((item: RepoWhitelistItem) => ({
+            ...item,
+            isGlobal: item.repositories.length === 0
+        }))
+
+        const blacklist = blacklistRaw.map((item: RepoBlacklistItem) => ({
+            ...item,
+            isGlobal: item.repositories.length === 0
+        }))
+
+        console.log(whitelist,blacklist)
         return { whitelist, blacklist }
     } catch (error) {
         console.error(`Error fetching repository config: ${error}`)

@@ -49,14 +49,31 @@ export async function whitelistByRepositoryHandler(req: FastifyRequest, res: Fas
     
         const result = await run(
             `
-            SELECT w.name,
-                COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions,
-                COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) as ecosystems,
-                COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) as repositories,
-                COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
-            FROM whitelist w
-            JOIN whitelist_repositories wr ON w.name = wr.name
-            WHERE wr.repository = $1;
+            WITH repo_whitelist AS (
+                SELECT 
+                    w.name,
+                    COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions,
+                    COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) as ecosystems,
+                    COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) as repositories,
+                    COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
+                FROM whitelist w
+                JOIN whitelist_repositories wr ON w.name = wr.name
+                WHERE wr.repository = $1
+            ),
+            global_whitelist AS (
+                SELECT 
+                    w.name,
+                    COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions,
+                    '{}'::TEXT[] as ecosystems, -- Global rule (no specific ecosystem)
+                    '{}'::TEXT[] as repositories, -- Global rule (applies to all repos)
+                    COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
+                FROM whitelist w
+                LEFT JOIN whitelist_ecosystems we ON w.name = we.name
+                WHERE we.ecosystem IS NULL OR we.ecosystem = ''
+            )
+            SELECT * FROM repo_whitelist
+            UNION ALL
+            SELECT * FROM global_whitelist;
             `,
             [repository]
         )

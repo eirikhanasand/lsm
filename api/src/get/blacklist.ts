@@ -48,14 +48,31 @@ export async function blacklistByRepositoryHandler(req: FastifyRequest, res: Fas
     
         const result = await run(
             `
-            SELECT b.name,
-                COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) as versions,
-                COALESCE((SELECT array_agg(ecosystem) FROM blacklist_ecosystems WHERE name = b.name), '{}'::TEXT[]) as ecosystems,
-                COALESCE((SELECT array_agg(repository) FROM blacklist_repositories WHERE name = b.name), '{}'::TEXT[]) as repositories,
-                COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments
-            FROM blacklist b
-            JOIN blacklist_repositories br ON b.name = br.name
-            WHERE br.repository = $1;
+            WITH repo_blacklist AS (
+                SELECT 
+                    b.name,
+                    COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) as versions,
+                    COALESCE((SELECT array_agg(ecosystem) FROM blacklist_ecosystems WHERE name = b.name), '{}'::TEXT[]) as ecosystems,
+                    COALESCE((SELECT array_agg(repository) FROM blacklist_repositories WHERE name = b.name), '{}'::TEXT[]) as repositories,
+                    COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments
+                FROM blacklist b
+                JOIN blacklist_repositories br ON b.name = br.name
+                WHERE br.repository = $1
+            ),
+            global_blacklist AS (
+                SELECT 
+                    b.name,
+                    COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) as versions,
+                    '{}'::TEXT[] as ecosystems, -- Global rule (no specific ecosystem)
+                    '{}'::TEXT[] as repositories, -- Global rule (applies to all repos)
+                    COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments
+                FROM blacklist b
+                LEFT JOIN blacklist_ecosystems be ON b.name = be.name
+                WHERE be.ecosystem IS NULL OR be.ecosystem = ''
+            )
+            SELECT * FROM repo_blacklist
+            UNION ALL
+            SELECT * FROM global_blacklist;
             `,
             [repository]
         )
