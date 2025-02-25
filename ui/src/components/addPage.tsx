@@ -15,10 +15,27 @@ type PackageProps = {
     packages: APIPackage[]
 }
 
-export default function AddPage({list, packages: serverPackages, repositories}: ClientPageProps) {
+function groupPackagesByEcosystem(packages: APIPackage[]) {
+    const grouped: Record<string, APIPackage[]> = {}
+
+    packages.forEach(pkg => {
+        const ecosystem = Array.isArray(pkg.ecosystems) ? pkg.ecosystems.join(", ") : (pkg.ecosystems || "Other")
+        
+        if (!grouped[ecosystem]) {
+            grouped[ecosystem] = []
+        }
+        grouped[ecosystem].push(pkg)
+    })
+
+    return grouped
+}
+
+
+export default function AddPage({ list, packages: serverPackages, repositories }: ClientPageProps) {
     const [packages, setPackages] = useState<APIPackage[]>([...serverPackages])
     const [showForm, setShowForm] = useState(false)
     const formStyle = "w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+    
     const [newPackage, setNewPackage] = useState<Package>({
         name: "",
         version: "",
@@ -27,10 +44,16 @@ export default function AddPage({list, packages: serverPackages, repositories}: 
         comment: "",
     })
 
+    const groupedPackages = groupPackagesByEcosystem(packages)
+
     return (
         <main className="flex min-h-full flex-col items-center justify-center p-6">
-            <h1 className="text-3xl font-bold text-blue-600">{list === 'whitelist' ? "Whitelisted" : "Blacklisted"} Packages</h1>
-            <p className="mt-2 text-foreground">Manage the list of {list === 'whitelist' ? "safe" : "dangerous"} packages.</p>
+            <h1 className="text-3xl font-bold text-blue-600">
+                {list === 'whitelist' ? "Whitelisted" : "Blacklisted"} Packages
+            </h1>
+            <p className="mt-2 text-foreground">
+                Manage the list of {list === 'whitelist' ? "safe" : "dangerous"} packages.
+            </p>
 
             {!showForm && (
                 <button
@@ -61,7 +84,7 @@ export default function AddPage({list, packages: serverPackages, repositories}: 
                     <select
                         value={newPackage.ecosystem || ""}
                         onChange={(e) => setNewPackage({ ...newPackage, ecosystem: e.target.value })}
-                        className= "select-repo w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className="select-repo w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">All Ecosystems</option>
                         {ECOSYSTEMS.map((ecosystem: string) => (
@@ -73,7 +96,7 @@ export default function AddPage({list, packages: serverPackages, repositories}: 
                     <select
                         value={newPackage.repository || ""}
                         onChange={(e) => setNewPackage({ ...newPackage, repository: e.target.value })}
-                        className= "select-repo w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        className="select-repo w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">All Repositories</option>
                         {repositories.map((repo) => (
@@ -90,39 +113,56 @@ export default function AddPage({list, packages: serverPackages, repositories}: 
                     />
                     <div className="mt-4 flex justify-between">
                         <button 
-                            onClick={() => addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list})}
+                            onClick={() => addPackage({ newPackage, setPackages, setShowForm, setNewPackage, packages, list })}
                             className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600"
                         >
                             Add
                         </button>
-                        <button onClick={() => setShowForm(false)} className="bg-red-500 px-4 py-2 rounded-md text-white hover:bg-red-600">
+                        <button 
+                            onClick={() => setShowForm(false)} 
+                            className="bg-red-500 px-4 py-2 rounded-md text-white hover:bg-red-600"
+                        >
                             Cancel
                         </button>
                     </div>
                 </div>
             )}
 
-            <div className="mt-6">
-                {packages.length === 0 ? (
-                    <p className="text-foreground text-center">No {list === 'whitelist' ? "whitelisted" : "blacklisted"} packages yet.</p>
+            <div className="mt-6 w-full">
+                {Object.keys(groupedPackages).length === 0 ? (
+                    <p className="text-foreground text-center">
+                        No {list === 'whitelist' ? "whitelisted" : "blacklisted"} packages yet.
+                    </p>
                 ) : (
-                    <ul className={`grid gap-6 justify-center`} style={{ gridTemplateColumns: `repeat(${Math.min(packages.length, 3)}, minmax(0, 1fr))` }}>
-                        {packages.map((pkg: APIPackage) => <Package 
-                            key={pkg.name}
-                            pkg={pkg}
-                            list={list}
-                            setPackages={setPackages}
-                            packages={packages}
-                        />)}
-                    </ul>
+                    Object.keys(groupedPackages).sort().map(ecosystem => (
+                        <div key={ecosystem} className="mb-6 w-full">
+                            <h2 className="text-xl font-bold text-blue-500">{ecosystem}</h2>
+                            <ul 
+                                className="grid gap-4 w-full" 
+                                style={{ 
+                                    display: "grid", 
+                                    gridTemplateColumns: "repeat(auto-fill, minmax(20%, 1fr))",
+                                    justifyContent: "start",
+                                    alignItems: "start",
+                                    gap: "1rem",
+                                    maxWidth: "100%",
+                                }}
+                            >
+                                {groupedPackages[ecosystem].map(pkg => (
+                                    <Package key={pkg.name} pkg={pkg} list={list} setPackages={setPackages} packages={packages} />
+                                ))}
+                            </ul>
+                        </div>
+                    ))
                 )}
             </div>
         </main>
     )
 }
 
-function Package({pkg, setPackages, packages, list}: PackageProps) {
+function Package({ pkg, setPackages, packages, list }: PackageProps) {
     const [editing, setEditing] = useState(false)
+
     return (
         <li className="flex flex-col bg-background p-4 rounded-md shadow-sm border border-blue-500 min-w-100">
             {editing && <Edit 
@@ -145,18 +185,11 @@ function Package({pkg, setPackages, packages, list}: PackageProps) {
                 {Array.isArray(pkg.comments) && pkg.comments.length ? `"${pkg.comments}"` : ""}
             </h1>
             <div className="self-end">
-                <button
-                    onClick={(() => setEditing(true))}
-                    // onClick={() => editPackage({pkg, setPackages, packages, list})}
-                    className="h-[20px] w-[20px] self-end"
-                >
-                    <Pencil
-                        fill="pencil-icon cursor-pointer" 
-                        className="pencil-icon max-w-[16px] max-h-[16px] mb-[1.7px]"
-                    />
+                <button onClick={() => setEditing(true)} className="h-[20px] w-[20px] self-end">
+                    <Pencil fill="pencil-icon cursor-pointer" className="pencil-icon max-w-[16px] max-h-[16px] mb-[1.7px]" />
                 </button>
-                <button
-                    onClick={() => removePackage({name: pkg.name, setPackages, packages, list})}
+                <button 
+                    onClick={() => removePackage({ name: pkg.name, setPackages, packages, list })}
                     className="h-[20px] w-[20px] self-end"
                 >
                     <Trash fill="fill-shallow hover:fill-red-500 cursor-pointer" className="w-full h-full" />
