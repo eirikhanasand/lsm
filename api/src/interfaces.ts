@@ -1,6 +1,6 @@
 import { FastifyReply } from "fastify"
 
-export type FetchListProps = {
+export interface FetchListProps {
     name: string
     version: string
     ecosystem: string
