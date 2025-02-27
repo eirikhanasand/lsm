@@ -6,6 +6,8 @@ export default async function RepoConfigPage({ params }: { params: Promise<{ rep
 
     const localWhitelist = whitelist.filter(item => !item.isGlobal)
     const globalWhitelist = whitelist.filter(item => item.isGlobal)
+    const localBlacklist = blacklist.filter(item => !item.isGlobal)
+    const globalBlacklist = blacklist.filter(item => item.isGlobal)
 
     return (
         <main className="min-h-full w-full p-4">
@@ -55,13 +57,36 @@ export default async function RepoConfigPage({ params }: { params: Promise<{ rep
                 <section>
                     <h2 className="text-2xl font-semibold mb-2">Blacklist</h2>
 
-                    {/* Display Blacklist as Before */}
-                    {blacklist.length === 0 ? (
-                        <p>No blacklisted items.</p>
+                    {/* Repository-Specific Blacklist */}
+                    <h3 className="text-xl font-medium mt-4">Repository-Specific Rules</h3>
+                    {localBlacklist.length === 0 ? (
+                        <p>No local blacklist rules.</p>
                     ) : (
                         <ul className="list-disc list-inside">
-                            {blacklist.map((item: RepoBlacklistItem) => (
-                                <li key={item.name}>{item.name}</li>
+                            {localBlacklist.map((item: RepoBlacklistItem) => (
+                                <li key={item.name}>
+                                    {item.name}{" "}
+                                    {item.versions.length > 0 && (
+                                        <span>(Versions: {item.versions.join(", ")})</span>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+
+                    {/* Global Blacklist */}
+                    <h3 className="text-xl font-medium mt-4">Global Rules</h3>
+                    {globalBlacklist.length === 0 ? (
+                        <p>No global blacklist rules.</p>
+                    ) : (
+                        <ul className="list-disc list-inside">
+                            {globalBlacklist.map((item: RepoBlacklistItem) => (
+                                <li key={item.name}>
+                                    {item.name}{" "}
+                                    {item.versions.length > 0 && (
+                                        <span>(Versions: {item.versions.join(", ")})</span>
+                                    )}
+                                </li>
                             ))}
                         </ul>
                     )}
