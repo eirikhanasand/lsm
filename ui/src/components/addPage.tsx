@@ -48,87 +48,177 @@ export default function AddPage({ list, packages: serverPackages, repositories }
     const formStyle = "w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
     
     return (
-        <main className="flex min-h-full flex-col items-center justify-center p-6">
+        <main className="relative flex min-h-full flex-col items-center justify-center p-6">
             <h1 className="text-3xl font-bold text-blue-600">
-                {list === 'whitelist' ? "Whitelisted" : "Blacklisted"} Packages
+                {list === "whitelist" ? "Whitelisted" : "Blacklisted"} Packages
             </h1>
             <p className="mt-2 text-foreground">
-                Manage the list of {list === 'whitelist' ? "safe" : "dangerous"} packages.
+               Manage the list of{" "}
+                {list === "whitelist" ? "safe" : "dangerous"} packages.
             </p>
-            
+
             <select
                 value={selectedEcosystem}
                 onChange={(e) => setSelectedEcosystem(e.target.value)}
                 className="select-repo w-1/8 mx-auto mt-2 p-1 border border-dark rounded text-sm text-foreground focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             >
                 <option value="">All Ecosystems</option>
-                {Object.keys(groupedPackages).sort().map(ecosystem => (
-                    <option key={ecosystem} value={ecosystem}>{ecosystem}</option>
-                ))}
+                {Object.keys(groupedPackages)
+                    .sort()
+                    .map((ecosystem) => (
+                        <option key={ecosystem} value={ecosystem}>
+                            {ecosystem}
+                        </option>
+                    ))}
             </select>
-            
-            {!showForm && (
-                <button
-                    onClick={() => setShowForm(true)}
-                    className="mt-4 rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600"
-                >
-                    + Add Package
-                </button>
-            )}
-            
+             
+            <button
+                onClick={() => {
+                    if (!showForm) {
+                        setShowForm(true)
+                    }
+                }}
+                disabled={showForm}
+                className={`mt-4 rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 
+                ${showForm ? "opacity-50 cursor-not-allowed" : ""}`}
+            >
+            + Add Package
+            </button>
+
             {showForm && (
-                <div className="mt-4 w-96 bg-background p-4 rounded-lg shadow-md border border-dark">
-                    <h2 className="text-lg font-semibold text-foreground">Add New Package</h2>
-                    <input type="text" placeholder="Package Name" value={newPackage.name} onChange={(e) => setNewPackage({ ...newPackage, name: e.target.value })} className={formStyle} />
-                    <input type="text" placeholder="Version" value={newPackage.version} onChange={(e) => setNewPackage({ ...newPackage, version: e.target.value })} className={formStyle} />
-                    <select
-                        value={newPackage.ecosystem || ""}
-                        onChange={(e) => setNewPackage({ ...newPackage, ecosystem: e.target.value })}
-                        className="select-repo w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                <div
+                    className="w-full h-full absolute left-0 top-0 grid place-items-center bg-black/80"
+                    onClick={() => setShowForm(false)}
+                >
+                    <div
+                        className="grid w-[35vw] bg-normal rounded-lg p-8 overflow-auto noscroll"
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        <option value="">All Ecosystems</option>
-                        {ECOSYSTEMS.map((ecosystem: string) => (
-                            <option key={ecosystem} value={ecosystem}>
-                                {ecosystem}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        value={newPackage.repository || ""}
-                        onChange={(e) => setNewPackage({ ...newPackage, repository: e.target.value })}
-                        className="select-repo w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-                    >
-                        <option value="">All Repositories</option>
-                        {repositories.map((repo) => (
-                            <option key={`${repo.type}-${repo.key}`} value={repo.key}>
+                        <h2 className="text-lg font-semibold text-foreground">
+                        Add New Package
+                        </h2>
+            
+                        <input
+                            type="text"
+                            placeholder="Package Name"
+                            value={newPackage.name}
+                            onChange={(e) =>
+                                setNewPackage({ ...newPackage, name: e.target.value })
+                            }
+                            className={`${formStyle} bg-[#333] text-white`}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Version"
+                            value={newPackage.version}
+                            onChange={(e) =>
+                                setNewPackage({ ...newPackage, version: e.target.value })
+                            }
+                            className={`${formStyle} bg-[#333] text-white`}
+                        />
+                        <select
+                            value={newPackage.ecosystem || ""}
+                            onChange={(e) =>
+                                setNewPackage({ ...newPackage, ecosystem: e.target.value })
+                            }
+                            className={`${formStyle} bg-[#333] text-white`}
+                        >
+                            <option className="bg-[#333] text-white" value="">All Ecosystems</option>
+                            {ECOSYSTEMS.map((ecosystem: string) => (
+                                <option key={ecosystem} value={ecosystem}>
+                                    {ecosystem}
+                                </option>
+                            ))}
+                        </select>
+                        <select
+                            value={newPackage.repository || ""}
+                            onChange={(e) =>
+                                setNewPackage({ ...newPackage, repository: e.target.value })
+                            }
+                            className={`${formStyle} bg-[#333] text-white`}
+                        >
+                            <option className="bg-[#333] text-white" value="">All Repositories</option>
+                            {repositories.map((repo) => (
+                                <option
+                                    key={`${repo.type}-${repo.key}`}
+                                    value={repo.key}
+                                >
                                 [{repo.type}] {repo.key}
-                            </option>
-                        ))}
-                    </select>
-                    <textarea placeholder="Reason" value={newPackage.comment} onChange={(e) => setNewPackage({ ...newPackage, comment: e.target.value })} className={formStyle} />
-                    <div className="mt-4 flex justify-between">
-                        <button onClick={() => addPackage({ newPackage, setPackages, setShowForm, setNewPackage, packages, list })} className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600">Add</button>
-                        <button onClick={() => setShowForm(false)} className="bg-red-500 px-4 py-2 rounded-md text-white hover:bg-red-600">Cancel</button>
+                                </option>
+                            ))}
+                        </select>
+                        <textarea
+                            placeholder="Reason"
+                            value={newPackage.comment}
+                            onChange={(e) =>
+                                setNewPackage({ ...newPackage, comment: e.target.value })
+                            }
+                            className={`${formStyle} bg-[#333] text-white h-32`} 
+                        />
+
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                onClick={() =>
+                                    addPackage({
+                                        newPackage,
+                                        setPackages,
+                                        setShowForm,
+                                        setNewPackage,
+                                        packages,
+                                        list,
+                                    })
+                                }
+                                className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600"
+                            >
+                            Add
+                            </button>
+                            <button
+                                onClick={() => setShowForm(false)}
+                                className="bg-red-500 px-4 py-2 rounded-md text-white hover:bg-red-600"
+                            >
+                            Cancel
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
-            
+
             <div className="mt-6 w-full">
                 {Object.keys(filteredPackages).length === 0 ? (
                     <p className="text-foreground text-center">
-                        No {list === 'whitelist' ? "whitelisted" : "blacklisted"} packages yet.
+                                   No {list === "whitelist" ? "whitelisted" : "blacklisted"} packages
+                                   yet.
                     </p>
                 ) : (
-                    Object.keys(filteredPackages).sort().map(ecosystem => (
-                        <div key={ecosystem} className="mb-6 w-full">
-                            <h2 className="text-xl font-bold text-blue-500">{ecosystem}</h2>
-                            <ul className="grid gap-4 w-full" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(20%, 1fr))", justifyContent: "start", alignItems: "start", gap: "1rem", maxWidth: "100%" }}>
-                                {filteredPackages[ecosystem].map(pkg => (
-                                    <Package key={pkg.name} pkg={pkg} list={list} setPackages={setPackages} packages={packages} />
-                                ))}
-                            </ul>
-                        </div>
-                    ))
+                    Object.keys(filteredPackages)
+                        .sort()
+                        .map((ecosystem) => (
+                            <div key={ecosystem} className="mb-6 w-full">
+                                <h2 className="text-xl font-bold text-blue-500">{ecosystem}</h2>
+                                <ul
+                                    className="grid gap-4 w-full"
+                                    style={{
+                                        display: "grid",
+                                        gridTemplateColumns:
+                                             "repeat(auto-fill, minmax(20%, 1fr))",
+                                        justifyContent: "start",
+                                        alignItems: "start",
+                                        gap: "1rem",
+                                        maxWidth: "100%",
+                                    }}
+                                >
+                                    {filteredPackages[ecosystem].map((pkg) => (
+                                        <Package
+                                            key={pkg.name}
+                                            pkg={pkg}
+                                            list={list}
+                                            setPackages={setPackages}
+                                            packages={packages}
+                                        />
+                                    ))}
+                                </ul>
+                            </div>
+                        ))
                 )}
             </div>
         </main>
