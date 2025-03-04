@@ -31,6 +31,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
     const [packages, setPackages] = useState<APIPackage[]>([...serverPackages])
     const [selectedEcosystem, setSelectedEcosystem] = useState<string>("")
     const [showForm, setShowForm] = useState(false)
+    const [searchTerm, setSearchTerm] = useState<string>("")
     const [newPackage, setNewPackage] = useState<Package>({
         name: "",
         version: "",
@@ -39,9 +40,15 @@ export default function AddPage({ list, packages: serverPackages, repositories }
         comment: "",
     })
     
-    const groupedPackages = groupPackagesByEcosystem(packages)
     
-    const filteredPackages = selectedEcosystem 
+    const searchFilteredPackages = packages.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
+  
+    const groupedPackages = groupPackagesByEcosystem(searchFilteredPackages)
+
+    const filteredPackages = selectedEcosystem
         ? { [selectedEcosystem]: groupedPackages[selectedEcosystem] || [] }
         : groupedPackages
     
@@ -71,7 +78,14 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                         </option>
                     ))}
             </select>
-             
+            <input
+                type="text"
+                placeholder="Search for a package..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="mt-4 p-2 border border-dark rounded ..."
+            />
+
             <button
                 onClick={() => {
                     if (!showForm) {
