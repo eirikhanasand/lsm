@@ -8,6 +8,7 @@ import whitelistPutHandler from "./put/whitelist.js"
 import blacklistPutHandler from "./put/blacklist.js"
 import whitelistDeleteHandler from "./delete/whitelist.js"
 import blacklistDeleteHandler from "./delete/blacklist.js"
+import { loginHandler, logoutHandler, loginCallbackHandler } from "./get/auth.js"
 import { FastifyInstance, FastifyPluginOptions } from "fastify"
 
 export default async function apiRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
@@ -20,7 +21,9 @@ export default async function apiRoutes(fastify: FastifyInstance, options: Fasti
     fastify.get("/blacklist/:ecosystem/:name/:version", blacklistHandler)
     fastify.get("/whitelist/:repository", whitelistByRepositoryHandler)
     fastify.get("/blacklist/:repository", blacklistByRepositoryHandler)
-    
+    fastify.get("/oauth2/login", loginHandler)
+    fastify.get("/oauth2/callback", loginCallbackHandler)
+    fastify.get("/oauth2/logout", logoutHandler)
 
     // POST handlers
     fastify.post("/whitelist", whitelistPostHandler)
@@ -34,4 +37,3 @@ export default async function apiRoutes(fastify: FastifyInstance, options: Fasti
     fastify.delete("/whitelist/:name", whitelistDeleteHandler)
     fastify.delete("/blacklist/:name", blacklistDeleteHandler)
 }
-

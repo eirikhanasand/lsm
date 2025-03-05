@@ -17,16 +17,19 @@ RUN /opt/venv/bin/pip install gsutil crcmod
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Starts varnish
-COPY default.vcl /etc/varnish/default.vcl
+COPY ./api/default.vcl /etc/varnish/default.vcl
 
 # Copy package.json first for caching
-COPY package*.json ./
+COPY ./api/package*.json ./
 
 # Installs node dependencies
 RUN npm install
 
 # Copies the rest of the API source code
-COPY . .
+COPY ./api .
+
+# Copies the env variables
+COPY ../.env .
 
 # Compiles the API
 RUN npm run build

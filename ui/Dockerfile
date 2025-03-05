@@ -23,7 +23,7 @@ RUN npm install
 COPY ./ui .
 
 # Copies env variables
-COPY .env ../.env
+COPY ../.env ../.env
 
 RUN npm run build
 

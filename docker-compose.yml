@@ -31,13 +31,11 @@ services:
   api:
     container_name: lsm_api
     build:
-      context: ./api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./api/Dockerfile
     depends_on:
       postgres:
         condition: service_healthy
-    environment:
-      - DATABASE_URL=postgresql://osvuser:osvpassword@lsm_database:5432/osvdb?sslmode=disable
     ports:
       - "8080:8080"
     healthcheck:

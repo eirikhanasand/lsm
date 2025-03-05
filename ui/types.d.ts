@@ -56,6 +56,16 @@ type RepoConfig = {
     blacklist: RepoBlacklistItem[]
 }
 
+type User = {
+    id: string
+    username: string
+    avatar: string
+    mfa_enabled: boolean
+    locale: string
+    email: string
+    verified: boolean
+}
+
 type Ecosystem = 
     "ansible" |
     "alpine" |
