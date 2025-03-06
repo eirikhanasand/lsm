@@ -5,3 +5,8 @@ type OSVHandlerParams = {
     repository: string
     comment: string
 }
+
+type StatisticHandlerParams = {
+    timestart: string
+    timeend: string
+}

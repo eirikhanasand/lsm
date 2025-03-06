@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 import fetchWhiteList from "../utils/fetchWhitelist.js"
 import fetchBlackList from "../utils/fetchBlacklist.js"
+import {processVulnerabilities} from "../utils/download.js";
 
 type OSVResponse = {
     vulnerabilties: any[]
@@ -56,6 +57,7 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
         if ((result.rows.length === 0 || !result.rows.length) && (!('whitelist' in response) && !('blacklist' in response))) {
             return res.send({})
         }
+        processVulnerabilities(response)
 
         return res.send(response)
     } catch (error) {
