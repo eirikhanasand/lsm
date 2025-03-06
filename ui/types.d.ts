@@ -57,12 +57,13 @@ type RepoConfig = {
 }
 
 type User = {
-    id: string
-    username: string
     avatar: string
-    mfa_enabled: boolean
-    locale: string
     email: string
+    id: string
+    locale: string
+    mfa_enabled: boolean
+    token: string
+    username: string
     verified: boolean
 }
 

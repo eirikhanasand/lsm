@@ -3,14 +3,16 @@ import "./globals.css"
 import Link from "next/link"
 import ThemeSwitch from "@/components/themeSwitch"
 import { cookies } from "next/headers"
-
+import Image from "next/image"
 export const metadata: Metadata = {
     title: "Library Safety Manager",
     description: "A plugin to manage library packages"
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-    const theme = (await cookies()).get('theme')?.value || 'dark'
+    const Cookies = await cookies()
+    const theme = Cookies.get('theme')?.value || 'dark'
+    const token = Cookies.get('token')?.value
 
     return (
         <html lang="en" className={theme}>
@@ -20,7 +22,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     <Link href="/dashboard" className="text-md grid place-items-center text-white">
                         Library Safety Manager
                     </Link>
-                    <ThemeSwitch />
+                    <nav className="flex justify-end">
+                        {token && <Link 
+                            href="/logout"
+                            className='relative w-[3.5vh] h-[3.5vh] self-center' 
+                        >
+                            <Image src="/logout.svg" alt="logo" fill={true} />
+                        </Link>}
+                        <ThemeSwitch />
+                    </nav>
                 </header>
                 <main className='h-[93.5vh] max-h-[93.5vh] overflow-auto w-full'>
                     {children}

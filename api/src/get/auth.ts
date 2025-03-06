@@ -40,9 +40,8 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
         })
         const userData = await userResponse.json()
         const { id, username, avatar, mfa_enabled, locale, email, verified } = userData as {[key: string]: string}
-        const token = btoa(JSON.stringify({id, username, avatar, mfa_enabled, locale, email, verified}))
+        const token = btoa(JSON.stringify({token: access_token, id, username, avatar, mfa_enabled, locale, email, verified}))
         res.redirect(`${FRONTEND_URL}/login?token=${token}`)
-        res.send({ id, username, avatar, mfa_enabled, locale, email, verified })
     } catch (error) {
         console.error(`Error during OAuth2 process: ${error}`)
         res.status(500).send({ error: "OAuth2 login failed" })

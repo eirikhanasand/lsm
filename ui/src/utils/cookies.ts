@@ -8,6 +8,10 @@ export function getCookie(name: string): string | null {
 export function setCookie(name: string, value: string, days?: number) {
     let expires = ""
 
+    if (!value) {
+        return
+    }
+
     if (days) {
         const date = new Date()
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000))
@@ -15,4 +19,14 @@ export function setCookie(name: string, value: string, days?: number) {
     }
 
     document.cookie = `${name}=${encodeURIComponent(value)}; ${expires} path=/; SameSite=Lax`
+}
+
+export function removeCookies(...cookies: string[]) {
+    for (const cookie of cookies) {
+        removeCookie(cookie)
+    }
+}
+
+export function removeCookie(name: string) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`
 }
