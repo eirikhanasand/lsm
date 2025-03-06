@@ -67,6 +67,38 @@ type User = {
     verified: boolean
 }
 
+type StatisticResponse = {
+    totalScanned: number
+    vulnerabilitiesFound: number
+    criticalBlocked: number
+    safeApproved: number
+    lastScan: string | null
+    repositoryStats: Statistics[]
+    vulnerabilitiesOverTime: Vulnerability[]
+}
+
+type Statistics = {
+    repository: string
+    ecosystem: string
+    scanned: number
+    vulnerabilities: number
+    blocked: number
+    safe: number
+}
+
+type Vulnerability = {
+    timestamp: string
+    severity: number
+    repository: string
+    ecosystem: string
+    reason: string
+}
+
+type GetStatisticProps = {
+    timeStart: string
+    timeEnd: string
+}
+
 type Ecosystem = 
     "ansible" |
     "alpine" |

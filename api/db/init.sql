@@ -100,6 +100,26 @@ CREATE TABLE IF NOT EXISTS vulnerabilities (
     CONSTRAINT unique_name_ecosystem_version UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
 );
 
+-- Creates downloaded events table
+CREATE TABLE IF NOT EXISTS download_events (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+    package_name VARCHAR(255) NOT NULL CHECK (LENGTH(package_name) > 0),
+    package_version VARCHAR(50) NOT NULL CHECK (LENGTH(package_version) > 0),
+    ecosystem VARCHAR(100) NOT NULL CHECK (LENGTH(ecosystem) > 0),
+    client_address INET NOT NULL,
+    repository VARCHAR(25) NOT NULL CHECK (LENGTH(repository) > 0),
+    status VARCHAR(10) NOT NULL CHECK (status IN ('passed', 'blocked')),
+    reason TEXT CHECK (LENGTH(reason) > 0),
+    CONSTRAINT unique_event UNIQUE (timestamp, package_name, package_version, client_address)
+);
+
+-- Indexes for downloaded packages
+CREATE INDEX idx_download_timestamp ON download_events (timestamp);
+CREATE INDEX idx_download_package_name ON download_events (package_name);
+CREATE INDEX idx_download_ecosystem ON download_events (ecosystem);
+CREATE INDEX idx_download_version ON download_events (package_version);
+
 -- Indexes for Vulnerability
 CREATE INDEX IF NOT EXISTS idx_name_ecosystem_version ON vulnerabilities (name, package_name, ecosystem, version_introduced, version_fixed);
 CREATE INDEX IF NOT EXISTS idx_package_name ON vulnerabilities (name, package_name);

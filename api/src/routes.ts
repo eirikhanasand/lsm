@@ -1,5 +1,6 @@
 import indexHandler from "./get/index.js"
 import osvHandler from "./get/osv.js"
+import packageStatsHandler from "./get/statistic.js";
 import whitelistIndexHandler, { whitelistHandler, whitelistByRepositoryHandler } from "./get/whitelist.js"
 import blacklistIndexHandler, { blacklistHandler, blacklistByRepositoryHandler } from "./get/blacklist.js"
 import whitelistPostHandler from "./post/whitelist.js"
@@ -11,7 +12,7 @@ import blacklistDeleteHandler from "./delete/blacklist.js"
 import { loginHandler, logoutHandler, loginCallbackHandler } from "./get/auth.js"
 import { FastifyInstance, FastifyPluginOptions } from "fastify"
 
-export default async function apiRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
+export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // GET handlers
     fastify.get("/", indexHandler)
     fastify.get("/osv/:ecosystem/:name/:version", osvHandler)
@@ -24,6 +25,7 @@ export default async function apiRoutes(fastify: FastifyInstance, options: Fasti
     fastify.get("/oauth2/login", loginHandler)
     fastify.get("/oauth2/callback", loginCallbackHandler)
     fastify.get("/oauth2/logout", logoutHandler)
+    fastify.get("/statistic/:timestart/:timeend", packageStatsHandler)
 
     // POST handlers
     fastify.post("/whitelist", whitelistPostHandler)
