@@ -1,7 +1,15 @@
-import { API } from "@parent/constants"
 import Link from "next/link"
+import { API } from "@parent/constants"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 
 export default async function Home() {
+    const Cookies = await cookies()
+    const token = Cookies.get('token')?.value
+    if (token) {
+        redirect('/dashboard')
+    }
+
     return (
         <main className="h-full grid place-items-center p-4">
             <div>
