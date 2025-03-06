@@ -4,6 +4,7 @@ export async function middleware(req: NextRequest) {
     const tokenCookie = req.cookies.get('token')
     if (!pathIsAllowedWhileUnauthenticated(req.nextUrl.pathname)) {
         if (!tokenCookie) {
+            console.log("redirecting to /, no cookie")
             return NextResponse.redirect(new URL('/', req.url))   
         }
         const token = tokenCookie.value
@@ -19,11 +20,11 @@ export async function middleware(req: NextRequest) {
 }
 
 function pathIsAllowedWhileUnauthenticated(path: string) {
-    if (path === '/') {
+    if (path === '/' || path === '/favicon.ico') {
         return true
     }
 
-    if (path.startsWith('/_next/static/chunks/')) {
+    if (path.startsWith('/_next/static/chunks/') || path.startsWith('/_next/static/css/')) {
         return true
     }
 
