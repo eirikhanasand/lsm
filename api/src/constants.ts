@@ -7,7 +7,7 @@ type ENV = {
     FRONTEND_URL: string
 }
 
-dotenv.config()
+dotenv.config({path: '../.env'})
 
 const { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL } = process.env as ENV
 if (!API || !CLIENT_ID || !CLIENT_SECRET || !FRONTEND_URL) {

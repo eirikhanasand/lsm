@@ -1,4 +1,3 @@
-import { useRouter } from "next/router"
 import { setCookie } from "../cookies"
 
 export default async function handleAuthResponse() {
@@ -20,8 +19,9 @@ export default async function handleAuthResponse() {
     setCookie('email', user.email)
     setCookie('verified', user.verified)
 
-    // Redirect user after authentication
-    const path = localStorage.getItem('redirect') || '/dashboard'
-    localStorage.removeItem('redirect')
+    // Redirects the user after authentication
+    // const path = localStorage.getItem('redirect') || '/dashboard'
+    // localStorage.removeItem('redirect')
+    const path = '/dashboard'
     window.location.href = path
 }

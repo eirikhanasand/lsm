@@ -29,7 +29,7 @@ RUN npm install
 COPY ./api .
 
 # Copies the env variables
-COPY ../.env .
+COPY ../.env ../.env
 
 # Compiles the API
 RUN npm run build
