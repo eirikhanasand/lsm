@@ -32,6 +32,8 @@ export default function AddPage({ list, packages: serverPackages, repositories }
     const [selectedEcosystem, setSelectedEcosystem] = useState<string>("")
     const [showForm, setShowForm] = useState(false)
     const [searchTerm, setSearchTerm] = useState<string>("")
+    const [selectedVersion, setSelectedVersion] = useState<string>("")
+    const [showGlobalOnly, setShowGlobalOnly] = useState<boolean>(false)
     const [newPackage, setNewPackage] = useState<Package>({
         name: "",
         version: "",
@@ -41,16 +43,39 @@ export default function AddPage({ list, packages: serverPackages, repositories }
     })
     
     
-    const searchFilteredPackages = packages.filter((p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    const allVersions = Array.from(
+        new Set(
+            packages
+                .flatMap((p) => (Array.isArray(p.versions) ? p.versions : []))
+                .filter(Boolean)
+        )
+    ).sort()
 
-  
-    const groupedPackages = groupPackagesByEcosystem(searchFilteredPackages)
+    const filtered = packages.filter((p) => {
+        const nameMatches = p.name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
 
-    const filteredPackages = selectedEcosystem
-        ? { [selectedEcosystem]: groupedPackages[selectedEcosystem] || [] }
-        : groupedPackages
+        const versionMatches =
+            !selectedVersion ||
+            (Array.isArray(p.versions) && p.versions.includes(selectedVersion))
+
+        const ecosystemMatches =
+            !selectedEcosystem ||
+            (Array.isArray(p.ecosystems) &&
+                p.ecosystems.includes(selectedEcosystem))
+
+        const isGlobal =
+                !p.repositories || (Array.isArray(p.repositories) && p.repositories.length === 0)
+        const isLocal = !isGlobal
+              
+              
+        const globalOrLocalMatch = showGlobalOnly ? isGlobal : isLocal
+
+        return nameMatches && versionMatches && ecosystemMatches && globalOrLocalMatch
+    })
+
+    const groupedPackages = groupPackagesByEcosystem(filtered)
     
     const formStyle = "w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
     
@@ -78,6 +103,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                         </option>
                     ))}
             </select>
+
             <input
                 type="text"
                 placeholder="Search for a package..."
@@ -86,6 +112,43 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                 className="mt-4 p-2 border border-dark rounded ..."
             />
 
+            <select
+                value={selectedVersion}
+                onChange={(e) => setSelectedVersion(e.target.value)}
+                className="select-version w-1/8 mx-auto mt-2 p-1 border border-dark rounded text-sm text-foreground focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            >
+                <option value="">All Versions</option>
+                {allVersions.map((version) => (
+                    <option key={version} value={version}>
+                        {version}
+                    </option>
+                ))}
+            </select>
+
+            <div className="flex items-center justify-center">
+                <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={showGlobalOnly}
+                        onChange={(e) => setShowGlobalOnly(e.target.checked)}
+                    />
+                    <div className="absolute inset-0 bg-gray-600 rounded-full" />
+
+                    <div
+                        className={`
+                            absolute top-0 left-0 h-full w-1/2 rounded-full
+                            bg-blue-500
+                            transform transition-transform duration-300 ease-in-out
+                            ${showGlobalOnly ? "translate-x-full" : "translate-x-0"}
+                        `}
+                    />
+                    <div className="relative grid grid-cols-2 place-items-center h-full w-full px-2 text-white text-sm font-medium gap-4">
+                        <div className="text-center">Local</div>
+                        <div className="text-center">Global</div>
+                    </div>
+                </label>
+            </div>
             <button
                 onClick={() => {
                     if (!showForm) {
@@ -198,13 +261,13 @@ export default function AddPage({ list, packages: serverPackages, repositories }
             )}
 
             <div className="mt-6 w-full">
-                {Object.keys(filteredPackages).length === 0 ? (
+                {Object.keys(groupedPackages).length === 0 ? (
                     <p className="text-foreground text-center">
                                    No {list === "whitelist" ? "whitelisted" : "blacklisted"} packages
                                    yet.
                     </p>
                 ) : (
-                    Object.keys(filteredPackages)
+                    Object.keys(groupedPackages)
                         .sort()
                         .map((ecosystem) => (
                             <div key={ecosystem} className="mb-6 w-full">
@@ -221,7 +284,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                                         maxWidth: "100%",
                                     }}
                                 >
-                                    {filteredPackages[ecosystem].map((pkg) => (
+                                    {groupedPackages[ecosystem].map((pkg) => (
                                         <Package
                                             key={pkg.name}
                                             pkg={pkg}
