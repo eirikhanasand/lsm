@@ -10,6 +10,8 @@
   --color-superlight: none;
   --color-bright: none;
   --color-shallow: none;
+  --color-shallow-light: none;
+  --color-shallow-dark: none;
 }
 
 @utility noscroll {
@@ -40,6 +42,8 @@
   --color-superlight: #424242;
   --color-bright: white;
   --color-shallow: gray;
+  --color-shallow-light: gray;
+  --color-shallow-dark: rgb(79, 78, 78);
 }
 
 .light {
@@ -52,6 +56,8 @@
   --color-superlight: #b0b0b0;
   --color-bright: black;
   --color-shallow: rgb(116, 116, 116);
+  --color-shallow-light: rgb(169, 215, 236);
+  --color-shallow-dark: rgb(118, 198, 235);
 }
 
 body {
