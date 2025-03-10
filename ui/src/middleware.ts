@@ -4,7 +4,6 @@ export async function middleware(req: NextRequest) {
     const tokenCookie = req.cookies.get('token')
     if (!pathIsAllowedWhileUnauthenticated(req.nextUrl.pathname)) {
         if (!tokenCookie) {
-            console.log("redirecting to /, no cookie")
             return NextResponse.redirect(new URL('/', req.url))   
         }
         const token = tokenCookie.value
