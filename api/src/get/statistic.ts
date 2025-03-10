@@ -1,6 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 
+type StatisticHandlerParams = {
+    timestart: string
+    timeend: string
+}
+
 type StatisticResponse = {
     totalScanned: number
     vulnerabilitiesFound: number
@@ -13,6 +18,9 @@ type StatisticResponse = {
 
 export default async function packageStatsHandler(req: FastifyRequest, res: FastifyReply) {
     const { timestart, timeend} = req.params as StatisticHandlerParams
+    if (!timestart || !timeend) {
+        return res.status(400).send({ error: "Missing start or end time." })
+    }
 
     const queryParams =  [timestart, timeend]
 
