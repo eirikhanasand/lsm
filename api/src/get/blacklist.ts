@@ -9,7 +9,25 @@ export default async function blacklistIndexHandler(_: FastifyRequest, res: Fast
             COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) as versions, 
             COALESCE((SELECT array_agg(ecosystem) FROM blacklist_ecosystems WHERE name = b.name), '{}'::TEXT[]) as ecosystems, 
             COALESCE((SELECT array_agg(repository) FROM blacklist_repositories WHERE name = b.name), '{}'::TEXT[]) as repositories, 
-            COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments 
+            COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments,
+            COALESCE((SELECT array_agg(author) FROM blacklist_authors WHERE name = b.name), '{}'::TEXT[]) as authors,
+            COALESCE((SELECT timestamp FROM blacklist_createdat WHERE name = w.name), NULL) as createdat,
+            COALESCE((SELECT createdby FROM blacklist_createdby WHERE name = w.name), '') as createdby,
+            COALESCE((SELECT timestamp FROM blacklist_updatedat WHERE name = w.name), NULL) as updatedat,
+            COALESCE((SELECT updatedby FROM blacklist_updatedby WHERE name = w.name), '') as updatedby,
+            COALESCE((
+                SELECT jsonb_agg(
+                    jsonb_build_object(
+                        'id', id,
+                        'name', name,
+                        'event', event,
+                        'author', author,
+                        'timestamp', timestamp
+                    )
+                )
+                FROM blacklist_changelog
+                WHERE name = w.name
+            ), '[]'::jsonb) as changeLog
             FROM blacklist b;
         `, [])
         if (result.rows.length === 0) {
@@ -54,7 +72,25 @@ export async function blacklistByRepositoryHandler(req: FastifyRequest, res: Fas
                     COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) as versions,
                     COALESCE((SELECT array_agg(ecosystem) FROM blacklist_ecosystems WHERE name = b.name), '{}'::TEXT[]) as ecosystems,
                     COALESCE((SELECT array_agg(repository) FROM blacklist_repositories WHERE name = b.name), '{}'::TEXT[]) as repositories,
-                    COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments
+                    COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments,
+                    COALESCE((SELECT array_agg(author) FROM blacklist_authors WHERE name = b.name), '{}'::TEXT[]) as authors,
+                    COALESCE((SELECT timestamp FROM blacklist_createdat WHERE name = w.name), NULL) as createdat,
+                    COALESCE((SELECT createdby FROM blacklist_createdby WHERE name = w.name), '') as createdby,
+                    COALESCE((SELECT timestamp FROM blacklist_updatedat WHERE name = w.name), NULL) as updatedat,
+                    COALESCE((SELECT updatedby FROM blacklist_updatedby WHERE name = w.name), '') as updatedby,
+                    COALESCE((
+                        SELECT jsonb_agg(
+                            jsonb_build_object(
+                                'id', id,
+                                'name', name,
+                                'event', event,
+                                'author', author,
+                                'timestamp', timestamp
+                            )
+                        )
+                        FROM blacklist_changelog
+                        WHERE name = w.name
+                    ), '[]'::jsonb) as changeLog
                 FROM blacklist b
                 JOIN blacklist_repositories br ON b.name = br.name
                 WHERE br.repository = $1
@@ -65,7 +101,26 @@ export async function blacklistByRepositoryHandler(req: FastifyRequest, res: Fas
                     COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) as versions,
                     '{}'::TEXT[] as ecosystems,
                     '{}'::TEXT[] as repositories,
-                    COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments
+                    COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) as comments,
+                    COALESCE((SELECT array_agg(author) FROM blacklist_authors WHERE name = b.name), '{}'::TEXT[]) as authors,
+                    COALESCE((SELECT array_agg(timestamp) FROM blacklist_createdat WHERE name = w.name), '{}'::TIMESTAMP) as createdat,
+                    COALESCE((SELECT timestamp FROM blacklist_createdat WHERE name = w.name), NULL) as createdat,
+                    COALESCE((SELECT createdby FROM blacklist_createdby WHERE name = w.name), '') as createdby,
+                    COALESCE((SELECT timestamp FROM blacklist_updatedat WHERE name = w.name), NULL) as updatedat,
+                    COALESCE((SELECT updatedby FROM blacklist_updatedby WHERE name = w.name), '') as updatedby,
+                    COALESCE((
+                        SELECT jsonb_agg(
+                            jsonb_build_object(
+                                'id', id,
+                                'name', name,
+                                'event', event,
+                                'author', author,
+                                'timestamp', timestamp
+                            )
+                        )
+                        FROM blacklist_changelog
+                        WHERE name = w.name
+                    ), '[]'::jsonb) as changeLog
                 FROM blacklist b
                 LEFT JOIN blacklist_repositories br ON b.name = br.name
                 WHERE br.repository IS NULL OR br.repository = ''

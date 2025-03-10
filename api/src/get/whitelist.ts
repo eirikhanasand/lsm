@@ -9,7 +9,25 @@ export default async function whitelistIndexHandler(_: FastifyRequest, res: Fast
             COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions, 
             COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) as ecosystems, 
             COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) as repositories,
-            COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
+            COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments,
+            COALESCE((SELECT array_agg(author) FROM whitelist_authors WHERE name = w.name), '{}'::TEXT[]) as authors,
+            COALESCE((SELECT timestamp FROM whitelist_createdat WHERE name = w.name), NULL) as createdat,
+            COALESCE((SELECT createdby FROM whitelist_createdby WHERE name = w.name), '') as createdby,
+            COALESCE((SELECT timestamp FROM whitelist_updatedat WHERE name = w.name), NULL) as updatedat,
+            COALESCE((SELECT updatedby FROM whitelist_updatedby WHERE name = w.name), '') as updatedby,
+            COALESCE((
+                SELECT jsonb_agg(
+                    jsonb_build_object(
+                        'id', id,
+                        'name', name,
+                        'event', event,
+                        'author', author,
+                        'timestamp', timestamp
+                    )
+                )
+                FROM whitelist_changelog
+                WHERE name = w.name
+            ), '[]'::jsonb) as changeLog
             FROM whitelist w;
         `, [])
         if (result.rows.length === 0) {
@@ -55,7 +73,25 @@ export async function whitelistByRepositoryHandler(req: FastifyRequest, res: Fas
                     COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions,
                     COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) as ecosystems,
                     COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) as repositories,
-                    COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
+                    COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments,
+                    COALESCE((SELECT array_agg(author) FROM whitelist_authors WHERE name = w.name), '{}'::TEXT[]) as authors,
+                    COALESCE((SELECT timestamp FROM whitelist_createdat WHERE name = w.name), NULL) as createdat,
+                    COALESCE((SELECT createdby FROM whitelist_createdby WHERE name = w.name), '') as createdby,
+                    COALESCE((SELECT timestamp FROM whitelist_updatedat WHERE name = w.name), NULL) as updatedat,
+                    COALESCE((SELECT updatedby FROM whitelist_updatedby WHERE name = w.name), '') as updatedby,
+                    COALESCE((
+                        SELECT jsonb_agg(
+                            jsonb_build_object(
+                                'id', id,
+                                'name', name,
+                                'event', event,
+                                'author', author,
+                                'timestamp', timestamp
+                            )
+                        )
+                        FROM whitelist_changelog
+                        WHERE name = w.name
+                    ), '[]'::jsonb) as changeLog
                 FROM whitelist w
                 JOIN whitelist_repositories wr ON w.name = wr.name
                 WHERE wr.repository = $1
@@ -66,7 +102,25 @@ export async function whitelistByRepositoryHandler(req: FastifyRequest, res: Fas
                     COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions,
                     '{}'::TEXT[] as ecosystems,
                     '{}'::TEXT[] as repositories,
-                    COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
+                    COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments,
+                    COALESCE((SELECT array_agg(author) FROM whitelist_authors WHERE name = w.name), '{}'::TEXT[]) as authors,
+                    COALESCE((SELECT timestamp FROM whitelist_createdat WHERE name = w.name), NULL) as createdat,
+                    COALESCE((SELECT createdby FROM whitelist_createdby WHERE name = w.name), '') as createdby,
+                    COALESCE((SELECT timestamp FROM whitelist_updatedat WHERE name = w.name), NULL) as updatedat,
+                    COALESCE((SELECT updatedby FROM whitelist_updatedby WHERE name = w.name), '') as updatedby,
+                    COALESCE((
+                        SELECT jsonb_agg(
+                            jsonb_build_object(
+                                'id', id,
+                                'name', name,
+                                'event', event,
+                                'author', author,
+                                'timestamp', timestamp
+                            )
+                        )
+                        FROM whitelist_changelog
+                        WHERE name = w.name
+                    ), '[]'::jsonb) as changeLog
                 FROM whitelist w
                 LEFT JOIN whitelist_repositories wr ON w.name = wr.name
                 WHERE wr.repository IS NULL OR wr.repository = ''

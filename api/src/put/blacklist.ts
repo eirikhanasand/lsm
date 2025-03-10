@@ -7,18 +7,19 @@ type BlacklistUpdateBody = {
     ecosystem: string
     comment: string
     repository: string
+    author: string
 }
 
 export default async function blacklistPutHandler(req: FastifyRequest, res: FastifyReply) {
-    const { ecosystem, name, version, comment, repository } = req.body as BlacklistUpdateBody
-    if (!ecosystem || !name || !version || !comment) {
+    const { ecosystem, name, version, comment, repository, author } = req.body as BlacklistUpdateBody
+    if (!ecosystem || !name || !version || !comment || !author) {
         return res
           .status(400)
-          .send({ error: "Missing name, oldVersion, newVersion, ecosystem, comment." })
+          .send({ error: "Missing name, oldVersion, newVersion, ecosystem, comment or author." })
     }
 
     try {
-        console.log(`Replacing blacklist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}, repository=${repository}`)
+        console.log(`Replacing blacklist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}, repository=${repository}, author=${author}`)
 
         await runInTransaction(async (client) => {
             const checkExists = await client.query(
@@ -63,6 +64,18 @@ export default async function blacklistPutHandler(req: FastifyRequest, res: Fast
                     SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM blacklist_repositories WHERE name = $1 AND repository = $2);
                 `,
                 [name, repository]
+            )
+
+            await client.query(`INSERT INTO blacklist_updatedat (name) VALUES ($1);`, [name])
+            await client.query(`INSERT INTO blacklist_updatedby (name) VALUES ($1);`, [name, author])
+            await client.query(
+                `INSERT INTO blacklist_changelog (event, name, author) VALUES ($1, $2, $3);`, 
+                [`Added ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} to the blacklist for ${repository ? repository : 'all repositories'} with comment ${comment}.`, name, author]
+            )
+
+            await client.query(
+                `INSERT INTO audit_log (event, author) VALUES ($1, $2);`, 
+                [`Updated ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} in the blacklist for ${repository ? repository : 'all repositories'} with comment ${comment}.`, author]
             )
         })
 

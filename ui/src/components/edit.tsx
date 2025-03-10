@@ -29,7 +29,13 @@ export default function Edit({pkg, setEditing, setPackages, packages, list}: Edi
                 versions,
                 ecosystems,
                 repositories,
-                comments
+                comments,
+                authors: pkg.authors,
+                createdAt: pkg.createdAt,
+                createdBy: pkg.createdBy,
+                updatedAt: pkg.updatedAt,
+                updatedBy: pkg.updatedBy,
+                changeLog: pkg.changeLog
             }, setPackages, packages, list})
         }
     }
@@ -56,6 +62,12 @@ export default function Edit({pkg, setEditing, setPackages, packages, list}: Edi
                         <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Ecosystems</h1>
                         <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Repositories</h1>
                         <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Comments</h1>
+                        <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Authors</h1>
+                        <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Created at</h1>
+                        <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Created by</h1>
+                        <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Updated at</h1>
+                        <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Updated by</h1>
+                        <h1 className="text-sm pt-2 p-1 pl-2 w-full h-[4vh]">Changelog</h1>
                     </div>
                     <div className="w-full space-y-2">
                         <input
@@ -86,6 +98,24 @@ export default function Edit({pkg, setEditing, setPackages, packages, list}: Edi
                             placeholder="Comment"
                             onChange={(event) => setComments(event.target.value.split(','))}
                         />
+                        <h1 className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none">
+                            {pkg.authors.join(',')}
+                        </h1>
+                        <h1 className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none">
+                            {pkg.createdAt}
+                        </h1>
+                        <h1 className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none">
+                            {pkg.createdBy}
+                        </h1>
+                        <h1 className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none">
+                            {pkg.updatedAt}
+                        </h1>
+                        <h1 className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none">
+                            {pkg.updatedBy}
+                        </h1>
+                        <h1 className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none">
+                            {pkg.changeLog.join(',')}
+                        </h1>
                     </div>
                 </div>
                 <button

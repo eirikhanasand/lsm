@@ -1,4 +1,5 @@
 "use client"
+import Section from "@/components/section"
 import { useState } from "react"
 
 export default function Settings() {
@@ -20,6 +21,7 @@ export default function Settings() {
                     className="w-full cursor-pointer"
                 />
             </div>
+            <Section text="Audit log" href="/dashboard/audit" />
         </main>
     )
 }

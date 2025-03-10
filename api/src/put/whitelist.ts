@@ -7,18 +7,19 @@ type WhitelistUpdateBody = {
     ecosystem: string
     comment: string
     repository: string
+    author: string
 }
 
 export default async function whitelistPutHandler(req: FastifyRequest, res: FastifyReply) {
-    const { ecosystem, name, version, comment, repository } = req.body as WhitelistUpdateBody
-    if (!ecosystem || !name || !version || !comment) {
+    const { ecosystem, name, version, comment, repository, author } = req.body as WhitelistUpdateBody
+    if (!ecosystem || !name || !version || !comment || !author) {
         return res
           .status(400)
           .send({ error: "Missing name, oldVersion, newVersion, ecosystem, comment." })
     }
 
     try {
-        console.log(`Replacing whitelist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}, repository=${repository}`)
+        console.log(`Replacing whitelist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}, repository=${repository}, author=${author}`)
 
         await runInTransaction(async (client) => {
             const checkExists = await client.query(
@@ -63,6 +64,18 @@ export default async function whitelistPutHandler(req: FastifyRequest, res: Fast
                     SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM whitelist_repositories WHERE name = $1 AND repository = $2);
                 `,
                 [name, repository]
+            )
+
+            await client.query(`INSERT INTO whitelist_updatedat (name) VALUES ($1);`, [name])
+            await client.query(`INSERT INTO whitelist_updatedby (name) VALUES ($1);`, [name, author])
+            await client.query(
+                `INSERT INTO whitelist_changelog (event, name, author) VALUES ($1, $2, $3);`, 
+                [`Added ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} to the whitelist for ${repository ? repository : 'all repositories'} with comment ${comment}.`, name, author]
+            )
+
+            await client.query(
+                `INSERT INTO audit_log (event, author) VALUES ($1, $2);`, 
+                [`Updated ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} in the whitelist for ${repository ? repository : 'all repositories'} with comment ${comment}.`, author]
             )
         })
 

@@ -1,12 +1,13 @@
 "use client"
 import addPackage from "@/utils/filtering/addPackage"
 import removePackage from "@/utils/filtering/removePackage"
-import { SetStateAction, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import Trash from "./svg/trash"
 import Pencil from "./svg/pencil"
 import Edit from "./edit"
 import "./addPage.css"
 import { ECOSYSTEMS } from "@parent/constants"
+import { getCookie } from "@/utils/cookies"
 
 type PackageProps = {
     pkg: APIPackage
@@ -34,14 +35,23 @@ export default function AddPage({ list, packages: serverPackages, repositories }
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [selectedVersion, setSelectedVersion] = useState<string>("")
     const [showGlobalOnly, setShowGlobalOnly] = useState<boolean>(false)
-    const [newPackage, setNewPackage] = useState<Package>({
+    const [author, setAuthor] = useState<string | null>(null)
+    const [newPackage, setNewPackage] = useState<AddPackage>({
         name: "",
         version: "",
         ecosystem: "",
         repository: null,
         comment: "",
+        author: ""
     })
-    
+
+    useEffect(() => {
+        const tempAuthor = getCookie('id')
+        if (tempAuthor) {
+            setAuthor(tempAuthor)
+            setNewPackage({...newPackage, author: tempAuthor})
+        }
+    }, [])
     
     const allVersions = Array.from(
         new Set(
@@ -243,6 +253,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                                         setNewPackage,
                                         packages,
                                         list,
+                                        author
                                     })
                                 }
                                 className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600"

@@ -14,7 +14,13 @@ export default async function editPackage({pkg, setPackages, packages, list}: Re
         ecosystem: pkg.ecosystems.join(','),
         version: pkg.versions.join(','),
         comment: pkg.comments.join(','),
-        repository: pkg.repositories.join(',')
+        repository: pkg.repositories.join(','),
+        author: pkg.authors.join(','),
+        createdAt: pkg.createdAt,
+        createdBy: pkg.createdBy,
+        updatedAt: pkg.updatedAt,
+        updatedBy: pkg.updatedBy,
+        changeLog: pkg.changeLog
     }})
 
     if (response === 500) {
