@@ -2,7 +2,7 @@ import { API } from "@constants"
 
 type PostListProps = {
     list: 'whitelist' | 'blacklist'
-    newPackage: Package
+    newPackage: AddPackage
 }
 
 export default async function postPackage({list, newPackage}: PostListProps) {
@@ -10,7 +10,7 @@ export default async function postPackage({list, newPackage}: PostListProps) {
         const response = await fetch(`${API}/${list}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({...newPackage})
         })

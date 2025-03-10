@@ -4,11 +4,7 @@ type OSVHandlerParams = {
     ecosystem: string
     repository: string
     comment: string
-}
-
-type StatisticHandlerParams = {
-    timestart: string
-    timeend: string
+    author: string
 }
 
 type Statistics = {
@@ -26,4 +22,10 @@ type Vulnerability = {
     repository: string
     ecosystem: string
     reason: string
+}
+
+type UserParams = {
+    id: string
+    name: string
+    image: string
 }

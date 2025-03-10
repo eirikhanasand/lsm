@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL } from "../constants.js"
+import run from "../db.js"
 
 export function loginHandler(_: FastifyRequest, res: FastifyReply) {
     const redirectUri = encodeURIComponent(`${API}/oauth2/callback`)
@@ -41,6 +42,12 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
         const userData = await userResponse.json()
         const { id, username, avatar, mfa_enabled, locale, email, verified } = userData as {[key: string]: string}
         const token = btoa(JSON.stringify({token: access_token, id, username, avatar, mfa_enabled, locale, email, verified}))
+        await run(
+            `INSERT INTO users (id, name, image)
+                SELECT $1, $2, $3
+                WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = $1);`, 
+            [id, username, avatar]
+        )
         res.redirect(`${FRONTEND_URL}/login?token=${token}`)
     } catch (error) {
         console.error(`Error during OAuth2 process: ${error}`)

@@ -4,6 +4,21 @@ type Package = {
     ecosystem: string
     repository: string | null
     comment: string
+    author: string
+    createdAt: string
+    createdBy: string
+    updatedAt: string
+    updatedBy: string
+    changeLog: ChangeLog[]
+}
+
+type AddPackage = {
+    name: string
+    version: string
+    ecosystem: string
+    repository: string | null
+    comment: string
+    author: string
 }
 
 type APIPackage = {
@@ -12,6 +27,12 @@ type APIPackage = {
     ecosystems: string[]
     repositories: string[]
     comments: string[]
+    authors: string[]
+    createdAt: string
+    createdBy: string
+    updatedAt: string
+    updatedBy: string
+    changeLog: ChangeLog[]
 }
 
 type Repository = {
@@ -97,6 +118,24 @@ type Vulnerability = {
 type GetStatisticProps = {
     timeStart: string
     timeEnd: string
+}
+
+type AuditProps = {
+    id: number
+    event: string
+    author: string
+    name: string
+    image: string
+    timestamp: string
+}
+
+type ChangeLog = {
+    name: string
+    event: string
+    author: string
+    timestamp: string
+    image: string
+    id: string
 }
 
 type Ecosystem = 
