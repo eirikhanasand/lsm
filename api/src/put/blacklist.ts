@@ -7,25 +7,22 @@ type BlacklistUpdateBody = {
     ecosystem: string
     comment: string
     repository: string
-    author: string
+    author: User
 }
 
 export default async function blacklistPutHandler(req: FastifyRequest, res: FastifyReply) {
     const { ecosystem, name, version, comment, repository, author } = req.body as BlacklistUpdateBody
-    if (!ecosystem || !name || !version || !comment || !author) {
+    if (!name || !comment || !author) {
         return res
           .status(400)
-          .send({ error: "Missing name, oldVersion, newVersion, ecosystem, comment or author." })
+          .send({ error: "Missing name, comment or author." })
     }
 
     try {
         console.log(`Replacing blacklist version: name=${name}, version=${version}, ecosystem=${ecosystem}, comment=${comment}, repository=${repository}, author=${author}`)
 
         await runInTransaction(async (client) => {
-            const checkExists = await client.query(
-                "SELECT name FROM blacklist WHERE name = $1;",
-                [name]
-            )
+            const checkExists = await client.query("SELECT name FROM blacklist WHERE name = $1;", [name])
             if (checkExists.rowCount === 0) {
                 throw new Error("blacklist entry not found.")
             }
@@ -66,17 +63,10 @@ export default async function blacklistPutHandler(req: FastifyRequest, res: Fast
                 [name, repository]
             )
 
-            await client.query(`INSERT INTO blacklist_updatedat (name) VALUES ($1);`, [name])
-            await client.query(`INSERT INTO blacklist_updatedby (name) VALUES ($1);`, [name, author])
-            await client.query(
-                `INSERT INTO blacklist_changelog (event, name, author) VALUES ($1, $2, $3);`, 
-                [`Added ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} to the blacklist for ${repository ? repository : 'all repositories'} with comment ${comment}.`, name, author]
-            )
-
-            await client.query(
-                `INSERT INTO audit_log (event, author) VALUES ($1, $2);`, 
-                [`Updated ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} in the blacklist for ${repository ? repository : 'all repositories'} with comment ${comment}.`, author]
-            )
+            await client.query(`INSERT INTO blacklist_updated (name, id) VALUES ($1, $2);`, [name, author.id])
+            const audit = `Added ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} to the blacklist for ${repository ? repository : 'all repositories'} with comment ${comment}.`
+            await client.query(`INSERT INTO blacklist_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
+            await client.query(`INSERT INTO audit_log (event, author) VALUES ($1, $2);`, [audit, author.id])
         })
 
         return res.send({ message: "blacklist entry updated successfully." })

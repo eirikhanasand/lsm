@@ -4,7 +4,7 @@ type OSVHandlerParams = {
     ecosystem: string
     repository: string
     comment: string
-    author: string
+    author: Author
 }
 
 type Statistics = {
@@ -28,4 +28,10 @@ type UserParams = {
     id: string
     name: string
     image: string
+}
+
+type User = {
+    id: string
+    name: string
+    avatar: string
 }

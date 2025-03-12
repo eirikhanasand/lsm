@@ -47,22 +47,14 @@ export default async function blacklistPostHandler(req: FastifyRequest, res: Fas
         await run(
             `INSERT INTO blacklist_authors (name, author) 
              SELECT $1, $2 WHERE NOT EXISTS (SELECT 1 FROM blacklist_authors WHERE name = $1 AND author = $2);`, 
-            [name, author]
+            [name, author.id]
         )
 
-        await run(`INSERT INTO blacklist_createdat (name) VALUES ($1);`, [name])
-        await run(`INSERT INTO blacklist_createdby (name, author) VALUES ($1, $2);`, [name, author])
-        await run(`INSERT INTO blacklist_updatedat (name) VALUES ($1);`, [name])
-        await run(`INSERT INTO blacklist_updatedby (name, author) VALUES ($1, $2);`, [name, author])
-        await run(
-            `INSERT INTO blacklist_changelog (event, author) VALUES ($1, $2, $3);`, 
-            [`Added ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} to the blacklist for ${repository ? repository : 'all repositories'} with comment ${comment}.`, name, author]
-        )
-
-        await run(
-            `INSERT INTO audit_log (event, author) VALUES ($1, $2);`, 
-            [`Added ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} to the blacklist for ${repository ? repository : 'all repositories'} with comment ${comment}.`, author]
-        )
+        await run(`INSERT INTO blacklist_created (name, id) VALUES ($1, $2);`, [name, author.id])
+        await run(`INSERT INTO blacklist_updated (name, id) VALUES ($1, $2);`, [name, author.id])
+        const audit = `Added ${name} version ${version} ${ecosystem ? `with ecosystem ${ecosystem}` : 'for all ecosystems'} to the blacklist for ${repository ? repository : 'all repositories'} with comment ${comment}.`
+        await run(`INSERT INTO blacklist_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
+        await run(`INSERT INTO audit_log (event, author) VALUES ($1, $2);`, [audit, author.id])
 
         return res.send({ message: "Added to blacklist successfully." })
     } catch (error) {
