@@ -10,7 +10,7 @@ type AuditResponse = {
 export default async function auditHandler(_: FastifyRequest, res: FastifyReply) {
     try {
         console.log(`Fetching audit log`)
-        const auditResult = await run(`SELECT id, event, author, timestamp FROM audit_log`, [])
+        const auditResult = await run(`SELECT id, event, author, timestamp FROM audit_log;`, [])
         const auditLog: AuditResponse[] = await Promise.all(auditResult.rows.map(async(row) => {
             const details = await getDetails(row.author)
             return {
