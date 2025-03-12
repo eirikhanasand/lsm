@@ -1,7 +1,7 @@
 "use client"
 import addPackage from "@/utils/filtering/addPackage"
 import removePackage from "@/utils/filtering/removePackage"
-import { SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import Trash from "./svg/trash"
 import Pencil from "./svg/pencil"
 import Edit from "./edit"
@@ -12,7 +12,15 @@ import { getCookie } from "@/utils/cookies"
 type PackageProps = {
     pkg: Package
     list: 'whitelist' | 'blacklist'
-    setPackages: (value: SetStateAction<Package[]>) => void
+    setPackages: Dispatch<SetStateAction<Package[]>>
+    packages: Package[]
+    author: Author
+}
+
+type PackagesProps = {
+    groupedPackages: Record<string, Package[]>
+    list: "whitelist" | "blacklist"
+    setPackages: Dispatch<SetStateAction<Package[]>>
     packages: Package[]
     author: Author
 }
@@ -166,7 +174,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                     />
                 </div>
             </div>
-            <div className="fixed w-full h-full grid place-items-end top-0 pointer-events-none">
+            <div className="fixed w-full h-full grid place-items-end top-0 pointer-events-none z-100">
                 <button
                     onClick={() => {
                         if (!showForm) {
@@ -174,8 +182,8 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                         }
                     }}
                     disabled={showForm}
-                    className={`relative rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 mr-6 mb-6 pointer-events-auto
-                    ${showForm ? "opacity-50 cursor-not-allowed" : ""}`}
+                    className={`relative rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 mr-6 mb-6 pointer-events-auto z-1000
+                    ${showForm ? "opacity-100 cursor-not-allowed" : ""}`}
                 >
                     + Add Package
                 </button>
@@ -183,7 +191,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
 
             {showForm && (
                 <div
-                    className="w-full h-full absolute left-0 top-0 grid place-items-center bg-black/80"
+                    className="w-full h-full absolute left-0 top-0 grid place-items-center bg-black/80 z-1000"
                     onClick={() => setShowForm(false)}
                 >
                     <div
@@ -287,39 +295,75 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                                    yet.
                     </p>
                 ) : (
-                    Object.keys(groupedPackages)
-                        .sort()
-                        .map((ecosystem) => (
-                            <div key={ecosystem} className="mb-6 w-full">
-                                <h2 className="text-xl font-bold text-blue-500">{ecosystem}</h2>
-                                <ul
-                                    className="grid gap-4 w-full"
-                                >
-                                    {groupedPackages[ecosystem].map((pkg) => (
-                                        <Package
-                                            key={pkg.name}
-                                            pkg={pkg}
-                                            list={list}
-                                            setPackages={setPackages}
-                                            packages={packages}
-                                            author={author}
-                                        />
-                                    ))}
-                                </ul>
-                            </div>
-                        ))
+                    <div>
+                        <PackageHeader />
+                        <Packages 
+                            groupedPackages={groupedPackages} 
+                            list={list}
+                            setPackages={setPackages}
+                            packages={packages}
+                            author={author}
+                        />
+                    </div>
                 )}
             </div>
         </main>
     )
 }
 
+function PackageHeader() {
+    return (
+        <div className="grid grid-cols-12 w-full h-8 rounded-lg px-4 items-center border border-blue-500">
+            <h1 className="col-span-2">Name</h1>
+            <h1>Ecosystem</h1>
+            <h1>Repository</h1>
+            <h1>Version</h1>
+            <div className="flex col-span-7 w-full">
+                <h1 className="w-103.5">Comment</h1>
+                <h1 className="w-44">Created</h1>
+                <h1 className="w-44">Updated</h1>
+                <h1 className="w-20">Revision</h1>
+            </div>
+        </div>
+    )
+}
+
+function Packages({groupedPackages, list, setPackages, packages, author}: PackagesProps) {
+    return Object.keys(groupedPackages)
+    .sort()
+    .map((ecosystem) => (
+        <div key={ecosystem} className="mb-6 w-full">
+            <h2 className="text-xl font-bold text-blue-500">{ecosystem}</h2>
+            <ul
+                className="grid gap-4 w-full"
+            >
+                {groupedPackages[ecosystem].map((pkg) => (
+                    <Package
+                        key={pkg.name}
+                        pkg={pkg}
+                        list={list}
+                        setPackages={setPackages}
+                        packages={packages}
+                        author={author}
+                    />
+                ))}
+            </ul>
+        </div>
+    ))
+}
 
 function Package({ pkg, setPackages, packages, list, author }: PackageProps) {
     const [editing, setEditing] = useState(false)
+    const [createdDate, setCreatedDate] = useState("")
+    const [updatedDate, setUpdatedDate] = useState("")
+
+    useEffect(() => {
+        setCreatedDate(new Date(pkg.created.time).toLocaleString())
+        setUpdatedDate(new Date(pkg.updated.time).toLocaleString())
+    }, [pkg])
 
     return (
-        <li className="flex flex-col bg-background p-4 rounded-md shadow-sm border border-blue-500 min-w-100">
+        <li className="relative grid grid-cols-12 bg-background p-4 rounded-md shadow-sm border border-blue-500 min-w-100">
             {editing && <Edit 
                 pkg={pkg}
                 setEditing={setEditing}
@@ -328,19 +372,31 @@ function Package({ pkg, setPackages, packages, list, author }: PackageProps) {
                 setPackages={setPackages}
                 author={author}
             />}
-            <div className="text-lg text-foreground flex justify-between">
-                <h1 className="text-sm text-foreground font-semibold">
-                    {pkg.name} ({pkg.versions.join(', ')})
+            <h1 className="text-sm text-foreground font-semibold text-wrap break-all col-span-2">
+                {pkg.name}
+            </h1>
+            <h1 className="text-sm text-foreground">
+                {Array.isArray(pkg.repositories) && pkg.repositories.length ? pkg.repositories : "Global"}
+            </h1>
+            <h1 className="text-sm text-foreground">{pkg.ecosystems}</h1>
+            <h1 className="text-sm text-foreground font-semibold">
+                {pkg.versions.join(', ')}
+            </h1>
+            <div className="flex col-span-7 gap-4">
+                <h1 className="text-sm text-shallow italic col-span-4 pr-2 w-100">
+                    {Array.isArray(pkg.comments) && pkg.comments.length ? `"${pkg.comments}"` : ""}
                 </h1>
-                <h1 className="text-sm text-foreground">
-                    {Array.isArray(pkg.repositories) && pkg.repositories.length ? pkg.repositories : "Global"}
+                <h1 className="text-sm text-shallow w-40">
+                    {createdDate}
+                </h1>
+                <h1 className="text-sm text-shallow w-40">
+                    {updatedDate}
+                </h1>
+                <h1 className="text-sm text-shallow w-20">
+                    {pkg.changeLog.length}
                 </h1>
             </div>
-            <h1 className="text-sm text-foreground">{pkg.ecosystems}</h1>
-            <h1 className="text-sm text-shallow italic mt-1">
-                {Array.isArray(pkg.comments) && pkg.comments.length ? `"${pkg.comments}"` : ""}
-            </h1>
-            <div className="self-end">
+            <div className="absolute right-4 mt-3.5">
                 <button onClick={() => setEditing(true)} className="h-[20px] w-[20px] self-end">
                     <Pencil fill="pencil-icon cursor-pointer" className="pencil-icon max-w-[16px] max-h-[16px] mb-[1.7px]" />
                 </button>
