@@ -4,12 +4,12 @@ import { getCookie } from "../cookies"
 
 type AddPackageProps = {
     newPackage: AddPackage
-    setPackages: (value: SetStateAction<APIPackage[]>) => void
+    setPackages: (value: SetStateAction<Package[]>) => void
     setShowForm: (value: SetStateAction<boolean>) => void
     setNewPackage: (value: SetStateAction<AddPackage>) => void
-    packages: APIPackage[]
+    packages: Package[]
     list: 'whitelist' | 'blacklist'
-    author: string | null
+    author: Author | null
 }
 
 export default async function addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list}: AddPackageProps) {
@@ -32,9 +32,9 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
     }
 
     const name = getCookie('user')
-    const author = getCookie('id')
-    const image = getCookie('avatar')
-    if (!name || !author || !image) {
+    const id = getCookie('id')
+    const avatar = getCookie('avatar')
+    if (!name || !id || !avatar) {
         alert('You`re not logged in. Redirecting to login.')
         // Should implement redirect back later
         return window.location.href = '/logout' 
@@ -46,17 +46,14 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
         ecosystems: [newPackage.ecosystem],
         repositories: newPackage.repository !== null ? [newPackage.repository] : [],
         comments: [newPackage.comment],
-        authors: [newPackage.author],
-        createdAt: new Date().toISOString(),
-        createdBy: newPackage.author,
-        updatedAt: new Date().toISOString(),
-        updatedBy: newPackage.author,
+        authors: [{ id, name, avatar }],
+        created: { id, name, avatar, time: new Date().toISOString() },
+        updated: { id, name, avatar, time: new Date().toISOString() },
         changeLog: [{
             name,
             event: `Added ${newPackage.name} version ${newPackage.version} ${newPackage.ecosystem ? `with ecosystem ${newPackage.ecosystem}` : 'for all ecosystems'} to the whitelist for ${newPackage.repository ? newPackage.repository : 'all repositories'} with comment ${newPackage.comment}.`,
-            author,
+            author: { id, name, avatar },
             timestamp: new Date().toISOString(),
-            image,
             id: "1"
         }]
     }])

@@ -3,8 +3,8 @@ import deletePackage from "./deletePackage"
 
 type RemovePackageProps = {
     name: string
-    setPackages: (value: SetStateAction<APIPackage[]>) => void
-    packages: APIPackage[]
+    setPackages: (value: SetStateAction<Package[]>) => void
+    packages: Package[]
     list: 'whitelist' | 'blacklist'
 }
 

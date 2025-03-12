@@ -10,3 +10,7 @@
 .select-repo {
     background: var(--background);
 }
+
+.select-version {
+    background: var(--background);
+}
