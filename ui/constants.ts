@@ -15,7 +15,7 @@ const {
 // }
 
 export { JFROG_ID, JFROG_TOKEN }
-export const API = ENV_API || 'http://129.241.150.86:8080/api'
+export const API = ENV_API || 'http://localhost:8080/api'
 export const SERVER_API = ENV_SERVER_API || 'http://172.17.0.1:8080/api'
 export const ECOSYSTEMS = [  
     'ansible',
