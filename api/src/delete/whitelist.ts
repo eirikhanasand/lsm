@@ -12,16 +12,14 @@ export default async function whitelistDeleteHandler(req: FastifyRequest, res: F
             await client.query("DELETE FROM whitelist_versions WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_ecosystems WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_repositories WHERE name = $1;", [name])
+            await client.query("DELETE FROM whitelist_references WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_comments WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_authors WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_created WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_updated WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_changelog WHERE name = $1;", [name])
 
-            const mainDeleteResult = await client.query(
-                "DELETE FROM whitelist WHERE name = $1 RETURNING *;",
-                [name]
-            )
+            const mainDeleteResult = await client.query("DELETE FROM whitelist WHERE name = $1 RETURNING *;", [name])
             if (mainDeleteResult.rowCount === 0) {
                 throw new Error(`No whitelist entry found for name='${name}'.`)
             }

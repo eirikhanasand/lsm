@@ -1,15 +1,15 @@
-import { SetStateAction } from "react"
+import { Dispatch, SetStateAction } from "react"
 import postPackage from "./postPackage"
 import { getCookie } from "../cookies"
 
 type AddPackageProps = {
     newPackage: AddPackage
-    setPackages: (value: SetStateAction<Package[]>) => void
-    setShowForm: (value: SetStateAction<boolean>) => void
-    setNewPackage: (value: SetStateAction<AddPackage>) => void
+    setPackages: Dispatch<SetStateAction<Package[]>>
+    setShowForm: Dispatch<SetStateAction<boolean>>
+    setNewPackage: Dispatch<SetStateAction<AddPackage>>
     packages: Package[]
     list: 'whitelist' | 'blacklist'
-    author: Author | null
+    author: Author
 }
 
 export default async function addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list}: AddPackageProps) {
@@ -43,9 +43,10 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
     setPackages([...packages, { 
         name: newPackage.name,
         versions: [newPackage.version],
-        ecosystems: [newPackage.ecosystem],
+        ecosystems: newPackage.ecosystem !== null ? [newPackage.ecosystem] : [],
         repositories: newPackage.repository !== null ? [newPackage.repository] : [],
         comments: [newPackage.comment],
+        references: newPackage.reference !== null ? [newPackage.reference] : [],
         authors: [{ id, name, avatar }],
         created: { id, name, avatar, time: new Date().toISOString() },
         updated: { id, name, avatar, time: new Date().toISOString() },
@@ -59,11 +60,12 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
     }])
     setShowForm(false)
     setNewPackage({ 
-        name: "", 
-        version: "", 
-        ecosystem: "", 
-        comment: "", 
-        repository: null, 
+        name: "",
+        version: "",
+        ecosystem: null,
+        comment: "",
+        reference: null,
+        repository: null,
         author: newPackage.author
     })
 }

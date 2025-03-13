@@ -15,6 +15,7 @@ export default async function editPackage({pkg, setPackages, packages, list, aut
         ecosystem: pkg.ecosystems.join(','),
         version: pkg.versions.join(','),
         comment: pkg.comments.join(','),
+        reference: pkg.references.join(','),
         repository: pkg.repositories.join(','),
         author
     }})

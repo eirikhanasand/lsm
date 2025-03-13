@@ -8,6 +8,7 @@ import Edit from "./edit"
 import "./addPage.css"
 import { ECOSYSTEMS } from "@parent/constants"
 import { getCookie } from "@/utils/cookies"
+import Link from "next/link"
 
 type PackageProps = {
     pkg: Package
@@ -49,8 +50,9 @@ export default function AddPage({ list, packages: serverPackages, repositories }
         name: "",
         version: "",
         ecosystem: "",
-        repository: null,
+        repository: "",
         comment: "",
+        reference: "",
         author: {
             id: "",
             name: "",
@@ -170,7 +172,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                         placeholder="Search for a package..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="h-full px-2 py-4 bg-dark rounded self-center"
+                        className="h-full px-2 py-4 bg-dark rounded self-center text-white"
                     />
                 </div>
             </div>
@@ -182,8 +184,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                         }
                     }}
                     disabled={showForm}
-                    className={`relative rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 mr-6 mb-6 pointer-events-auto z-1000
-                    ${showForm ? "opacity-100 cursor-not-allowed" : ""}`}
+                    className="w-40 h-10 rounded-lg relative bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 right-6 bottom-6 pointer-events-auto z-1000"
                 >
                     + Add Package
                 </button>
@@ -199,7 +200,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="text-lg font-semibold text-foreground">
-                        Add New Package
+                            Add New Package
                         </h2>
             
                         <input
@@ -209,7 +210,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                             onChange={(e) =>
                                 setNewPackage({ ...newPackage, name: e.target.value })
                             }
-                            className={`${formStyle} bg-[#333] text-white`}
+                            className={`${formStyle} bg-light text-foreground`}
                         />
                         <input
                             type="text"
@@ -218,16 +219,16 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                             onChange={(e) =>
                                 setNewPackage({ ...newPackage, version: e.target.value })
                             }
-                            className={`${formStyle} bg-[#333] text-white`}
+                            className={`${formStyle} bg-light text-foreground`}
                         />
                         <select
                             value={newPackage.ecosystem || ""}
                             onChange={(e) =>
                                 setNewPackage({ ...newPackage, ecosystem: e.target.value })
                             }
-                            className={`${formStyle} bg-[#333] text-white`}
+                            className={`${formStyle} bg-light text-foreground`}
                         >
-                            <option className="bg-[#333] text-white" value="">All Ecosystems</option>
+                            <option className="bg-light text-white" value="">All Ecosystems</option>
                             {ECOSYSTEMS.map((ecosystem: string) => (
                                 <option key={ecosystem} value={ecosystem}>
                                     {ecosystem}
@@ -239,9 +240,9 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                             onChange={(e) =>
                                 setNewPackage({ ...newPackage, repository: e.target.value })
                             }
-                            className={`${formStyle} bg-[#333] text-white`}
+                            className={`${formStyle} bg-light text-foreground`}
                         >
-                            <option className="bg-[#333] text-white" value="">All Repositories</option>
+                            <option className="bg-light text-white" value="">All Repositories</option>
                             {repositories.map((repo) => (
                                 <option
                                     key={`${repo.type}-${repo.key}`}
@@ -251,13 +252,22 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                                 </option>
                             ))}
                         </select>
+                        <input
+                            type="text"
+                            placeholder="Reference"
+                            value={newPackage.reference || ""}
+                            onChange={(e) =>
+                                setNewPackage({ ...newPackage, reference: e.target.value })
+                            }
+                            className={`${formStyle} bg-light text-foreground`}
+                        />
                         <textarea
                             placeholder="Reason"
                             value={newPackage.comment}
                             onChange={(e) =>
                                 setNewPackage({ ...newPackage, comment: e.target.value })
                             }
-                            className={`${formStyle} bg-[#333] text-white h-32`} 
+                            className={`${formStyle} bg-light text-foreground h-32`} 
                         />
 
                         <div className="mt-4 flex justify-between">
@@ -332,7 +342,7 @@ function Packages({groupedPackages, list, setPackages, packages, author}: Packag
     return Object.keys(groupedPackages)
         .sort()
         .map((ecosystem) => (
-            <div key={ecosystem} className="mb-6 w-full">
+            <div key={ecosystem} className="w-full">
                 <h2 className="text-xl font-bold text-blue-500">{ecosystem}</h2>
                 <ul
                     className="grid gap-4 w-full"
@@ -396,13 +406,24 @@ function Package({ pkg, setPackages, packages, list, author }: PackageProps) {
                     {pkg.changeLog.length}
                 </h1>
             </div>
-            <div className="absolute right-4 mt-3.5">
-                <button onClick={() => setEditing(true)} className="h-[20px] w-[20px] self-end">
-                    <Pencil fill="pencil-icon cursor-pointer" className="pencil-icon max-w-[16px] max-h-[16px] mb-[1.7px]" />
+            <div className="absolute right-4 mt-3.5 flex">
+                <div className="mr-[2.5px]">
+                    {pkg.references && pkg.references.length > 1 
+                        ? <div className="relative group inline-block">
+                            <Link href={pkg.references[0]} className="info-icon border border-shallow px-[6.6px] rounded-full mb-5 text-shallow">i</Link>
+
+                            <div className="grid absolute right-0 hidden w-100 bg-light p-2 border border-blue-500 rounded group-hover:grid group-hover:grid-cols-1">
+                                {pkg.references.map((reference) => <Link key={reference} href={reference} className="text-blue-300">{reference}</Link>)}
+                            </div>
+                        </div> 
+                        : <Link href={pkg.references[0]} className="info-icon border border-shallow px-[6.6px] rounded-full mb-5 text-shallow cursor-pointer hover:border-blue-500 hover:text-foreground">i</Link>}
+                </div>
+                <button onClick={() => setEditing(true)} className="h-[20px] w-[20px] self-end mb-[4px]">
+                    <Pencil fill="pencil-icon cursor-pointer" className="pencil-icon max-w-[16px] max-h-[16px]" />
                 </button>
                 <button 
                     onClick={() => removePackage({ name: pkg.name, setPackages, packages, list })}
-                    className="h-[20px] w-[20px] self-end"
+                    className="h-[20px] w-[20px] self-end mb-[4.2px]"
                 >
                     <Trash fill="fill-shallow hover:fill-red-500 cursor-pointer" className="w-full h-full" />
                 </button>

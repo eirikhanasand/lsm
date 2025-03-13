@@ -3,7 +3,19 @@ COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name)
 COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) AS ecosystems, 
 COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) AS repositories,
 COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) AS comments,
-COALESCE((SELECT array_agg(author) FROM whitelist_authors WHERE name = w.name), '{}'::TEXT[]) AS authors,
+COALESCE((SELECT array_agg(reference) FROM whitelist_references WHERE name = w.name), '{}'::TEXT[]) AS "references",
+(
+    SELECT jsonb_agg(
+        jsonb_build_object(
+            'id', u.id,
+            'name', u.name,
+            'avatar', u.avatar
+        )
+    )
+    FROM whitelist_authors wa
+    JOIN users u ON wa.author = u.id
+    WHERE wa.name = w.name
+) AS authors,
 (
     SELECT jsonb_build_object(
         'id', u.id,

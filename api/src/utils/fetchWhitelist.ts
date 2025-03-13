@@ -11,6 +11,7 @@ export default async function fetchWhiteList({name, version, ecosystem, res}: Fe
          LEFT JOIN whitelist_ecosystems we ON w.name = we.name
          LEFT JOIN whitelist_comments wc ON w.name = wc.name
          LEFT JOIN whitelist_repositories wr ON w.name = wr.name
+         LEFT JOIN whitelist_references wre on w.name = wre.name
          WHERE w.name = $1 AND wv.version = $2 AND we.ecosystem = $3;
         `, [name, version, ecosystem]
     )

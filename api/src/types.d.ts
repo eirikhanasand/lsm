@@ -1,9 +1,10 @@
 type OSVHandlerParams = {
     name: string
     version: string
-    ecosystem: string
-    repository: string
+    ecosystem: string | undefined
+    repository: string | undefined
     comment: string
+    reference: string | undefined
     author: Author
 }
 
@@ -34,4 +35,14 @@ type User = {
     id: string
     name: string
     avatar: string
+}
+
+type UpdateBody = {
+    name: string
+    version: string
+    ecosystem: string
+    comment: string
+    repository: string
+    reference: string
+    author: User
 }

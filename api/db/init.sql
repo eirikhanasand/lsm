@@ -57,6 +57,14 @@ CREATE TABLE IF NOT EXISTS whitelist_comments (
     PRIMARY KEY (name, comment)
 );
 
+-- References for specific whitelisted dependencies
+CREATE TABLE IF NOT EXISTS whitelist_references (
+    name TEXT NOT NULL,
+    reference TEXT NOT NULL,
+    FOREIGN KEY (name) REFERENCES whitelist(name),
+    PRIMARY KEY (name, reference)
+);
+
 -- Authors for specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_authors (
     name TEXT NOT NULL,
@@ -123,6 +131,14 @@ CREATE TABLE IF NOT EXISTS blacklist_comments (
     comment TEXT NOT NULL,
     FOREIGN KEY (name) REFERENCES blacklist(name),
     PRIMARY KEY (name, comment)
+);
+
+-- References for specific blacklisted dependencies
+CREATE TABLE IF NOT EXISTS blacklist_references (
+    name TEXT NOT NULL,
+    reference TEXT NOT NULL,
+    FOREIGN KEY (name) REFERENCES blacklist(name),
+    PRIMARY KEY (name, reference)
 );
 
 -- Authors for specific blacklisted dependencies

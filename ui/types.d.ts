@@ -1,18 +1,20 @@
 type AddPackage = {
     name: string
     version: string
-    ecosystem: string
+    ecosystem: string | null
     repository: string | null
     comment: string
+    reference: string | null
     author: Author
 }
 
 type PutPackage = {
     name: string
     version: string
-    ecosystem: string
+    ecosystem: string | null
     repository: string | null
     comment: string
+    reference: string | null
     author: Author
 }
 
@@ -22,6 +24,7 @@ type Package = {
     ecosystems: string[]
     repositories: string[]
     comments: string[]
+    references: string[]
     authors: Author[]
     created: Author & { time: string }
     updated: Author & { time: string }
