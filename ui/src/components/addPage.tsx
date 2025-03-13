@@ -315,9 +315,9 @@ function PackageHeader() {
     return (
         <div className="grid grid-cols-12 w-full h-8 rounded-lg px-4 items-center border border-blue-500">
             <h1 className="col-span-2">Name</h1>
-            <h1>Ecosystem</h1>
-            <h1>Repository</h1>
-            <h1>Version</h1>
+            <h1>Ecosystems</h1>
+            <h1>Repositories</h1>
+            <h1>Versions</h1>
             <div className="flex col-span-7 w-full">
                 <h1 className="w-103.5">Comment</h1>
                 <h1 className="w-44">Created</h1>
@@ -330,26 +330,26 @@ function PackageHeader() {
 
 function Packages({groupedPackages, list, setPackages, packages, author}: PackagesProps) {
     return Object.keys(groupedPackages)
-    .sort()
-    .map((ecosystem) => (
-        <div key={ecosystem} className="mb-6 w-full">
-            <h2 className="text-xl font-bold text-blue-500">{ecosystem}</h2>
-            <ul
-                className="grid gap-4 w-full"
-            >
-                {groupedPackages[ecosystem].map((pkg) => (
-                    <Package
-                        key={pkg.name}
-                        pkg={pkg}
-                        list={list}
-                        setPackages={setPackages}
-                        packages={packages}
-                        author={author}
-                    />
-                ))}
-            </ul>
-        </div>
-    ))
+        .sort()
+        .map((ecosystem) => (
+            <div key={ecosystem} className="mb-6 w-full">
+                <h2 className="text-xl font-bold text-blue-500">{ecosystem}</h2>
+                <ul
+                    className="grid gap-4 w-full"
+                >
+                    {groupedPackages[ecosystem].map((pkg) => (
+                        <Package
+                            key={pkg.name}
+                            pkg={pkg}
+                            list={list}
+                            setPackages={setPackages}
+                            packages={packages}
+                            author={author}
+                        />
+                    ))}
+                </ul>
+            </div>
+        ))
 }
 
 function Package({ pkg, setPackages, packages, list, author }: PackageProps) {
