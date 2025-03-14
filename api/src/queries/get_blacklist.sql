@@ -1,4 +1,4 @@
-SELECT b.name, b.cmmment
+SELECT b.name, b.cmmment,
 COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) AS versions, 
 COALESCE((SELECT array_agg(ecosystem) FROM blacklist_ecosystems WHERE name = b.name), '{}'::TEXT[]) AS ecosystems, 
 COALESCE((SELECT array_agg(repository) FROM blacklist_repositories WHERE name = b.name), '{}'::TEXT[]) AS repositories,
