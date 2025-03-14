@@ -1,6 +1,6 @@
 import indexHandler from "./get/index.js"
 import osvHandler from "./get/osv.js"
-import packageStatsHandler from "./get/statistic.js";
+import packageStatsHandler from "./get/statistic.js"
 import whitelistIndexHandler, { whitelistHandler, whitelistByRepositoryHandler } from "./get/whitelist.js"
 import blacklistIndexHandler, { blacklistHandler, blacklistByRepositoryHandler } from "./get/blacklist.js"
 import whitelistPostHandler from "./post/whitelist.js"

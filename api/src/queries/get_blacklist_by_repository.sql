@@ -1,10 +1,9 @@
 WITH repo_blacklist AS (
     SELECT 
-        b.name,
+        b.name, b.comment,
         COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) AS versions,
         COALESCE((SELECT array_agg(ecosystem) FROM blacklist_ecosystems WHERE name = b.name), '{}'::TEXT[]) AS ecosystems,
         COALESCE((SELECT array_agg(repository) FROM blacklist_repositories WHERE name = b.name), '{}'::TEXT[]) AS repositories,
-        COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) AS comments,
         COALESCE((SELECT array_agg(reference) FROM blacklist_references WHERE name = w.name), '{}'::TEXT[]) AS "references",
         (
             SELECT jsonb_agg(
@@ -66,11 +65,10 @@ WITH repo_blacklist AS (
 ),
 global_blacklist AS (
     SELECT 
-        b.name,
+        b.name, b.comment,
         COALESCE((SELECT array_agg(version) FROM blacklist_versions WHERE name = b.name), '{}'::TEXT[]) AS versions,
         '{}'::TEXT[] AS ecosystems,
         '{}'::TEXT[] AS repositories,
-        COALESCE((SELECT array_agg(comment) FROM blacklist_comments WHERE name = b.name), '{}'::TEXT[]) 
         COALESCE((SELECT array_agg(reference) FROM blacklist_references WHERE name = b.name), '{}'::TEXT[]) AS "references",
         (
             SELECT jsonb_agg(

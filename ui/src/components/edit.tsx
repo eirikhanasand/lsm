@@ -1,29 +1,37 @@
-import { SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import editPackage from "@/utils/filtering/editPackage"
 import Image from "next/image"
+import Dropdown from "./dropdown"
+import { ECOSYSTEMS } from "@parent/constants"
 
 type EditProps = {
     pkg: Package
-    setEditing: (value: SetStateAction<boolean>) => void
+    setEditing: Dispatch<SetStateAction<boolean>>
     list: 'whitelist' | 'blacklist'
     packages: Package[]
-    setPackages: (value: SetStateAction<Package[]>) => void
+    setPackages: Dispatch<SetStateAction<Package[]>>
     author: Author
+    repositories: Repository[]
 }
 
-export default function Edit({pkg, setEditing, setPackages, packages, list, author}: EditProps) {
+export default function Edit({pkg, setEditing, setPackages, packages, list, author, repositories: serverRepositories}: EditProps) {
     const [versions, setVersions] = useState(pkg.versions)
     const [ecosystems, setEcosystems] = useState(pkg.ecosystems)
     const [repositories, setRepositories] = useState(pkg.repositories)
     const [references, setReferences] = useState(pkg.references)
-    const [comments, setComments] = useState(pkg.comments)
+    const [comment, setComment] = useState(pkg.comment)
+
+    function parseRepositories() {
+        return repositories
+            .map((repository) => repository.includes('] ') ? repository.split('] ')[1] : repository)
+    }
 
     function isEdited() {
         return !(JSON.stringify(versions) === JSON.stringify(pkg.versions)
             && JSON.stringify(ecosystems) === JSON.stringify(pkg.ecosystems)
-            && JSON.stringify(repositories) === JSON.stringify(pkg.repositories)
+            && JSON.stringify(parseRepositories()) === JSON.stringify(pkg.repositories)
             && JSON.stringify(references) === JSON.stringify(pkg.references)
-            && JSON.stringify(comments) === JSON.stringify(pkg.comments))
+            && JSON.stringify(comment) === JSON.stringify(pkg.comment))
     }
 
     function handleSave() {
@@ -33,7 +41,7 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
                 versions,
                 ecosystems,
                 repositories,
-                comments,
+                comment,
                 references,
                 authors: pkg.authors,
                 created: pkg.created,
@@ -61,44 +69,49 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
                         <h1 className="text-sm pt-2 p-1 w-full h-[4vh]">Versions</h1>
                         <h1 className="text-sm pt-2 p-1 w-full h-[4vh]">Ecosystems</h1>
                         <h1 className="text-sm pt-2 p-1 w-full h-[4vh]">Repositories</h1>
-                        <h1 className="text-sm pt-2 p-1 w-full h-[4vh]">Comments</h1>
+                        <h1 className="text-sm pt-2 p-1 w-full h-[4vh]">Comment</h1>
                         <h1 className="text-sm pt-2 p-1 w-full h-[4vh]">References</h1>
                     </div>
                     <div className="w-full space-y-2">
                         <input
                             className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none caret-blue-500"
-                            value={versions.join(',')}
+                            value={versions.join(', ')}
                             type="text"
-                            placeholder="Versions to whitelist"
+                            placeholder={`Versions to ${list}`}
                             onChange={(event) => setVersions(event.target.value.split(','))}
                         />
-                        <input
-                            className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none caret-blue-500"
-                            value={ecosystems.join(',')}
-                            type="text"
-                            placeholder="Ecosystems to whitelist"
-                            onChange={(event) => setEcosystems(event.target.value.split(','))}
+                        <Dropdown 
+                            item='ecosystems' 
+                            items={ecosystems} 
+                            allItems={ECOSYSTEMS} 
+                            setItems={setEcosystems} 
+                        />
+                        <Dropdown 
+                            item='repositories' 
+                            items={repositories} 
+                            allItems={serverRepositories.map((repository) => `[${repository.type}] ${repository.key}`)} 
+                            setItems={setRepositories} 
                         />
                         <input
                             className="text-sm bg-light p-1 pl-2 w-full rounded-lg h-[4vh] outline-none caret-blue-500"
-                            value={repositories.join(',')}
+                            value={repositories.join(', ')}
                             type="text"
                             placeholder="Repositories affected"
                             onChange={(event) => setRepositories(event.target.value.split(','))}
                         />
                         <input
                             className="text-sm bg-light p-1 pl-2 w-full rounded-lg min-h-[4vh] outline-none caret-blue-500"
-                            value={references.join(',')}
+                            value={references.join(', ')}
                             type="text"
-                            placeholder="Comment"
+                            placeholder="References"
                             onChange={(event) => setReferences(event.target.value.split(','))}
                         />
                         <input
                             className="text-sm bg-light p-1 pl-2 w-full rounded-lg min-h-[4vh] outline-none caret-blue-500"
-                            value={comments.join(',')}
+                            value={comment}
                             type="text"
                             placeholder="Comment"
-                            onChange={(event) => setComments(event.target.value.split(','))}
+                            onChange={(event) => setComment(event.target.value)}
                         />
                     </div>
                 </div>
@@ -122,7 +135,7 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
             </div>
             <button
                 onClick={handleSave}
-                className={`w-40 h-10 rounded-lg absolute bottom-6 right-6 bg-blue-500 px-6 py-2${isEdited() ? "text-foreground hover:text-green-500 cursor-pointer" : "text-shallow"}`}
+                className={`${isEdited() ? 'bg-blue-500' : 'bg-gray-900 cursor-not-allowed'} w-40 h-10 rounded-lg absolute bottom-6 right-6 px-6 py-2${isEdited() ? "text-foreground cursor-pointer" : "text-shallow"}`}
             >
                 <h1>Save</h1>
             </button>  

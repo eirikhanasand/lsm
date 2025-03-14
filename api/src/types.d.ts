@@ -1,10 +1,10 @@
 type OSVHandlerParams = {
     name: string
-    version: string
-    ecosystem: string | undefined
-    repository: string | undefined
     comment: string
-    reference: string | undefined
+    version: string
+    ecosystem: string
+    repository: string
+    references: string[]
     author: Author
 }
 
@@ -39,10 +39,20 @@ type User = {
 
 type UpdateBody = {
     name: string
-    version: string
-    ecosystem: string
     comment: string
-    repository: string
-    reference: string
+    versions: string[]
+    ecosystems: string[]
+    repositories: string[]
+    references: string[]
     author: User
+}
+
+type PostBody = {
+    name: string
+    comment: string
+    versions: string[]
+    ecosystems: string[]
+    repositories: string[]
+    references: string[]
+    author: Author
 }

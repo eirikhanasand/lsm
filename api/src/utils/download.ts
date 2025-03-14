@@ -1,14 +1,14 @@
-import run from "../db.js";
+import run from "../db.js"
 
 type DownloadEvent = {
-    package_name: string;
-    package_version: string;
-    ecosystem: string;
-    repository: string;
-    client_address: string;
-    status: 'passed' | 'blocked';
-    reason: string;
-};
+    package_name: string
+    package_version: string
+    ecosystem: string
+    repository: string
+    client_address: string
+    status: 'passed' | 'blocked'
+    reason: string
+}
 
 export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
     const query = `
@@ -16,7 +16,7 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
     VALUES ($1, $2, $3, $4, $5, $6, $7)
     ON CONFLICT (timestamp, package_name, package_version, client_address) DO NOTHING
     RETURNING *;
-  `;
+  `
 
     try {
         const result = await run(query, [
@@ -27,11 +27,11 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
             event.status,
             event.reason,
             event.repository,
-        ]);
-        return result.rows[0];
+        ])
+        return result.rows[0]
     } catch (error) {
-        console.error('Error inserting download event:', error);
-        throw error;
+        console.error('Error inserting download event:', error)
+        throw error
     }
 }
 
@@ -50,13 +50,12 @@ export async function processVulnerabilities(response: any) {
                 client_address: '0.0.0.0',
                 status: 'blocked',
                 reason: vuln.data.details,
-            } as DownloadEvent;
+            } as DownloadEvent
 
-            await insertDownloadEvent(event);
-            console.log(`Inserted event for ${event.package_name} ${event.package_version}`);
+            await insertDownloadEvent(event)
+            console.log(`Inserted event for ${event.package_name} ${event.package_version}`)
         }
     } catch (error) {
         console.log(error)
     }
-
 }

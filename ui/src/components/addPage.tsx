@@ -9,6 +9,8 @@ import "./addPage.css"
 import { ECOSYSTEMS } from "@parent/constants"
 import { getCookie } from "@/utils/cookies"
 import Link from "next/link"
+import groupPackagesByEcosystem from "@/utils/filtering/groupPackageByEcosystem"
+import Dropdown from "./dropdown"
 
 type PackageProps = {
     pkg: Package
@@ -16,6 +18,7 @@ type PackageProps = {
     setPackages: Dispatch<SetStateAction<Package[]>>
     packages: Package[]
     author: Author
+    repositories: Repository[]
 }
 
 type PackagesProps = {
@@ -24,18 +27,7 @@ type PackagesProps = {
     setPackages: Dispatch<SetStateAction<Package[]>>
     packages: Package[]
     author: Author
-}
-
-function groupPackagesByEcosystem(packages: Package[]) {
-    const grouped: Record<string, Package[]> = {}
-    packages.forEach(pkg => {
-        const ecosystem = Array.isArray(pkg.ecosystems) ? pkg.ecosystems.join(", ") : (pkg.ecosystems || "Other")
-        if (!grouped[ecosystem]) {
-            grouped[ecosystem] = []
-        }
-        grouped[ecosystem].push(pkg)
-    })
-    return grouped
+    repositories: Repository[]
 }
 
 export default function AddPage({ list, packages: serverPackages, repositories }: ClientPageProps) {
@@ -48,11 +40,11 @@ export default function AddPage({ list, packages: serverPackages, repositories }
     const [author, setAuthor] = useState<Author>({id: "", name: "", avatar: ""})
     const [newPackage, setNewPackage] = useState<AddPackage>({
         name: "",
-        version: "",
-        ecosystem: "",
-        repository: "",
+        versions: [],
+        ecosystems: [],
+        repositories: [],
         comment: "",
-        reference: "",
+        references: [],
         author: {
             id: "",
             name: "",
@@ -215,49 +207,32 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                         <input
                             type="text"
                             placeholder="Version"
-                            value={newPackage.version}
+                            value={newPackage.versions}
                             onChange={(e) =>
-                                setNewPackage({ ...newPackage, version: e.target.value })
+                                setNewPackage({ ...newPackage, versions: e.target.value.replaceAll(' ', '').split(',') })
                             }
                             className={`${formStyle} bg-light text-foreground`}
                         />
-                        <select
-                            value={newPackage.ecosystem || ""}
-                            onChange={(e) =>
-                                setNewPackage({ ...newPackage, ecosystem: e.target.value })
-                            }
-                            className={`${formStyle} bg-light text-foreground`}
-                        >
-                            <option className="bg-light text-white" value="">All Ecosystems</option>
-                            {ECOSYSTEMS.map((ecosystem: string) => (
-                                <option key={ecosystem} value={ecosystem}>
-                                    {ecosystem}
-                                </option>
-                            ))}
-                        </select>
-                        <select
-                            value={newPackage.repository || ""}
-                            onChange={(e) =>
-                                setNewPackage({ ...newPackage, repository: e.target.value })
-                            }
-                            className={`${formStyle} bg-light text-foreground`}
-                        >
-                            <option className="bg-light text-white" value="">All Repositories</option>
-                            {repositories.map((repo) => (
-                                <option
-                                    key={`${repo.type}-${repo.key}`}
-                                    value={repo.key}
-                                >
-                                [{repo.type}] {repo.key}
-                                </option>
-                            ))}
-                        </select>
+                        <Dropdown
+                            className="mt-2"
+                            item='ecosystems'
+                            items={newPackage.ecosystems} 
+                            allItems={ECOSYSTEMS} 
+                            setItems={(items) => setNewPackage({ ...newPackage, ecosystems: items })}
+                        />
+                        <Dropdown
+                            className="mt-2"
+                            item='repositories'
+                            items={newPackage.repositories} 
+                            allItems={repositories.map((repository) => `[${repository.type}] ${repository.key}`)} 
+                            setItems={(items) => setNewPackage({ ...newPackage, repositories: items })}
+                        />
                         <input
                             type="text"
                             placeholder="Reference"
-                            value={newPackage.reference || ""}
+                            value={newPackage.references}
                             onChange={(e) =>
-                                setNewPackage({ ...newPackage, reference: e.target.value })
+                                setNewPackage({ ...newPackage, references: e.target.value.replaceAll(' ', '').split(',') })
                             }
                             className={`${formStyle} bg-light text-foreground`}
                         />
@@ -313,6 +288,7 @@ export default function AddPage({ list, packages: serverPackages, repositories }
                             setPackages={setPackages}
                             packages={packages}
                             author={author}
+                            repositories={repositories}
                         />
                     </div>
                 )}
@@ -338,7 +314,7 @@ function PackageHeader() {
     )
 }
 
-function Packages({groupedPackages, list, setPackages, packages, author}: PackagesProps) {
+function Packages({groupedPackages, list, setPackages, packages, author, repositories}: PackagesProps) {
     return Object.keys(groupedPackages)
         .sort()
         .map((ecosystem) => (
@@ -355,6 +331,7 @@ function Packages({groupedPackages, list, setPackages, packages, author}: Packag
                             setPackages={setPackages}
                             packages={packages}
                             author={author}
+                            repositories={repositories}
                         />
                     ))}
                 </ul>
@@ -362,7 +339,7 @@ function Packages({groupedPackages, list, setPackages, packages, author}: Packag
         ))
 }
 
-function Package({ pkg, setPackages, packages, list, author }: PackageProps) {
+function Package({ pkg, setPackages, packages, list, author, repositories }: PackageProps) {
     const [editing, setEditing] = useState(false)
     const [createdDate, setCreatedDate] = useState("")
     const [updatedDate, setUpdatedDate] = useState("")
@@ -380,6 +357,7 @@ function Package({ pkg, setPackages, packages, list, author }: PackageProps) {
                 list={list}
                 packages={packages}
                 setPackages={setPackages}
+                repositories={repositories}
                 author={author}
             />}
             <h1 className="text-sm text-foreground font-semibold text-wrap break-all col-span-2">
@@ -394,7 +372,7 @@ function Package({ pkg, setPackages, packages, list, author }: PackageProps) {
             </h1>
             <div className="flex col-span-7 gap-4">
                 <h1 className="text-sm text-shallow italic col-span-4 pr-2 w-100">
-                    {Array.isArray(pkg.comments) && pkg.comments.length ? `"${pkg.comments}"` : ""}
+                    {pkg.comment || ""}
                 </h1>
                 <h1 className="text-sm text-shallow w-40">
                     {createdDate}

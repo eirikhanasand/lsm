@@ -13,7 +13,7 @@ type AddPackageProps = {
 }
 
 export default async function addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list}: AddPackageProps) {
-    if (!newPackage.name || !newPackage.version || !newPackage.comment) {
+    if (!newPackage.name || !newPackage.comment) {
         alert("Please fill in all fields.")
         return
     }
@@ -42,17 +42,17 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
 
     setPackages([...packages, { 
         name: newPackage.name,
-        versions: [newPackage.version],
-        ecosystems: newPackage.ecosystem !== null ? [newPackage.ecosystem] : [],
-        repositories: newPackage.repository !== null ? [newPackage.repository] : [],
-        comments: [newPackage.comment],
-        references: newPackage.reference !== null ? [newPackage.reference] : [],
+        versions: newPackage.versions,
+        ecosystems: newPackage.ecosystems,
+        repositories: newPackage.repositories,
+        comment: newPackage.comment,
+        references: newPackage.references,
         authors: [{ id, name, avatar }],
         created: { id, name, avatar, time: new Date().toISOString() },
         updated: { id, name, avatar, time: new Date().toISOString() },
         changeLog: [{
             name,
-            event: `Added ${newPackage.name} version ${newPackage.version} ${newPackage.ecosystem ? `with ecosystem ${newPackage.ecosystem}` : 'for all ecosystems'} to the whitelist for ${newPackage.repository ? newPackage.repository : 'all repositories'} with comment ${newPackage.comment}.`,
+            event: `Added ${name} ${Array.isArray(newPackage.versions) && newPackage.versions.length ? `versions ${newPackage.versions.join(', ')}` : ''} ${Array.isArray(newPackage.ecosystems) && newPackage.ecosystems.length ? `${Array.isArray(newPackage.versions) && newPackage.versions.length ? 'with' : 'for'} ecosystems ${newPackage.ecosystems.join(', ')}` : 'for all ecosystems'} to the ${list} for ${Array.isArray(newPackage.repositories) && newPackage.repositories.length ? newPackage.repositories : 'all repositories'} with comment ${newPackage.comment}${Array.isArray(newPackage.references) && newPackage.references.length ? ` and references ${newPackage.references}` : ''}.`,
             author: { id, name, avatar },
             timestamp: new Date().toISOString(),
             id: "1"
@@ -61,11 +61,11 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
     setShowForm(false)
     setNewPackage({ 
         name: "",
-        version: "",
-        ecosystem: null,
+        versions: [],
+        ecosystems: [],
         comment: "",
-        reference: null,
-        repository: null,
+        references: [],
+        repositories: [],
         author: newPackage.author
     })
 }

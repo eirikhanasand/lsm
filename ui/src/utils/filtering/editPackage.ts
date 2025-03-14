@@ -12,11 +12,11 @@ type RemovePackageProps = {
 export default async function editPackage({pkg, setPackages, packages, list, author}: RemovePackageProps) {
     const response = await putPackage({list, pkg: {
         name: pkg.name,
-        ecosystem: pkg.ecosystems.join(','),
-        version: pkg.versions.join(','),
-        comment: pkg.comments.join(','),
-        reference: pkg.references.join(','),
-        repository: pkg.repositories.join(','),
+        ecosystems: pkg.ecosystems,
+        versions: pkg.versions,
+        comment: pkg.comment,
+        references: pkg.references,
+        repositories: pkg.repositories,
         author
     }})
 
@@ -25,5 +25,5 @@ export default async function editPackage({pkg, setPackages, packages, list, aut
         return
     }
 
-    setPackages(packages.map((p) =>p.name === pkg.name ? pkg : p));
+    setPackages(packages.map((p) =>p.name === pkg.name ? pkg : p))
 }

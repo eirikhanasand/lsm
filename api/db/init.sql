@@ -17,12 +17,14 @@ END $$;
 
 -- Whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist (
-    name TEXT PRIMARY KEY
+    name TEXT PRIMARY KEY,
+    comment TEXT NOT NULL
 );
 
 -- Blacklisted dependencies
 CREATE TABLE IF NOT EXISTS blacklist (
-    name TEXT PRIMARY KEY
+    name TEXT PRIMARY KEY,
+    comment TEXT NOT NULL
 );
 
 -- Version specific whitelisted dependencies
@@ -47,14 +49,6 @@ CREATE TABLE IF NOT EXISTS whitelist_repositories (
     repository TEXT,
     FOREIGN KEY (name) REFERENCES whitelist(name),
     PRIMARY KEY (name, repository)
-);
-
--- Comments for specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_comments (
-    name TEXT NOT NULL,
-    comment TEXT NOT NULL,
-    FOREIGN KEY (name) REFERENCES whitelist(name),
-    PRIMARY KEY (name, comment)
 );
 
 -- References for specific whitelisted dependencies
@@ -123,14 +117,6 @@ CREATE TABLE IF NOT EXISTS blacklist_repositories (
     repository TEXT,
     FOREIGN KEY (name) REFERENCES blacklist(name),
     PRIMARY KEY (name, repository)
-);
-
--- Comments for specific blacklisted dependencies
-CREATE TABLE IF NOT EXISTS blacklist_comments (
-    name TEXT NOT NULL,
-    comment TEXT NOT NULL,
-    FOREIGN KEY (name) REFERENCES blacklist(name),
-    PRIMARY KEY (name, comment)
 );
 
 -- References for specific blacklisted dependencies
@@ -232,12 +218,10 @@ CREATE INDEX IF NOT EXISTS idx_vuln_name ON vulnerabilities (name);
 CREATE INDEX IF NOT EXISTS idx_whitelist_versions_name ON whitelist_versions (name);
 CREATE INDEX IF NOT EXISTS idx_whitelist_ecosystems_name ON whitelist_ecosystems (name);
 CREATE INDEX IF NOT EXISTS idx_whitelist_repositories_name ON whitelist_repositories (name);
-CREATE INDEX IF NOT EXISTS idx_whitelist_comments_name ON whitelist_comments (name);
 CREATE INDEX IF NOT EXISTS idx_whitelist_authors_name ON whitelist_authors (name);
 
 -- Indexes for Blacklist
 CREATE INDEX IF NOT EXISTS idx_blacklist_versions_name ON blacklist_versions (name);
 CREATE INDEX IF NOT EXISTS idx_blacklist_ecosystems_name ON blacklist_ecosystems (name);
 CREATE INDEX IF NOT EXISTS idx_blacklist_repositories_name ON blacklist_repositories (name);
-CREATE INDEX IF NOT EXISTS idx_blacklist_comments_name ON blacklist_comments (name);
 CREATE INDEX IF NOT EXISTS idx_blacklist_authors_name ON blacklist_authors (name);

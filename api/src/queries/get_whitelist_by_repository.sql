@@ -1,10 +1,9 @@
 WITH repo_whitelist AS (
     SELECT 
-        w.name,
+        w.name, w.comment,
         COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) AS versions,
         COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) AS ecosystems,
         COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) AS repositories,
-        COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) AS comments,
         COALESCE((SELECT array_agg(reference) FROM whitelist_references WHERE name = w.name), '{}'::TEXT[]) AS "references",
         (
             SELECT jsonb_agg(
@@ -66,11 +65,10 @@ WITH repo_whitelist AS (
 ),
 global_whitelist AS (
     SELECT 
-        w.name,
+        w.name, w.comment,
         COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) AS versions,
         '{}'::TEXT[] AS ecosystems,
         '{}'::TEXT[] AS repositories,
-        COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) AS comments,
         COALESCE((SELECT array_agg(reference) FROM whitelist_references WHERE name = w.name), '{}'::TEXT[]) AS "references",
         (
             SELECT jsonb_agg(

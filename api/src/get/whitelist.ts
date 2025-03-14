@@ -40,7 +40,7 @@ export async function whitelistByRepositoryHandler(req: FastifyRequest, res: Fas
     }
   
     try {
-        console.log(`Fetching whitelist data for repository: ${repository}`);
+        console.log(`Fetching whitelist data for repository: ${repository}`)
         const query = await loadSQL("get_whitelist_by_repository.sql")
         const result = await run(query, [repository])
         if (result.rows.length === 0) {

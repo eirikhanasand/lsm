@@ -1,29 +1,29 @@
 type AddPackage = {
     name: string
-    version: string
-    ecosystem: string | null
-    repository: string | null
     comment: string
-    reference: string | null
+    versions: string[]
+    ecosystems: string[]
+    repositories: string[]
+    references: string[]
     author: Author
 }
 
 type PutPackage = {
     name: string
-    version: string
-    ecosystem: string | null
-    repository: string | null
+    versions: string[]
+    ecosystems: string[]
+    repositories: string[]
     comment: string
-    reference: string | null
+    references: string[]
     author: Author
 }
 
 type Package = {
     name: string
+    comment: string
     versions: string[]
     ecosystems: string[]
     repositories: string[]
-    comments: string[]
     references: string[]
     authors: Author[]
     created: Author & { time: string }
@@ -55,7 +55,7 @@ type RepoWhitelistItem = {
     versions: string[]       
     ecosystems: string[]  
     repositories: string[]  
-    comments: string[] 
+    comment: string 
     isGlobal?: boolean 
 }
 
@@ -64,7 +64,7 @@ type RepoBlacklistItem = {
     versions: string[]      
     ecosystems: string[]    
     repositories: string[]  
-    comments: string[]     
+    comment: string
     isGlobal?: boolean  
 }
 

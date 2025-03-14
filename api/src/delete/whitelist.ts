@@ -13,7 +13,6 @@ export default async function whitelistDeleteHandler(req: FastifyRequest, res: F
             await client.query("DELETE FROM whitelist_ecosystems WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_repositories WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_references WHERE name = $1;", [name])
-            await client.query("DELETE FROM whitelist_comments WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_authors WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_created WHERE name = $1;", [name])
             await client.query("DELETE FROM whitelist_updated WHERE name = $1;", [name])

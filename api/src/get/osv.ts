@@ -1,8 +1,8 @@
-import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 import fetchWhiteList from "../utils/fetchWhitelist.js"
 import fetchBlackList from "../utils/fetchBlacklist.js"
-import {processVulnerabilities} from "../utils/download.js";
+import { FastifyReply, FastifyRequest } from "fastify"
+import { processVulnerabilities } from "../utils/download.js"
 
 type OSVResponse = {
     vulnerabilties: any[]
@@ -40,7 +40,7 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
                     >= string_to_array($3, '.')::int[]
                 )
             );
-        `, [name, ecosystem, version]);
+        `, [name, ecosystem, version])
         const response = {
             vulnerabilties: result.rows
         } as OSVResponse

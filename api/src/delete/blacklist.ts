@@ -12,7 +12,6 @@ export default async function blacklistDeleteHandler(req: FastifyRequest, res: F
             await client.query("DELETE FROM blacklist_versions WHERE name = $1;", [name])
             await client.query("DELETE FROM blacklist_ecosystems WHERE name = $1;", [name])
             await client.query("DELETE FROM blacklist_repositories WHERE name = $1;", [name])
-            await client.query("DELETE FROM blacklist_comments WHERE name = $1;", [name])
             await client.query("DELETE FROM blacklist_references WHERE name = $1;", [name])
             await client.query("DELETE FROM blacklist_authors WHERE name = $1;", [name])
             await client.query("DELETE FROM blacklist_created WHERE name = $1;", [name])
