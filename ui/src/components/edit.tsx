@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import editPackage from "@/utils/filtering/editPackage"
 import Image from "next/image"
 import Dropdown from "./dropdown"
@@ -20,6 +20,7 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
     const [repositories, setRepositories] = useState(pkg.repositories)
     const [references, setReferences] = useState(pkg.references)
     const [comment, setComment] = useState(pkg.comment)
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     function isEdited() {
         return !(JSON.stringify(versions) === JSON.stringify(pkg.versions)
@@ -50,6 +51,12 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
         textarea.style.height = 'auto'
         textarea.style.height = `${textarea.scrollHeight}px`
     }
+
+    useEffect(() => {
+        if (textareaRef.current) {
+            autoResize(textareaRef.current)
+        }
+    }, [])
 
     return (
         <div 
@@ -100,7 +107,8 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
                             onChange={(event) => setReferences(event.target.value.split(', '))}
                         />
                         <textarea
-                            className="text-sm bg-light p-1 pl-2 w-full rounded-lg min-h-[4vh] max-h-[60vh] outline-none caret-blue-500"
+                            className="text-sm bg-light p-1 pl-2 w-full h-auto rounded-lg min-h-[4vh] max-h-[60vh] outline-none caret-blue-500"
+                            ref={textareaRef}
                             value={comment}
                             placeholder="Comment"
                             onChange={(event) => {
