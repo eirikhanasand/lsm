@@ -63,6 +63,8 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
              WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = $1);`, 
             [id, username, avatar]
         )
+
+        console.log("redirecting to", `${FRONTEND_URL}/login?token=${token}`)
         res.redirect(`${FRONTEND_URL}/login?token=${token}`)
     } catch (error) {
         console.error(`Error during OAuth2 process: ${error}`)
