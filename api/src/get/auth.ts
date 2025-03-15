@@ -49,6 +49,7 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
 
         const data = await response.json()
         const { access_token } = data as any
+        console.log("the access token is", access_token, data)
         const userResponse = await fetch("https://discord.com/api/users/@me", {
             headers: { Authorization: `Bearer ${access_token}` }
         })
