@@ -46,6 +46,11 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
         }
     }
 
+    function autoResize(textarea: HTMLTextAreaElement) {
+        textarea.style.height = 'auto'
+        textarea.style.height = `${textarea.scrollHeight}px`
+    }
+
     return (
         <div 
             className="w-[100vw] h-[100vh] fixed left-0 top-0 grid place-items-center bg-black/80 grid-cols-10 gap-4 p-6 z-100"
@@ -94,12 +99,14 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
                             placeholder="References"
                             onChange={(event) => setReferences(event.target.value.split(', '))}
                         />
-                        <input
-                            className="text-sm bg-light p-1 pl-2 w-full rounded-lg min-h-[4vh] outline-none caret-blue-500"
+                        <textarea
+                            className="text-sm bg-light p-1 pl-2 w-full rounded-lg min-h-[4vh] max-h-[60vh] outline-none caret-blue-500"
                             value={comment}
-                            type="text"
                             placeholder="Comment"
-                            onChange={(event) => setComment(event.target.value)}
+                            onChange={(event) => {
+                                setComment(event.target.value);
+                                autoResize(event.target)
+                            }}
                         />
                     </div>
                 </div>
