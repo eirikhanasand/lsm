@@ -22,7 +22,6 @@ const pool = new Pool({
 })
 
 export default async function run(query: string, params: string[]) {
-    console.log("running", params)
     const client = await pool.connect()
     try {
         return await client.query(query, params)
