@@ -52,7 +52,7 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
         updated: { id, name, avatar, time: new Date().toISOString() },
         changeLog: [{
             name,
-            event: `Added ${name} ${Array.isArray(newPackage.versions) && newPackage.versions.length ? `versions ${newPackage.versions.join(', ')}` : ''} ${Array.isArray(newPackage.ecosystems) && newPackage.ecosystems.length ? `${Array.isArray(newPackage.versions) && newPackage.versions.length ? 'with' : 'for'} ecosystems ${newPackage.ecosystems.join(', ')}` : 'for all ecosystems'} to the ${list} for ${Array.isArray(newPackage.repositories) && newPackage.repositories.length ? newPackage.repositories : 'all repositories'} with comment ${newPackage.comment}${Array.isArray(newPackage.references) && newPackage.references.length ? ` and references ${newPackage.references}` : ''}.`,
+            event: `Added ${name} ${Array.isArray(newPackage.versions) && newPackage.versions.length ? `versions ${newPackage.versions.join(', ')}` : 'for all versions'} ${Array.isArray(newPackage.ecosystems) && newPackage.ecosystems.length ? `${Array.isArray(newPackage.versions) && newPackage.versions.length ? 'with' : 'for'} ecosystems ${newPackage.ecosystems.join(', ')}` : 'for all ecosystems'} to the blacklist for ${Array.isArray(newPackage.repositories) && newPackage.repositories.length ? newPackage.repositories.join(', ') : 'all repositories'} with comment ${newPackage.comment}${Array.isArray(newPackage.references) && newPackage.references.length ? ` and references ${newPackage.references}` : ''}.`,
             author: { id, name, avatar },
             timestamp: new Date().toISOString(),
             id: String(packages.length + 1)

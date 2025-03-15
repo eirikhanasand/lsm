@@ -21,15 +21,10 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
     const [references, setReferences] = useState(pkg.references)
     const [comment, setComment] = useState(pkg.comment)
 
-    function parseRepositories() {
-        return repositories
-            .map((repository) => repository.includes('] ') ? repository.split('] ')[1] : repository)
-    }
-
     function isEdited() {
         return !(JSON.stringify(versions) === JSON.stringify(pkg.versions)
             && JSON.stringify(ecosystems) === JSON.stringify(pkg.ecosystems)
-            && JSON.stringify(parseRepositories()) === JSON.stringify(pkg.repositories)
+            && JSON.stringify(repositories) === JSON.stringify(pkg.repositories)
             && JSON.stringify(references) === JSON.stringify(pkg.references)
             && JSON.stringify(comment) === JSON.stringify(pkg.comment))
     }
@@ -97,7 +92,7 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
                             value={references.join(', ')}
                             type="text"
                             placeholder="References"
-                            onChange={(event) => setReferences(event.target.value.split(','))}
+                            onChange={(event) => setReferences(event.target.value.split(', '))}
                         />
                         <input
                             className="text-sm bg-light p-1 pl-2 w-full rounded-lg min-h-[4vh] outline-none caret-blue-500"
@@ -111,8 +106,8 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
             </div>
             <div className="w-full h-full bg-normal rounded-xl p-4 col-span-4">
                 <h1 className="text-md font-semibold w-full h-[4vh]">Changelog</h1>
-                <div className="text-xs text-shallow-dark w-full min-h-[4vh] outline-none space-y-2">
-                    {pkg.changeLog.toReversed().map((change) => <Change key={change.id} change={change} />)}
+                <div className="text-xs text-shallow-dark w-full min-h-[4vh] max-h-[80vh] outline-none space-y-2 overflow-auto">
+                    {pkg.changeLog.sort((a, b) => Number(b.id) - Number(a.id)).map((change) => <Change key={change.id} change={change} />)}
                 </div>
                 <div>
                     <h1 className="text-xs text-shallow-dark p-1 pl-2 w-full rounded-lg h-[2vh] outline-none mt-2">
@@ -139,11 +134,11 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
 
 function Change({change}: {change: ChangeLog}) {
     return <div className="flex items-center gap-2 p-1 px-2 bg-light rounded-lg">
-        <h1>{change.id}</h1>
+        <h1 className="min-w-[14px] max-w-[14px]">{change.id}</h1>
         <div className='relative min-w-[35px] max-w-[35px] h-[35px] self-center cursor-pointer rounded-full overflow-hidden'>
             <Image src={`https://cdn.discordapp.com/avatars/${change.author.id}/${change.author.avatar}.png?size=64`} alt="logo" fill={true} />
         </div>
-        <h1 className="w-[15vw]">{change.author.name}</h1>
+        <h1 className="min-w-[6vw] max-w-[6vw]">{change.author.name}</h1>
         <h1 className="text-pretty">{change.event}</h1>
         <h1 className="min-w-[110px] max-w-[110px]">{new Date(change.timestamp).toLocaleString()}</h1>
     </div>

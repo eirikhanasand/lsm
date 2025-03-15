@@ -70,7 +70,7 @@ export default async function whitelistPostHandler(req: FastifyRequest, res: Fas
 
         await run(`INSERT INTO whitelist_created (name, id) VALUES ($1, $2);`, [name, author.id])
         await run(`INSERT INTO whitelist_updated (name, id) VALUES ($1, $2);`, [name, author.id])
-        const audit = `Added ${name} ${Array.isArray(versions) && versions.length ? `versions ${versions.join(', ')}` : ''} ${Array.isArray(ecosystems) && ecosystems.length ? `${Array.isArray(versions) && versions.length ? 'with' : 'for'} ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the whitelist for ${Array.isArray(repositories) && repositories.length ? repositories : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references}` : ''}.`
+        const audit = `Added ${name} ${Array.isArray(versions) && versions.length ? `versions ${versions.join(', ')}` : 'for all versions'} ${Array.isArray(ecosystems) && ecosystems.length ? `${Array.isArray(versions) && versions.length ? 'with' : 'for'} ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the whitelist for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references}` : ''}.`
         await run(`INSERT INTO whitelist_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
         await run(`INSERT INTO audit_log (event, author) VALUES ($1, $2);`, [audit, author.id])
 

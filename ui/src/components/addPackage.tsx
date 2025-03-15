@@ -405,7 +405,7 @@ function Package({ pkg, setPackages, packages, list, author, repositories }: Pac
                             <Link href={pkg.references[0]} className="info-icon border border-shallow px-[6.6px] rounded-full mb-5 text-shallow">i</Link>
 
                             <div className="grid absolute right-0 hidden w-100 bg-light p-2 border border-blue-500 rounded group-hover:grid group-hover:grid-cols-1">
-                                {pkg.references.map((reference) => <Link key={reference} href={reference} className="text-blue-300">{reference}</Link>)}
+                                {pkg.references.map((reference) => <Link key={reference} href={reference} className="text-blue-300 pl-1">{reference}</Link>)}
                             </div>
                         </div> 
                         : <Link href={pkg.references[0]} className="info-icon border border-shallow px-[6.6px] rounded-full mb-5 text-shallow cursor-pointer hover:border-blue-500 hover:text-foreground">i</Link>}
