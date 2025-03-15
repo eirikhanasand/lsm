@@ -77,7 +77,7 @@ export default async function blacklistPutHandler(req: FastifyRequest, res: Fast
             }
 
             await client.query(`INSERT INTO blacklist_updated (name, id) VALUES ($1, $2);`, [name, author.id])
-            const audit = `Updated ${name} with versions ${versions} ${Array.isArray(ecosystems) && ecosystems.length ? `with ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the blacklist for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references.join(', ')}`: ''}.`
+            const audit = `Updated ${name} with versions ${versions.join(', ')} ${Array.isArray(ecosystems) && ecosystems.length ? `with ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the blacklist for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references.join(', ')}`: ''}.`
             await client.query(`INSERT INTO blacklist_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
             await client.query(`INSERT INTO audit_log (event, author) VALUES ($1, $2);`, [audit, author.id])
         })

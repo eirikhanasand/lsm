@@ -77,7 +77,7 @@ export default async function whitelistPutHandler(req: FastifyRequest, res: Fast
             }
 
             await client.query(`INSERT INTO whitelist_updated (name, id) VALUES ($1, $2);`, [name, author.id])
-            const audit = `Updated ${name} with versions ${versions} ${Array.isArray(ecosystems) && ecosystems.length ? `with ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the whitelist for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references.join(', ')}`: ''}.`
+            const audit = `Updated ${name} with versions ${versions.join(', ')} ${Array.isArray(ecosystems) && ecosystems.length ? `with ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the whitelist for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references.join(', ')}`: ''}.`
             await client.query(`INSERT INTO whitelist_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
             await client.query(`INSERT INTO audit_log (event, author) VALUES ($1, $2);`, [audit, author.id])
         })

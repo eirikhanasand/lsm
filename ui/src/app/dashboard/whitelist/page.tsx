@@ -1,10 +1,10 @@
 import getPackages from "@/utils/filtering/getPackage"
 import fetchRepositories from "@/utils/fetchRepositories"
-import AddPage from "@/components/addPage"
+import AddPackage from "@/components/addPackage"
 
 export default async function page() {
     const list = 'whitelist'
     const packages = await getPackages({list, side: 'server'})
     const repositories = await fetchRepositories()
-    return <AddPage list={list} packages={packages} repositories={repositories} />
+    return <AddPackage list={list} packages={packages} repositories={repositories} />
 }

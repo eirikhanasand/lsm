@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import Trash from "./svg/trash"
 import Pencil from "./svg/pencil"
 import Edit from "./edit"
-import "./addPage.css"
+import "./addPackage.css"
 import { ECOSYSTEMS } from "@parent/constants"
 import { getCookie } from "@/utils/cookies"
 import Link from "next/link"
@@ -30,7 +30,7 @@ type PackagesProps = {
     repositories: Repository[]
 }
 
-export default function AddPage({ list, packages: serverPackages, repositories }: ClientPageProps) {
+export default function AddPackage({ list, packages: serverPackages, repositories }: ClientPageProps) {
     const [packages, setPackages] = useState<Package[]>([...serverPackages])
     const [selectedEcosystem, setSelectedEcosystem] = useState<string>("")
     const [showForm, setShowForm] = useState(false)
@@ -300,15 +300,17 @@ export default function AddPage({ list, packages: serverPackages, repositories }
 function PackageHeader() {
     return (
         <div className="grid grid-cols-12 w-full h-8 rounded-lg px-4 items-center border border-blue-500">
-            <h1 className="col-span-2">Name</h1>
-            <h1>Ecosystems</h1>
-            <h1>Repositories</h1>
+            <div className="flex col-span-4 w-full">
+                <h1 className="w-full">Name</h1>
+                <h1 className="w-full">Ecosystems</h1>
+                <h1 className="w-full">Repositories</h1>
+            </div>
             <h1>Versions</h1>
             <div className="flex col-span-7 w-full">
                 <h1 className="w-103.5">Comment</h1>
                 <h1 className="w-44">Created</h1>
                 <h1 className="w-44">Updated</h1>
-                <h1 className="w-20">Revision</h1>
+                <h1 className="w-20">Revisions</h1>
             </div>
         </div>
     )
@@ -360,13 +362,25 @@ function Package({ pkg, setPackages, packages, list, author, repositories }: Pac
                 repositories={repositories}
                 author={author}
             />}
-            <h1 className="text-sm text-foreground font-semibold text-wrap break-all col-span-2">
-                {pkg.name}
-            </h1>
-            <h1 className="text-sm text-foreground">
-                {Array.isArray(pkg.repositories) && pkg.repositories.length ? pkg.repositories : "Global"}
-            </h1>
-            <h1 className="text-sm text-foreground">{pkg.ecosystems}</h1>
+            <div className="flex col-span-4">
+                <h1 className="text-sm text-foreground font-semibold text-wrap break-all w-full">
+                    {pkg.name}
+                </h1>
+                <div className="text-sm text-foreground w-full">
+                    {
+                        Array.isArray(pkg.ecosystems) && pkg.ecosystems.length 
+                            ? pkg.ecosystems.map((ecosystem) => <h1 key={ecosystem}>{ecosystem}</h1>) 
+                            : "All ecosystems"
+                    }
+                </div>
+                <div className="text-sm text-foreground w-full">
+                    {
+                        Array.isArray(pkg.repositories) && pkg.repositories.length 
+                            ? pkg.repositories.map((repository) => <h1 key={repository}>{repository}</h1>) 
+                            : "Global"
+                    }
+                </div>
+            </div>
             <h1 className="text-sm text-foreground font-semibold">
                 {pkg.versions.join(', ')}
             </h1>
@@ -385,7 +399,7 @@ function Package({ pkg, setPackages, packages, list, author, repositories }: Pac
                 </h1>
             </div>
             <div className="absolute right-4 mt-3.5 flex">
-                <div className="mr-[2.5px]">
+                <div className="mr-[2px]">
                     {pkg.references && pkg.references.length > 1 
                         ? <div className="relative group inline-block">
                             <Link href={pkg.references[0]} className="info-icon border border-shallow px-[6.6px] rounded-full mb-5 text-shallow">i</Link>
@@ -396,7 +410,7 @@ function Package({ pkg, setPackages, packages, list, author, repositories }: Pac
                         </div> 
                         : <Link href={pkg.references[0]} className="info-icon border border-shallow px-[6.6px] rounded-full mb-5 text-shallow cursor-pointer hover:border-blue-500 hover:text-foreground">i</Link>}
                 </div>
-                <button onClick={() => setEditing(true)} className="h-[20px] w-[20px] self-end mb-[4px]">
+                <button onClick={() => setEditing(true)} className="h-[20px] w-[20px] self-end mb-[4px] pl-[2px]">
                     <Pencil fill="pencil-icon cursor-pointer" className="pencil-icon max-w-[16px] max-h-[16px]" />
                 </button>
                 <button 
