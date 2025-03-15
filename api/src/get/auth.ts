@@ -55,6 +55,7 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
         })
         const userData = await userResponse.json()
         const { id, username, avatar, mfa_enabled, locale, email, verified } = userData as {[key: string]: string}
+        console.log(userData, id, username, avatar)
         const token = btoa(JSON.stringify({token: access_token, id, username, avatar, mfa_enabled, locale, email, verified}))
         await run(
             `INSERT INTO users (id, name, avatar)
