@@ -9,11 +9,6 @@ const {
     SERVER_API: ENV_SERVER_API
 } = process.env
 
-// Document check to bypass client side check
-// if (!ENV_JFROG_ID || !ENV_JFROG_TOKEN || !ENV_API) {
-//     throw new Error('Missing JFROG_ID, JFROG_TOKEN or API env variables.')
-// }
-
 export { JFROG_ID, JFROG_TOKEN }
 export const API = ENV_API || 'http://129.241.150.86:8080/api'
 export const SERVER_API = ENV_SERVER_API || 'http://172.17.0.1:8080/api'
