@@ -43,9 +43,9 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
         const { id, username, avatar, mfa_enabled, locale, email, verified } = userData as {[key: string]: string}
         const token = btoa(JSON.stringify({token: access_token, id, username, avatar, mfa_enabled, locale, email, verified}))
         await run(
-            `INSERT INTO users (id, name, image)
-                SELECT $1, $2, $3
-                WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = $1);`, 
+            `INSERT INTO users (id, name, avatar)
+             SELECT $1, $2, $3
+             WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = $1);`, 
             [id, username, avatar]
         )
         res.redirect(`${FRONTEND_URL}/login?token=${token}`)

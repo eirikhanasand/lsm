@@ -1,17 +1,12 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 import fetchWhiteList from "../utils/fetchWhitelist.js"
+import { loadSQL } from "../utils/loadSQL.js"
 
 export default async function whitelistIndexHandler(_: FastifyRequest, res: FastifyReply) {
     try {
-        const result = await run(`
-            SELECT w.name, 
-            COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions, 
-            COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) as ecosystems, 
-            COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) as repositories,
-            COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
-            FROM whitelist w;
-        `, [])
+        const query = await loadSQL("get_whitelist.sql")
+        const result = await run(query, [])
         if (result.rows.length === 0) {
             return res.send([])
         }
@@ -45,42 +40,12 @@ export async function whitelistByRepositoryHandler(req: FastifyRequest, res: Fas
     }
   
     try {
-        console.log(`Fetching whitelist data for repository: ${repository}`);
-    
-        const result = await run(
-            `
-            WITH repo_whitelist AS (
-                SELECT 
-                    w.name,
-                    COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions,
-                    COALESCE((SELECT array_agg(ecosystem) FROM whitelist_ecosystems WHERE name = w.name), '{}'::TEXT[]) as ecosystems,
-                    COALESCE((SELECT array_agg(repository) FROM whitelist_repositories WHERE name = w.name), '{}'::TEXT[]) as repositories,
-                    COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
-                FROM whitelist w
-                JOIN whitelist_repositories wr ON w.name = wr.name
-                WHERE wr.repository = $1
-            ),
-            global_whitelist AS (
-                SELECT 
-                    w.name,
-                    COALESCE((SELECT array_agg(version) FROM whitelist_versions WHERE name = w.name), '{}'::TEXT[]) as versions,
-                    '{}'::TEXT[] as ecosystems,
-                    '{}'::TEXT[] as repositories,
-                    COALESCE((SELECT array_agg(comment) FROM whitelist_comments WHERE name = w.name), '{}'::TEXT[]) as comments
-                FROM whitelist w
-                LEFT JOIN whitelist_repositories wr ON w.name = wr.name
-                WHERE wr.repository IS NULL OR wr.repository = ''
-            )
-            SELECT * FROM repo_whitelist
-            UNION ALL
-            SELECT * FROM global_whitelist;
-            `,
-            [repository]
-        )
-    
+        console.log(`Fetching whitelist data for repository: ${repository}`)
+        const query = await loadSQL("get_whitelist_by_repository.sql")
+        const result = await run(query, [repository])
         if (result.rows.length === 0) {
-          console.warn(`No whitelist entries found for repository: ${repository}`)
-          return res.send([])
+            console.warn(`No whitelist entries found for repository: ${repository}`)
+            return res.send([])
         }
         
         return res.send(result.rows)

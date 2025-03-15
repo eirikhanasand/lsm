@@ -5,16 +5,16 @@ export interface RepoWhitelistItem {
     versions: string[]       
     ecosystems: string[]  
     repositories: string[]  
-    comments: string[] 
+    comment: string
     isGlobal?: boolean 
 }
 
 export interface RepoBlacklistItem {
     name: string
-    versions: string[]      
+    versions: string[]
     ecosystems: string[]    
     repositories: string[]  
-    comments: string[]     
+    comment: string
     isGlobal?: boolean  
 }
 

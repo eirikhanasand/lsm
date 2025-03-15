@@ -2,19 +2,22 @@ import { SetStateAction } from "react"
 import putPackage from "./putPackage"
 
 type RemovePackageProps = {
-    pkg: APIPackage
-    setPackages: (value: SetStateAction<APIPackage[]>) => void
-    packages: APIPackage[]
+    pkg: Package
+    setPackages: (value: SetStateAction<Package[]>) => void
+    packages: Package[]
     list: 'whitelist' | 'blacklist'
+    author: Author
 }
 
-export default async function editPackage({pkg, setPackages, packages, list}: RemovePackageProps) {
+export default async function editPackage({pkg, setPackages, packages, list, author}: RemovePackageProps) {
     const response = await putPackage({list, pkg: {
         name: pkg.name,
-        ecosystem: pkg.ecosystems.join(','),
-        version: pkg.versions.join(','),
-        comment: pkg.comments.join(','),
-        repository: pkg.repositories.join(',')
+        ecosystems: pkg.ecosystems,
+        versions: pkg.versions,
+        comment: pkg.comment,
+        references: pkg.references,
+        repositories: pkg.repositories,
+        author
     }})
 
     if (response === 500) {
@@ -22,5 +25,5 @@ export default async function editPackage({pkg, setPackages, packages, list}: Re
         return
     }
 
-    setPackages(packages.map((p) =>p.name === pkg.name ? pkg : p));
+    setPackages(packages.map((p) =>p.name === pkg.name ? pkg : p))
 }

@@ -1,4 +1,4 @@
-DO $$ 
+DO $$
 BEGIN
     IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'osvdb') THEN
         CREATE DATABASE osvdb;
@@ -7,7 +7,7 @@ END $$;
 
 \c osvdb
 
-DO $$ 
+DO $$
 BEGIN
     IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'osvuser') THEN
         CREATE USER osvuser WITH ENCRYPTED PASSWORD 'osvpassword';
@@ -17,15 +17,17 @@ END $$;
 
 -- Whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist (
-    name TEXT PRIMARY KEY
+    name TEXT PRIMARY KEY,
+    comment TEXT NOT NULL
 );
 
 -- Blacklisted dependencies
 CREATE TABLE IF NOT EXISTS blacklist (
-    name TEXT PRIMARY KEY
+    name TEXT PRIMARY KEY,
+    comment TEXT NOT NULL
 );
 
--- Table for version specific whitelisted dependencies
+-- Version specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_versions (
     name TEXT NOT NULL,
     version TEXT,
@@ -33,7 +35,7 @@ CREATE TABLE IF NOT EXISTS whitelist_versions (
     PRIMARY KEY (name, version)
 );
 
--- Table for ecosystem specific whitelisted dependencies
+-- Ecosystem specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_ecosystems (
     name TEXT NOT NULL,
     ecosystem TEXT,
@@ -41,7 +43,7 @@ CREATE TABLE IF NOT EXISTS whitelist_ecosystems (
     PRIMARY KEY (name, ecosystem)
 );
 
--- Table for repository specific whitelisted dependencies
+-- Repository specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_repositories (
     name TEXT NOT NULL,
     repository TEXT,
@@ -49,15 +51,51 @@ CREATE TABLE IF NOT EXISTS whitelist_repositories (
     PRIMARY KEY (name, repository)
 );
 
--- Table for comments for specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_comments (
+-- References for specific whitelisted dependencies
+CREATE TABLE IF NOT EXISTS whitelist_references (
     name TEXT NOT NULL,
-    comment TEXT,
+    reference TEXT NOT NULL,
     FOREIGN KEY (name) REFERENCES whitelist(name),
-    PRIMARY KEY (name, comment)
+    PRIMARY KEY (name, reference)
 );
 
--- Table for version specific blacklisted versions
+-- Authors for specific whitelisted dependencies
+CREATE TABLE IF NOT EXISTS whitelist_authors (
+    name TEXT NOT NULL,
+    author TEXT NOT NULL,
+    FOREIGN KEY (name) REFERENCES whitelist(name),
+    PRIMARY KEY (name, author)
+);
+
+-- Created info for specific whitelisted dependencies
+CREATE TABLE IF NOT EXISTS whitelist_created (
+    name TEXT NOT NULL,
+    id TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (name) REFERENCES whitelist(name),
+    PRIMARY KEY (name, id, timestamp)
+);
+
+-- Updated info for specific whitelisted dependencies
+CREATE TABLE IF NOT EXISTS whitelist_updated (
+    name TEXT NOT NULL,
+    id TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (name) REFERENCES whitelist(name),
+    PRIMARY KEY (name, id, timestamp)
+);
+
+-- Changelog for specific whitelisted dependencies
+CREATE TABLE IF NOT EXISTS whitelist_changelog (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    event TEXT NOT NULL,
+    author TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (name) REFERENCES whitelist(name)
+);
+
+-- Version specific blacklisted versions
 CREATE TABLE IF NOT EXISTS blacklist_versions (
     name TEXT NOT NULL,
     version TEXT,
@@ -65,7 +103,7 @@ CREATE TABLE IF NOT EXISTS blacklist_versions (
     PRIMARY KEY (name, version)
 );
 
--- Table for ecosystem specific blacklisted ecosystems
+-- Ecosystem specific blacklisted ecosystems
 CREATE TABLE IF NOT EXISTS blacklist_ecosystems (
     name TEXT NOT NULL,
     ecosystem TEXT,
@@ -73,7 +111,7 @@ CREATE TABLE IF NOT EXISTS blacklist_ecosystems (
     PRIMARY KEY (name, ecosystem)
 );
 
--- Table for repository specific blacklisted repositories
+-- Repository specific blacklisted repositories
 CREATE TABLE IF NOT EXISTS blacklist_repositories (
     name TEXT NOT NULL,
     repository TEXT,
@@ -81,15 +119,51 @@ CREATE TABLE IF NOT EXISTS blacklist_repositories (
     PRIMARY KEY (name, repository)
 );
 
--- Table for comments for specific blacklisted dependencies
-CREATE TABLE IF NOT EXISTS blacklist_comments (
+-- References for specific blacklisted dependencies
+CREATE TABLE IF NOT EXISTS blacklist_references (
     name TEXT NOT NULL,
-    comment TEXT,
+    reference TEXT NOT NULL,
     FOREIGN KEY (name) REFERENCES blacklist(name),
-    PRIMARY KEY (name, comment)
+    PRIMARY KEY (name, reference)
 );
 
--- Creates vulnerability table
+-- Authors for specific blacklisted dependencies
+CREATE TABLE IF NOT EXISTS blacklist_authors (
+    name TEXT NOT NULL,
+    author TEXT NOT NULL,
+    FOREIGN KEY (name) REFERENCES blacklist(name),
+    PRIMARY KEY (name, author)
+);
+
+-- Created info for specific blacklisted dependencies
+CREATE TABLE IF NOT EXISTS blacklist_created (
+    name TEXT NOT NULL,
+    id TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (name) REFERENCES blacklist(name),
+    PRIMARY KEY (name, id, timestamp)
+);
+
+-- Updated info for specific blacklisted dependencies
+CREATE TABLE IF NOT EXISTS blacklist_updated (
+    name TEXT NOT NULL,
+    id TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (name) REFERENCES blacklist(name),
+    PRIMARY KEY (name, id, timestamp)
+);
+
+-- Changelog for specific blacklisted dependencies
+CREATE TABLE IF NOT EXISTS blacklist_changelog (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    event TEXT NOT NULL,
+    author TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (name) REFERENCES blacklist(name)
+);
+
+-- Vulnerabilities table
 CREATE TABLE IF NOT EXISTS vulnerabilities (
     name TEXT PRIMARY KEY,
     package_name TEXT NOT NULL,
@@ -100,7 +174,7 @@ CREATE TABLE IF NOT EXISTS vulnerabilities (
     CONSTRAINT unique_name_ecosystem_version UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
 );
 
--- Creates downloaded events table
+-- Download events table
 CREATE TABLE IF NOT EXISTS download_events (
     id SERIAL PRIMARY KEY,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -112,6 +186,21 @@ CREATE TABLE IF NOT EXISTS download_events (
     status VARCHAR(10) NOT NULL CHECK (status IN ('passed', 'blocked')),
     reason TEXT CHECK (LENGTH(reason) > 0),
     CONSTRAINT unique_event UNIQUE (timestamp, package_name, package_version, client_address)
+);
+
+-- Audit log table
+CREATE TABLE IF NOT EXISTS audit_log (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+    event TEXT NOT NULL,
+    author TEXT NOT NULL
+);
+
+-- User table
+CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    avatar TEXT NOT NULL
 );
 
 -- Indexes for downloaded packages
@@ -129,10 +218,10 @@ CREATE INDEX IF NOT EXISTS idx_vuln_name ON vulnerabilities (name);
 CREATE INDEX IF NOT EXISTS idx_whitelist_versions_name ON whitelist_versions (name);
 CREATE INDEX IF NOT EXISTS idx_whitelist_ecosystems_name ON whitelist_ecosystems (name);
 CREATE INDEX IF NOT EXISTS idx_whitelist_repositories_name ON whitelist_repositories (name);
-CREATE INDEX IF NOT EXISTS idx_whitelist_comments_name ON whitelist_comments (name);
+CREATE INDEX IF NOT EXISTS idx_whitelist_authors_name ON whitelist_authors (name);
 
 -- Indexes for Blacklist
 CREATE INDEX IF NOT EXISTS idx_blacklist_versions_name ON blacklist_versions (name);
 CREATE INDEX IF NOT EXISTS idx_blacklist_ecosystems_name ON blacklist_ecosystems (name);
 CREATE INDEX IF NOT EXISTS idx_blacklist_repositories_name ON blacklist_repositories (name);
-CREATE INDEX IF NOT EXISTS idx_blacklist_comments_name ON blacklist_comments (name);
+CREATE INDEX IF NOT EXISTS idx_blacklist_authors_name ON blacklist_authors (name);

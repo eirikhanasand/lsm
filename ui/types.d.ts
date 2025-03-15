@@ -1,37 +1,33 @@
-type Package = {
-    name: string
-    version: string
-    ecosystem: string
-    repository: string | null
-    comment: string
-    author: string
-    createdAt: string
-    createdBy: string
-    updatedAt: string
-    updatedBy: string
-    changeLog: ChangeLog[]
-}
-
 type AddPackage = {
     name: string
-    version: string
-    ecosystem: string
-    repository: string | null
     comment: string
-    author: string
+    versions: string[]
+    ecosystems: string[]
+    repositories: string[]
+    references: string[]
+    author: Author
 }
 
-type APIPackage = {
+type PutPackage = {
     name: string
     versions: string[]
     ecosystems: string[]
     repositories: string[]
-    comments: string[]
-    authors: string[]
-    createdAt: string
-    createdBy: string
-    updatedAt: string
-    updatedBy: string
+    comment: string
+    references: string[]
+    author: Author
+}
+
+type Package = {
+    name: string
+    comment: string
+    versions: string[]
+    ecosystems: string[]
+    repositories: string[]
+    references: string[]
+    authors: Author[]
+    created: Author & { time: string }
+    updated: Author & { time: string }
     changeLog: ChangeLog[]
 }
 
@@ -59,7 +55,7 @@ type RepoWhitelistItem = {
     versions: string[]       
     ecosystems: string[]  
     repositories: string[]  
-    comments: string[] 
+    comment: string 
     isGlobal?: boolean 
 }
 
@@ -68,7 +64,7 @@ type RepoBlacklistItem = {
     versions: string[]      
     ecosystems: string[]    
     repositories: string[]  
-    comments: string[]     
+    comment: string
     isGlobal?: boolean  
 }
 
@@ -123,19 +119,22 @@ type GetStatisticProps = {
 type AuditProps = {
     id: number
     event: string
-    author: string
-    name: string
-    image: string
+    author: Author
     timestamp: string
 }
 
 type ChangeLog = {
     name: string
     event: string
-    author: string
+    author: Author
     timestamp: string
-    image: string
     id: string
+}
+
+type Author = {
+    id: string
+    name: string
+    avatar: string
 }
 
 type Ecosystem = 

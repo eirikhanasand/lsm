@@ -7,6 +7,14 @@
     fill: var(--color-bright);
 }
 
+.info-icon:hover {
+    color: var(--color-foreground);
+}
+
 .select-repo {
+    background: var(--background);
+}
+
+.select-version {
     background: var(--background);
 }

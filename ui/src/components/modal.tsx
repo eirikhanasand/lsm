@@ -18,6 +18,6 @@ export default function Modal({ children, onClose }: ModalProps) {
                 {children}
             </div>
         </div>
-    );
+    )
 }
   

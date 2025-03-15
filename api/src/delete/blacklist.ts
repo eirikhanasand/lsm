@@ -12,12 +12,13 @@ export default async function blacklistDeleteHandler(req: FastifyRequest, res: F
             await client.query("DELETE FROM blacklist_versions WHERE name = $1;", [name])
             await client.query("DELETE FROM blacklist_ecosystems WHERE name = $1;", [name])
             await client.query("DELETE FROM blacklist_repositories WHERE name = $1;", [name])
-            await client.query("DELETE FROM blacklist_comments WHERE name = $1;", [name])
+            await client.query("DELETE FROM blacklist_references WHERE name = $1;", [name])
+            await client.query("DELETE FROM blacklist_authors WHERE name = $1;", [name])
+            await client.query("DELETE FROM blacklist_created WHERE name = $1;", [name])
+            await client.query("DELETE FROM blacklist_updated WHERE name = $1;", [name])
+            await client.query("DELETE FROM blacklist_changelog WHERE name = $1;", [name])
 
-            const mainDeleteResult = await client.query(
-                "DELETE FROM blacklist WHERE name = $1 RETURNING *;",
-                [name]
-            )
+            const mainDeleteResult = await client.query("DELETE FROM blacklist WHERE name = $1 RETURNING *;", [name])
             if (mainDeleteResult.rowCount === 0) {
                 throw new Error(`No blacklist entry found for name='${name}'.`)
             }

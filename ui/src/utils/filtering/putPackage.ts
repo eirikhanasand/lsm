@@ -2,7 +2,7 @@ import { API } from "@constants"
 
 type PutListProps = {
     list: 'whitelist' | 'blacklist'
-    pkg: Package
+    pkg: PutPackage
 }
 
 export default async function putPackage({list, pkg}: PutListProps) {

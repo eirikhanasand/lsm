@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "next/link"
 import fetchRepositories from "@/utils/fetchRepositories"
 
 type Repository = {

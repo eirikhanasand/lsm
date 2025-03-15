@@ -4,21 +4,23 @@ import run from "../db.js"
 type AuditResponse = {
     id: number
     event: string
-    author: string
+    author: User
 }
 
 export default async function auditHandler(_: FastifyRequest, res: FastifyReply) {
     try {
         console.log(`Fetching audit log`)
-        const auditResult = await run(`SELECT id, event, author, timestamp FROM audit_log`, [])
+        const auditResult = await run(`SELECT id, event, author, timestamp FROM audit_log;`, [])
         const auditLog: AuditResponse[] = await Promise.all(auditResult.rows.map(async(row) => {
             const details = await getDetails(row.author)
             return {
                 id: row.id,
                 event: row.event,
-                author: row.author,
-                name: details.name,
-                image: details.image,
+                author: {
+                    id: row.author,
+                    name: details.name,
+                    avatar: details.avatar
+                },
                 timestamp: row.timestamp
             }
         }))
@@ -30,7 +32,7 @@ export default async function auditHandler(_: FastifyRequest, res: FastifyReply)
     }
 }
 
-async function getDetails(id: string): Promise<{ name: string, image: string }> {
-    const details = await run(`SELECT name, image FROM users WHERE id = $1`, [id])
+async function getDetails(id: string): Promise<{ name: string, avatar: string }> {
+    const details = await run(`SELECT name, avatar FROM users WHERE id = $1`, [id])
     return details.rows[0]
 }
