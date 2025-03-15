@@ -73,7 +73,7 @@ export default function Edit({pkg, setEditing, setPackages, packages, list, auth
                             value={versions.join(', ')}
                             type="text"
                             placeholder={`Versions to ${list}`}
-                            onChange={(event) => setVersions(event.target.value.split(','))}
+                            onChange={(event) => setVersions(event.target.value.split(', '))}
                         />
                         <Dropdown 
                             item='ecosystems' 

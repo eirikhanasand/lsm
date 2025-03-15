@@ -40,10 +40,10 @@ export default function AddPackage({ list, packages: serverPackages, repositorie
     const [author, setAuthor] = useState<Author>({id: "", name: "", avatar: ""})
     const [newPackage, setNewPackage] = useState<AddPackage>({
         name: "",
+        comment: "",
         versions: [],
         ecosystems: [],
         repositories: [],
-        comment: "",
         references: [],
         author: {
             id: "",
@@ -58,7 +58,7 @@ export default function AddPackage({ list, packages: serverPackages, repositorie
         const avatar = getCookie('avatar')
         if (id && name && avatar) {
             setAuthor({ id, name, avatar })
-            setNewPackage({...newPackage, author: {id, name, avatar}})
+            setNewPackage({...newPackage, author: { id, name, avatar }})
         }
     }, [])
     
@@ -81,8 +81,7 @@ export default function AddPackage({ list, packages: serverPackages, repositorie
 
         const ecosystemMatches =
             !selectedEcosystem ||
-            (Array.isArray(p.ecosystems) &&
-                p.ecosystems.includes(selectedEcosystem))
+            (Array.isArray(p.ecosystems) && p.ecosystems.includes(selectedEcosystem))
 
         const isGlobal =
                 !p.repositories || (Array.isArray(p.repositories) && p.repositories.length === 0)
@@ -381,8 +380,8 @@ function Package({ pkg, setPackages, packages, list, author, repositories }: Pac
                     }
                 </div>
             </div>
-            <h1 className="text-sm text-foreground font-semibold">
-                {pkg.versions.join(', ')}
+            <h1 className="text-sm text-foreground">
+                {Array.isArray(pkg.versions) && pkg.versions.length ? pkg.versions.join(', ') : "All versions"}
             </h1>
             <div className="flex col-span-7 gap-4">
                 <h1 className="text-sm text-shallow italic col-span-4 pr-2 w-100">
