@@ -19,7 +19,14 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
         return res.status(400).send({ error: "Authorization code missing" })
     }
 
-    console.log("code", code)
+    console.log(`code '${code}'`)
+    console.log("body", new URLSearchParams({
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: `${API}/oauth2/callback`,
+    }))
 
     try {
         const response = await fetch("https://discord.com/api/oauth2/token", {
