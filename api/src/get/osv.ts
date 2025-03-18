@@ -53,12 +53,11 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
         if (blacklist.length) {
             response['blacklist'] = blacklist
         }
+        processVulnerabilities(response)
 
         if ((result.rows.length === 0 || !result.rows.length) && (!('whitelist' in response) && !('blacklist' in response))) {
             return res.send({})
         }
-        processVulnerabilities(response)
-
         return res.send(response)
     } catch (error) {
         console.error("Database error:", error)

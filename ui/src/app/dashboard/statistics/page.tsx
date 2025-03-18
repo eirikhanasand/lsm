@@ -91,7 +91,7 @@ export default function Statistics() {
                     console.log("Fetched stats:", fetchedStats)
 
                     setSummary({
-                        criticalBlocked: 0,
+                        criticalBlocked: fetchedStats.criticalBlocked,
                         lastScan: fetchedStats.lastScan,
                         safeApproved: fetchedStats.safeApproved,
                         vulnerabilitiesFound: fetchedStats.vulnerabilitiesFound,
@@ -99,15 +99,18 @@ export default function Statistics() {
                     })
                     setRepositories(fetchedStats.repositoryStats as RepositoryData[])
 
-                    function normalizeDateStart(dateStr: string) {
+                    function normalizeDateStart(dateStr: string): Date {
                         const date = new Date(dateStr)
                         return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
                     }
 
-                    function normalizeDateEnd(dateStr: string) {
+                    function normalizeDateEnd(dateStr: string): Date {
                         const date = new Date(dateStr)
                         return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59)
                     }
+
+                    console.log("fetched values:")
+                    console.log(fetchedStats)
 
                     const filteredValues = (fetchedStats.vulnerabilitiesOverTime as ChartData[])
                         .map((entry: ChartData) => {
@@ -120,6 +123,7 @@ export default function Statistics() {
                             const entryDate = entry.date
                             return entryDate >= normalizeDateStart(startDate) && entryDate <= normalizeDateEnd(endDate)
                         })
+
 
                     setLoadedData(filteredValues)
                     setData({
@@ -134,6 +138,9 @@ export default function Statistics() {
                             }
                         ]
                     })
+
+                    console.log("filtered values:")
+                    console.log(filteredValues)
                 }
             } catch (error) {
                 console.error("Error fetching statistics:", error)

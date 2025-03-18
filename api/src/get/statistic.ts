@@ -81,7 +81,7 @@ export default async function packageStatsHandler(req: FastifyRequest, res: Fast
         const response: StatisticResponse = {
             totalScanned: summary.total_scanned,
             vulnerabilitiesFound: summary.vulnerabilities_found,
-            criticalBlocked: summary.critical_blocked,
+            criticalBlocked: summary.vulnerabilities_found,
             safeApproved: summary.safe_approved,
             lastScan: summary.last_scan ? format(summary.last_scan) : null,
             repositoryStats,
@@ -99,9 +99,14 @@ function format(timestamp: string): string {
     console.log("the timestamp is", timestamp)
     const date = new Date(timestamp)
     const year = date.getFullYear()
-    const month = date.getMonth().toString().padStart(2, '0')
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
     const day = date.getDate().toString().padStart(2, '0')
     const hour = date.getHours().toString().padStart(2, '0')
     const minute = date.getMinutes().toString().padStart(2, '0')
-    return `${date}.${month}.${year}`
+
+    const formatted = `${year}-${month}-${day}T${hour}:${minute}:00.000Z`
+
+    console.log("formatted timestamp is: ", formatted)
+    return formatted
 }
+

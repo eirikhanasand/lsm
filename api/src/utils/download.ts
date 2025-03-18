@@ -1,4 +1,5 @@
 import run from "../db.js"
+import {API} from "../constants.js";
 
 type DownloadEvent = {
     package_name: string
@@ -8,6 +9,21 @@ type DownloadEvent = {
     client_address: string
     status: 'passed' | 'blocked'
     reason: string
+}
+
+type APIOSVResponse = {
+    status: any,
+    message: any,
+    headers: any
+}
+
+type GoogleStatus = {
+    status: number
+    data: {
+        whitelist?: any[]
+        blacklist?: any[]
+        vulnerabilties: Vulnerability[]
+    }
 }
 
 export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
@@ -43,12 +59,15 @@ export async function processVulnerabilities(response: any) {
             console.log(vuln)
             console.log(vuln.data)
 
+            const packageResponse = await checkPackage(vuln.package_name, vuln.version_introduced, vuln.ecosystem)
+            console.log(packageResponse)
+
             const event =  {
                 package_name: vuln.package_name,
                 package_version: vuln.version_introduced,
                 ecosystem: vuln.ecosystem,
                 client_address: '0.0.0.0',
-                status: 'blocked',
+                status: packageResponse.status,
                 reason: vuln.data.details,
             } as DownloadEvent
 
@@ -57,5 +76,111 @@ export async function processVulnerabilities(response: any) {
         }
     } catch (error) {
         console.log(error)
+    }
+}
+
+
+async function fetchOSV(name: string, version: string, ecosystem: string): Promise<GoogleStatus | null> {
+    try {
+        const response = await fetch(`${API}/${ecosystem}/${name}/${version}`);
+        const jsonData = await response.json();
+
+        return {
+            status: 200,
+            data: jsonData
+        } as GoogleStatus;
+    } catch (error) {
+        return null;
+    }
+}
+
+
+async function checkPackage(name: string | null, version: string | null, key: string | null) : Promise<APIOSVResponse> {
+    if (!name || !version || !key) {
+        //console.log(`DOWNLOAD STOPPED: UNABLE TO EXTRACT NAME AND VERSION - ${metadata.name}`)
+        return {
+            status: "stopped",
+            message: `DOWNLOAD STOPPED - Unable to extract package name and version.`,
+            // @ts-ignore, doesnt exist locally but does exist remotely
+            headers: {}
+        }
+    }
+
+    const osvData = await fetchOSV(name, version, key)
+
+    if (!osvData) return {
+        status: "stopped",
+        message: `DOWNLOAD STOPPED - Failed to fetch from API..`,
+        // @ts-ignore, doesnt exist locally but does exist remotely
+        headers: {}
+    }
+
+    console.log(osvData)
+    if (osvData.status !== 200) {
+        console.log('DOWNLOAD STOPPED: UNABLE TO FETCH OSV', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
+
+        console.log(osvData)
+        return {
+            status: "stopped",
+            message: `DOWNLOAD STOPPED - Unable to fetch package info from OSV.`,
+            // @ts-ignore - Required field, doesn't exist locally but does exist remotely
+            headers: {}
+        }
+    }
+
+    if ((osvData.data as any).length) {
+        // TITLE SECTION
+        //log('DOWNLOAD STOPPED: MALICIOUS', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
+        if ('vulnerabilties' in osvData.data) {
+            console.log('-----------------------------')
+            for (const vulnerability of osvData.data.vulnerabilties) {
+                //logDetails(vulnerability)
+            }
+        }
+        return {
+            status: "stopped",
+            message: `DOWNLOAD STOPPED: Malicious package detected.`,
+            // @ts-ignore - Required field, doesnt exist locally but does exist remotely
+            headers: {}
+        }
+    }
+
+    if (JSON.stringify(osvData.data) !== '{}') {
+        console.log("OSV data was not empty:")
+        console.log(osvData.data)
+
+        // Checking blacklist
+        if ('blacklist' in osvData.data) {
+            //log('DOWNLOAD STOPPED: BLACKLISTED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
+
+            return {
+                status: "stopped",
+                message: `DOWNLOAD STOPPED: Blacklisted.`,
+                headers: {}
+            }
+        }
+
+        // Checking whitelist
+        if ('whitelist' in osvData.data && osvData.data.vulnerabilties.length) {
+            if ('vulns' in osvData.data) {
+                console.log('-----------------------------')
+                for (const vulnerability of osvData.data.vulnerabilties) {
+                    //logDetails(vulnerability)
+                }
+            }
+            console.log('DOWNLOAD CONTINUED: MALICIOUS BUT WHITELISTED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
+            return {
+                status: "passed",
+                message: `DOWNLOAD CONTINUED: Malicious but whitelisted.`,
+                headers: {}
+            }
+        }
+    }
+
+    //log('DOWNLOAD CONTINUED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
+    return {
+        status: "passed",
+        message: `DOWNLOAD CONTINUED: Nothing observed.`,
+        headers: {}
     }
 }
