@@ -12,6 +12,8 @@ import blacklistDeleteHandler from "./delete/blacklist.js"
 import { loginHandler, logoutHandler, loginCallbackHandler } from "./get/auth.js"
 import { FastifyInstance, FastifyPluginOptions } from "fastify"
 import auditHandler from "./get/audit.js"
+import getWorkerLogsHandler from "./get/worker-logs.js"
+import postWorkerLogsHandler from "./post/workerlogs.js"
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // GET handlers
@@ -28,10 +30,12 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.get("/oauth2/logout", logoutHandler)
     fastify.get("/statistic/:timestart/:timeend", packageStatsHandler)
     fastify.get("/audit", auditHandler)
+    fastify.get("/worker-logs", getWorkerLogsHandler)
 
     // POST handlers
     fastify.post("/whitelist", whitelistPostHandler)
     fastify.post("/blacklist", blacklistPostHandler)
+    fastify.post("/worker-logs", postWorkerLogsHandler)
 
     // PUT handlers 
     fastify.put("/whitelist", whitelistPutHandler)

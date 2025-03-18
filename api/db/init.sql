@@ -196,6 +196,14 @@ CREATE TABLE IF NOT EXISTS audit_log (
     author TEXT NOT NULL
 );
 
+-- Worker logs table
+CREATE TABLE IF NOT EXISTS worker_logs (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+    log_message TEXT NOT NULL,
+    worker_name TEXT NOT NULL
+);
+
 -- User table
 CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,

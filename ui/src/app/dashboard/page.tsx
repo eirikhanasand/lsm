@@ -10,6 +10,7 @@ export default function Dashboard() {
                 <Section text="Whitelisted Packages" href="/dashboard/whitelist" />  
                 <Section text="Blacklisted Packages" href="/dashboard/blacklist" />
                 <Section text="Statistics" href="/dashboard/statistics" />
+                <Section text="Worker-Logs" href="/dashboard/worker-logs"/>
                 <Section text="Settings" href="/dashboard/settings" />
             </div>
         </main>
