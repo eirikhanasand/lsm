@@ -39,6 +39,8 @@ RUN chmod +x /app/entrypoint.sh /app/update_osv.sh
 
 # Cronjob to update osv hourly
 RUN echo '0 * * * * /bin/sh /app/update_osv.sh' >> /etc/crontabs/root
+# Cronjob to update CVE hourly
+RUN echo '0 * * * * /bin/sh /app/update_cve.sh' >> /etc/crontabs/root
 
 # Exposes API port
 EXPOSE 8080

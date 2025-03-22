@@ -9,9 +9,10 @@ type ENV = {
 
 dotenv.config({path: '../.env'})
 
+const REDHAT_API = "https://access.redhat.com/hydra/rest/securitydata"
 const { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL } = process.env as ENV
 if (!API || !CLIENT_ID || !CLIENT_SECRET || !FRONTEND_URL) {
     throw new Error("Missing API, CLIENT_ID, CLIENT_SECRET and / or FRONTEND_URL env variable.")
 }
 
-export { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL }
+export { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL, REDHAT_API}

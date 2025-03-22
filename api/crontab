@@ -1,1 +1,2 @@
 0 * * * * /app/update_osv.sh
+0 * * * * /app/update_cve.sh

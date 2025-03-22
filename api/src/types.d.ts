@@ -8,6 +8,10 @@ type OSVHandlerParams = {
     author: Author
 }
 
+type CVEHandlerParams = {
+    name: string
+}
+
 type Statistics = {
     repository: string
     ecosystem: string
