@@ -106,6 +106,7 @@ export async function processVulnerabilities(response: any) {
                 client_address: '0.0.0.0',
                 status: packageResponse.status,
                 reason: vuln.data.details,
+                repository: vuln.repository,
                 severity: severity.toString()
             } as DownloadEvent
 

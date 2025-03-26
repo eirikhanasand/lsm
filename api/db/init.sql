@@ -182,8 +182,8 @@ CREATE TABLE IF NOT EXISTS download_events (
     package_version VARCHAR(50) NOT NULL CHECK (LENGTH(package_version) > 0),
     ecosystem VARCHAR(100) NOT NULL CHECK (LENGTH(ecosystem) > 0),
     client_address INET NOT NULL,
-    repository VARCHAR(25) NOT NULL CHECK (LENGTH(repository) > 0),
     status VARCHAR(10) NOT NULL CHECK (status IN ('passed', 'blocked')),
+    repository VARCHAR(25),
     reason TEXT CHECK (LENGTH(reason) > 0),
     severity FLOAT(1) DEFAULT -1,
     CONSTRAINT unique_event UNIQUE (timestamp, package_name, package_version, client_address)
