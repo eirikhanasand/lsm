@@ -26,6 +26,7 @@ type StatCardProps = {
 
 type ChartData = {
     date: Date
+    package_name: string
     timestamp: string
     severity: number
     reason: string
@@ -116,7 +117,9 @@ export default function Statistics() {
                         .map((entry: ChartData) => {
                             const formattedTimestamp = convertToISOFormat(entry.timestamp)
                             entry.date = new Date(formattedTimestamp)
-                            entry.severity = Math.floor(Math.random() * 10)
+                            if (entry.severity == null) {
+                                entry.severity = Math.floor(Math.random() * 10)
+                            }
                             return entry
                         })
                         .filter((entry: ChartData) => {
@@ -127,7 +130,14 @@ export default function Statistics() {
 
                     setLoadedData(filteredValues)
                     setData({
-                        labels: filteredValues.map((entry) => entry.date.toLocaleDateString().replace(/\//g, '.')),
+                        labels: filteredValues.map((entry) => entry.date.toLocaleString("no-NO", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                        }).replace(/\//g, '.')),
                         datasets: [
                             {
                                 label: "Vulnerability Severity Over Time",
@@ -218,15 +228,19 @@ export default function Statistics() {
                             <strong>Severity Level:</strong> {selectedData.severity}
                         </p>
                         <p className="mb-4 text-white">
-                            <strong>Repository:</strong>
+                            <strong>Package name: </strong>
+                            {selectedData.package_name}
+                        </p>
+                        <p className="mb-4 text-white">
+                            <strong>Repository: </strong>
                             {selectedData.repository}
                         </p>
                         <p className="mb-4 text-white">
-                            <strong>Ecosystem:</strong>
+                            <strong>Ecosystem: </strong>
                             {selectedData.ecosystem}
                         </p>
                         <p className="mb-4 text-white">
-                            <strong>Status:</strong>
+                            <strong>Status: </strong>
                             {selectedData.status}
                         </p>
                         <button
@@ -269,5 +283,10 @@ function StatCard({title, value}: StatCardProps) {
 }
 
 function convertToISOFormat(timestamp: string): string {
-    return timestamp.replace(/(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(\d{2})/, "$1T$2:$3:$4Z")
+    // Assuming your timestamp format is like 'YYYY-MM-DD-HH-MM-SS'
+    return timestamp.replace(
+        /(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})/,
+        "$1T$2:$3:$4.$5$6Z"
+    );
 }
+

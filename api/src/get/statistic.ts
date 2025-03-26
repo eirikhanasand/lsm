@@ -49,11 +49,12 @@ export default async function packageStatsHandler(req: FastifyRequest, res: Fast
 
         const vulnerabilitiesOverTime = severityResult.rows.map(row => ({
             timestamp: format(row.timestamp),
+            package_name: row.package_name,
             repository: row.repository,
             ecosystem: row.ecosystem,
             status: row.status,
             reason: row.reason,
-            severity: 10,
+            severity: row.severity,
         }))
 
         // Fetching repository stats

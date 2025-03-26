@@ -22,6 +22,7 @@ type Statistics = {
 }
 
 type Vulnerability = {
+    package_name: string
     timestamp: string
     severity: number
     repository: string

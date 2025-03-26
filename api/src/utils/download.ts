@@ -1,5 +1,7 @@
 import run from "../db.js"
 import {API} from "../constants.js";
+import pkg from 'ae-cvss-calculator';
+const { Cvss4P0, Cvss3P1 } = pkg;
 
 type DownloadEvent = {
     package_name: string
@@ -7,8 +9,9 @@ type DownloadEvent = {
     ecosystem: string
     repository: string
     client_address: string
-    status: 'passed' | 'blocked'
-    reason: string
+    status: 'passed' | 'blocked',
+    reason: string,
+    severity: string
 }
 
 type APIOSVResponse = {
@@ -28,8 +31,8 @@ type GoogleStatus = {
 
 export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
     const query = `
-    INSERT INTO download_events (package_name, package_version, ecosystem, client_address, status, reason, repository)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    INSERT INTO download_events (package_name, package_version, ecosystem, client_address, status, reason, repository, severity)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     ON CONFLICT (timestamp, package_name, package_version, client_address) DO NOTHING
     RETURNING *;
   `
@@ -43,6 +46,7 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
             event.status,
             event.reason,
             event.repository,
+            event.severity,
         ])
         return result.rows[0]
     } catch (error) {
@@ -52,6 +56,8 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
 }
 
 export async function processVulnerabilities(response: any) {
+    console.log("PROCESSING")
+
     try {
         const { vulnerabilties } = response
 
@@ -59,9 +65,40 @@ export async function processVulnerabilities(response: any) {
             console.log(vuln)
             console.log(vuln.data)
 
-            const packageResponse = await checkPackage(vuln.package_name, vuln.version_introduced, vuln.ecosystem)
+            const packageResponse: APIOSVResponse = await checkPackage(vuln.package_name, vuln.version_introduced, vuln.ecosystem)
             console.log(packageResponse)
+            const vulnName = vuln.name
 
+            let severity = -1 // -1 if no severity score found.
+
+            if (vuln.data.severity != null) {
+                console.log("severity data:")
+                console.log(vuln.data.severity)
+
+                const cvss_v4 = vuln.data.severity.find(
+                    (elem: { type: string }) => elem.type === "CVSS_V4"
+                );
+
+                const cvss_v3 = vuln.data.severity.find(
+                    (elem: { type: string }) => elem.type === "CVSS_V3"
+                );
+
+                if (cvss_v4 != null) {
+                    const cvss4 = new Cvss4P0(cvss_v4.score)
+                    severity = cvss4.calculateScores().overall
+                } else if (cvss_v3 != null) {
+                    const cvss3 = new Cvss3P1(cvss_v3.score)
+                    severity = cvss3.calculateScores().overall
+                }
+            } else {
+                if (vulnName.startsWith("CVE")) {
+                    const CVE = await fetch(`${API}/cve/${vulnName}`)
+                }
+                if (vulnName.startsWith("MAL")) {
+                    console.log("MAL!!!!!")
+                    severity = 6.9
+                }
+            }
             const event =  {
                 package_name: vuln.package_name,
                 package_version: vuln.version_introduced,
@@ -69,6 +106,7 @@ export async function processVulnerabilities(response: any) {
                 client_address: '0.0.0.0',
                 status: packageResponse.status,
                 reason: vuln.data.details,
+                severity: severity.toString()
             } as DownloadEvent
 
             await insertDownloadEvent(event)

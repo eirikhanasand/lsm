@@ -15,7 +15,6 @@ export async function fetchCVEs(cve: string, res?: FastifyReply) {
                 return [];
             }
         }
-
         const cveData = result.rows[0];
 
         return res ? res.send(cveData) : cveData;
