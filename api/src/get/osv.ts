@@ -12,13 +12,15 @@ type OSVResponse = {
 
 export default async function osvHandler(req: FastifyRequest, res: FastifyReply) {
     const { name, version, ecosystem } = req.params as OSVHandlerParams
-
     if (!name || !version || !ecosystem) {
         return res.status(400).send({ error: "Missing name, version, or ecosystem." })
     }
 
+    const Name = decodeURIComponent(name)
+    const Version = decodeURIComponent(version)
+
     try {
-        console.log(`Fetching vulnerabilities: name=${name}, version=${version}, ecosystem=${ecosystem}`)
+        console.log(`Fetching vulnerabilities: name=${Name}, version=${Version}, ecosystem=${ecosystem}`)
 
         const result = await run(`
             SELECT * FROM vulnerabilities
@@ -40,13 +42,13 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
                     >= string_to_array($3, '.')::int[]
                 )
             );
-        `, [name, ecosystem, version])
+        `, [Name, ecosystem, Version])
         const response = {
             vulnerabilties: result.rows
         } as OSVResponse
 
-        const whitelist = await fetchWhiteList({name, ecosystem, version})
-        const blacklist = await fetchBlackList({name, ecosystem, version})
+        const whitelist = await fetchWhiteList({name: Name, ecosystem, version: Version})
+        const blacklist = await fetchBlackList({name: Name, ecosystem, version: Version})
         if (whitelist.length) {
             response['whitelist'] = whitelist
         }

@@ -25,8 +25,11 @@ export async function blacklistHandler(req: FastifyRequest, res: FastifyReply) {
         return res.status(400).send({ error: "Missing name, version, or ecosystem." })
     }
 
+    const Name = decodeURIComponent(name)
+    const Version = decodeURIComponent(version)
+
     try {
-        return fetchBlackList({name, version, ecosystem, res})
+        return fetchBlackList({name: Name, version: Version, ecosystem, res})
     } catch (error) {
         console.error("Database error:", error)
         return res.status(500).send({ error: "Internal Server Error" })
