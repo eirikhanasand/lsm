@@ -3,7 +3,7 @@ import { API } from "@constants"
 export async function getStatistics({timeStart, timeEnd}: GetStatisticProps): Promise<StatisticResponse | null>  {
     try {
         console.log(timeStart, timeEnd)
-        const response = await fetch(`${API}/statistic/${timeStart}/${timeEnd}`)
+        const response = await fetch(`${API}/statistics/${timeStart}/${timeEnd}`)
 
         if (!response.ok) {
             throw new Error(await response.text())

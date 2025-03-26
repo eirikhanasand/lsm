@@ -10,7 +10,7 @@ sub vcl_recv {
         return (pass);
     }
 
-    if (req.url ~ "^/api/(whitelist|blacklist|statistic)$") {
+    if (req.url ~ "^/api/(whitelist|blacklist|statistics)$") {
         return (pass);
     }
 
