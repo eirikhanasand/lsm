@@ -27,7 +27,7 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.get("/oauth2/login", loginHandler)
     fastify.get("/oauth2/callback", loginCallbackHandler)
     fastify.get("/oauth2/logout", logoutHandler)
-    fastify.get("/statistic/:timestart/:timeend", packageStatsHandler)
+    fastify.get("/statistics/:timestart/:timeend", packageStatsHandler)
     fastify.get("/audit", auditHandler)
     fastify.get("/cve/:name", cveHandler)
 
