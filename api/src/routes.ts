@@ -1,18 +1,19 @@
 import indexHandler from "./get/index.js"
 import osvHandler from "./get/osv.js"
-import packageStatsHandler from "./get/statistic.js"
+import auditHandler from "./get/audit.js"
+import cveHandler from "./get/cve.js"
+import packageStatsHandler from "./get/statistics.js"
 import whitelistIndexHandler, { whitelistHandler, whitelistByRepositoryHandler } from "./get/whitelist.js"
 import blacklistIndexHandler, { blacklistHandler, blacklistByRepositoryHandler } from "./get/blacklist.js"
 import whitelistPostHandler from "./post/whitelist.js"
 import blacklistPostHandler from "./post/blacklist.js"
+import workerPostHandler from "./post/worker.js"
 import whitelistPutHandler from "./put/whitelist.js"
 import blacklistPutHandler from "./put/blacklist.js"
 import whitelistDeleteHandler from "./delete/whitelist.js"
 import blacklistDeleteHandler from "./delete/blacklist.js"
 import { loginHandler, logoutHandler, loginCallbackHandler } from "./get/auth.js"
 import { FastifyInstance, FastifyPluginOptions } from "fastify"
-import auditHandler from "./get/audit.js"
-import cveHandler from "./get/cve.js";
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // GET handlers
@@ -34,6 +35,7 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     // POST handlers
     fastify.post("/whitelist", whitelistPostHandler)
     fastify.post("/blacklist", blacklistPostHandler)
+    fastify.post("/worker", workerPostHandler)
 
     // PUT handlers 
     fastify.put("/whitelist", whitelistPutHandler)

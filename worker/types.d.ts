@@ -1,10 +1,8 @@
 type GoogleStatus = {
     status: number
-    data: {
-        whitelist?: any[]
-        blacklist?: any[]
-        vulnerabilties: Vulnerability[]
-    }
+    message: string
+    log: string[]
+    headers: object
 }
 
 type Vulnerability = {
@@ -14,16 +12,18 @@ type Vulnerability = {
     aliases: string[]
     modified: string
     published: string
-    database_specific: { 
-        "malicious-packages-origins": Package[] 
-        severity: Severity
-        cwe_ids: string[]
-    }
+    database_specific: VulnerabilityDatabaseSpecific
     references: Reference[]
     affected: Affected[]
     schema_version: string
     credits: Credit[]
     severity?: Severity[]
+}
+
+type VulnerabilityDatabaseSpecific = { 
+    "malicious-packages-origins": Package[] 
+    severity: Severity
+    cwe_ids: string[]
 }
 
 type Reference = {
@@ -62,13 +62,15 @@ type Affected = {
     }
     ranges?: PackageRange[]
     versions?: string[]
-    database_specific: {
-        source: string
-        cwes: {
-            name: string
-            cweId: string
-            description: string
-        }
+    database_specific: AffectedDatabaseSpecific
+}
+
+type AffectedDatabaseSpecific = {
+    source: string
+    cwes: {
+        name: string
+        cweId: string
+        description: string
     }
 }
 

@@ -1,14 +1,5 @@
-import run from "../db.js"
-import fetchWhiteList from "../utils/fetchWhitelist.js"
-import fetchBlackList from "../utils/fetchBlacklist.js"
 import { FastifyReply, FastifyRequest } from "fastify"
-import { processVulnerabilities } from "../utils/download.js"
-
-type OSVResponse = {
-    vulnerabilties: any[]
-    whitelist?: any[]
-    blacklist?: any[]
-}
+import fetchOSV from "../utils/fetchOSV.js"
 
 export default async function osvHandler(req: FastifyRequest, res: FastifyReply) {
     const { name, version, ecosystem } = req.params as OSVHandlerParams
@@ -22,42 +13,9 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
     try {
         console.log(`Fetching vulnerabilities: name=${Name}, version=${Version}, ecosystem=${ecosystem}`)
 
-        const result = await run(`
-            SELECT * FROM vulnerabilities
-            WHERE package_name = $1
-            AND ecosystem = $2
-            AND (
-                version_introduced = 'unknown' OR
-                (
-                    version_introduced ~ '^[0-9]+(\.[0-9]+)*$'
-                    AND string_to_array(version_introduced, '.')::int[] 
-                    <= string_to_array($3, '.')::int[]
-                )
-            )
-            AND (
-                version_fixed = 'unknown' OR
-                (
-                    version_fixed ~ '^[0-9]+(\.[0-9]+)*$'
-                    AND string_to_array(version_fixed, '.')::int[] 
-                    >= string_to_array($3, '.')::int[]
-                )
-            );
-        `, [Name, ecosystem, Version])
-        const response = {
-            vulnerabilties: result.rows
-        } as OSVResponse
+        const { response, osvLength } = await fetchOSV({name: Name, version: Version, ecosystem, clientAddress: req.ip})
 
-        const whitelist = await fetchWhiteList({name: Name, ecosystem, version: Version})
-        const blacklist = await fetchBlackList({name: Name, ecosystem, version: Version})
-        if (whitelist.length) {
-            response['whitelist'] = whitelist
-        }
-        if (blacklist.length) {
-            response['blacklist'] = blacklist
-        }
-        processVulnerabilities(response)
-
-        if ((result.rows.length === 0 || !result.rows.length) && (!('whitelist' in response) && !('blacklist' in response))) {
+        if (!osvLength && (!('whitelist' in response) && !('blacklist' in response))) {
             return res.send({})
         }
         return res.send(response)
