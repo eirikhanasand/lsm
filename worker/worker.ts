@@ -2,25 +2,7 @@ import { PlatformContext, BeforeDownloadRequest, DownloadStatus, DownloadMetadat
 import { BeforeDownload } from './interfaces.js';
 // LAST IMPORT MUST HAVE SEMICOLON, OTHERWISE JFROG ARTIFACTORY PARSING FAILS
 
-const OSV_URL = "http://129.241.150.86:8080/api/osv"
-
-const NPMtestDataGood = {
-    "repoPath": {
-      "key": "npm",
-      "path": "@types/react/-/react-17.0.0.tgz",
-      "id": "npm:@types/react/-/react-17.0.0.tgz"
-    },
-    "originalRepoPath": {
-      "key": "npm",
-      "path": "@types/react/-/react-17.0.0.tgz",
-      "id": "npm:@types/react/-/react-17.0.0.tgz"
-    },
-    "name": "react-17.0.0.tgz",
-    "servletContextUrl": "https://<id>.jfrog.io/artifactory",
-    "uri": "/artifactory/npm/@types/react/-/react-17.0.0.tgz",
-    "clientAddress": "18.214.241.149",
-    "repoType": 2
-}
+const OSV_URL = "http://129.241.150.86:8080/api/worker"
 
 export default async function runWorker(context: PlatformContext, data: BeforeDownloadRequest): Promise<BeforeDownload> {
     const metadata = data.metadata
