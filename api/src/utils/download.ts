@@ -36,15 +36,11 @@ export async function processVulnerabilities({response, name, version, ecosystem
 
         for (const vuln of vulnerabilties) {
             console.log(vuln)
-            console.log(vuln.data)
 
             const status: number = await checkPackage({response})
-            console.log(status)
-            const vulnName = vuln.name
-
+            const vulnName = vuln.name || vuln.id || ''
             let severity = -1
-
-            if (vuln.data.severity != null) {
+            if ('data' in vuln && 'severity' in vuln.data && vuln.data.severity != null) {
                 console.log("severity data:")
                 console.log(vuln.data.severity)
 
@@ -78,7 +74,7 @@ export async function processVulnerabilities({response, name, version, ecosystem
                 ecosystem,
                 client_address: clientAddress,
                 status,
-                reason: vuln.data.details,
+                reason: vuln?.data?.details || vuln?.details,
                 severity: severity.toString()
             } as DownloadEvent
 

@@ -68,6 +68,8 @@ type OSVResponse = {
 }
 
 type OSVResponseVulnerability = {
+    id?: string
+    details?: string
     name: string
     package_name: string
     ecosystem: string
@@ -195,5 +197,7 @@ type FetchOSVProps = {
 
 type FetchOSVResponse = {
     response: OSVResponse
+    whitelist?: any[]
+    blacklist?: any[]
     osvLength: number
 }

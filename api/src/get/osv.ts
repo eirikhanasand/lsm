@@ -13,8 +13,12 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
     try {
         console.log(`Fetching vulnerabilities: name=${Name}, version=${Version}, ecosystem=${ecosystem}`)
 
-        const { response, osvLength } = await fetchOSV({name: Name, version: Version, ecosystem, clientAddress: req.ip})
+        const osv = await fetchOSV({name: Name, version: Version, ecosystem, clientAddress: req.ip})
+        if ('error' in osv) {
+            return res.send({ error: osv.error })
+        }
 
+        const { response, osvLength } = osv
         if (!osvLength && (!('whitelist' in response) && !('blacklist' in response))) {
             return res.send({})
         }
