@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Updating database..."
-export PGPASSWORD="osvpassword"
+export PGPASSWORD=$DB_PASSWORD
 PSQL="psql -h postgres -U osvuser -d osvdb -t -c"
 PSQL_MULTILINE="psql -h postgres -U osvuser -d osvdb -t"
 HEALTH_FILE="/tmp/health_status"

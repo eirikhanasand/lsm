@@ -8,10 +8,14 @@ END $$;
 \c osvdb
 
 DO $$
+DECLARE
+    user_password text;
 BEGIN
+    user_password := current_setting('db_password', true);
+
     IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'osvuser') THEN
-        CREATE USER osvuser WITH ENCRYPTED PASSWORD 'osvpassword';
-        GRANT ALL PRIVILEGES ON DATABASE osvdb TO osvuser;
+        EXECUTE format('CREATE USER osvuser WITH ENCRYPTED PASSWORD %L', user_password);
+        EXECUTE 'GRANT ALL PRIVILEGES ON DATABASE osvdb TO osvuser';
     END IF;
 END $$;
 
@@ -182,8 +186,7 @@ CREATE TABLE IF NOT EXISTS download_events (
     package_version VARCHAR(50) NOT NULL CHECK (LENGTH(package_version) > 0),
     ecosystem VARCHAR(100) NOT NULL CHECK (LENGTH(ecosystem) > 0),
     client_address INET NOT NULL,
-    status VARCHAR(10) NOT NULL CHECK (status IN ('passed', 'blocked')),
-    repository VARCHAR(25),
+    status INTEGER NOT NULL CHECK (status IN (1, 2)),
     reason TEXT CHECK (LENGTH(reason) > 0),
     severity FLOAT(1) DEFAULT -1,
     CONSTRAINT unique_event UNIQUE (timestamp, package_name, package_version, client_address)

@@ -16,11 +16,11 @@ services:
     restart: always
     environment:
       POSTGRES_USER: osvuser
-      POSTGRES_PASSWORD: osvpassword
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: osvdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./api/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     healthcheck:
@@ -38,6 +38,8 @@ services:
         condition: service_healthy
     ports:
       - "8080:8080"
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "[ \"$(cat /tmp/health_status 2>/dev/null)\" = \"healthy\" ] && wget -qO- http://localhost:8080/api || [ \"$(cat /tmp/health_status 2>/dev/null)\" = \"starting\" ]"]
       interval: 5s
