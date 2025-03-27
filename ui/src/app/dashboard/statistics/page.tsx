@@ -31,17 +31,7 @@ type ChartData = {
     severity: number
     reason: string
     status: string
-    repository: string
     ecosystem: string
-}
-
-type RepositoryData = {
-    repository: string
-    ecosystem: string
-    scanned: number
-    vulnerabilities: number
-    blocked: number
-    safe: number
 }
 
 type Data = {
@@ -67,16 +57,15 @@ type Summary = {
 
 export default function Statistics() {
     const [summary, setSummary] = useState<Summary>({
-        totalScanned: 500,
-        vulnerabilitiesFound: 120,
-        criticalBlocked: 45,
-        safeApproved: 300,
-        lastScan: "3.6.2025"
+        totalScanned: 0,
+        vulnerabilitiesFound: 0,
+        criticalBlocked: 0,
+        safeApproved: 0,
+        lastScan: "Never"
     })
-    const [repositories, setRepositories] = useState<RepositoryData[]>([])
-    const [startDate, setStartDate] = useState("2023-02-10")
-    const [endDate, setEndDate] = useState("2026-02-14")
-    const [expanded, setExpanded] = useState(false)
+    const [lastScan, setLastScan] = useState("Never")
+    const [startDate, setStartDate] = useState("2020-01-01")
+    const [endDate, setEndDate] = useState("2030-01-01")
     const [selectedData, setSelectedData] = useState<ChartData | null>(null)
     const [data, setData] = useState<Data>({
         labels: [],
@@ -92,13 +81,12 @@ export default function Statistics() {
                     console.log("Fetched stats:", fetchedStats)
 
                     setSummary({
-                        criticalBlocked: fetchedStats.criticalBlocked,
+                        criticalBlocked: Number(fetchedStats.criticalBlocked),
                         lastScan: fetchedStats.lastScan,
-                        safeApproved: fetchedStats.safeApproved,
-                        vulnerabilitiesFound: fetchedStats.vulnerabilitiesFound,
-                        totalScanned: fetchedStats.totalScanned,
+                        safeApproved: Number(fetchedStats.safeApproved),
+                        vulnerabilitiesFound: Number(fetchedStats.vulnerabilitiesFound),
+                        totalScanned: Number(fetchedStats.totalScanned),
                     })
-                    setRepositories(fetchedStats.repositoryStats as RepositoryData[])
 
                     function normalizeDateStart(dateStr: string): Date {
                         const date = new Date(dateStr)
@@ -127,6 +115,7 @@ export default function Statistics() {
                             return entryDate >= normalizeDateStart(startDate) && entryDate <= normalizeDateEnd(endDate)
                         })
 
+                    console.log("loaded", filteredValues)
 
                     setLoadedData(filteredValues)
                     setData({
@@ -148,9 +137,6 @@ export default function Statistics() {
                             }
                         ]
                     })
-
-                    console.log("filtered values:")
-                    console.log(filteredValues)
                 }
             } catch (error) {
                 console.error("Error fetching statistics:", error)
@@ -158,6 +144,10 @@ export default function Statistics() {
         }
         fetchStatistics()
     }, [startDate, endDate])
+
+    useEffect(() => {
+        setLastScan(summary.lastScan ? new Date(summary.lastScan).toLocaleString("no-NO", { timeZone: 'Europe/Oslo'}) : 'Never')
+    }, [summary])
 
     const chartOptions: ChartOptions<"line"> = {
         responsive: true,
@@ -183,7 +173,6 @@ export default function Statistics() {
                 Statistics surrounding package security. Check how many vulnerabilities were found and blocked.
             </p>
 
-            {/* Date Range Picker */}
             <div className="mt-6 flex space-x-4">
                 <input
                     type="date"
@@ -207,7 +196,7 @@ export default function Statistics() {
                 <StatCard title="Safe Packages Approved" value={summary.safeApproved} />
                 <StatCard
                     title="Last Scan Date"
-                    value={summary.lastScan || 'Never'}
+                    value={lastScan || 'Never'}
                 />
             </div>
 
@@ -215,7 +204,6 @@ export default function Statistics() {
                 <Line data={data} options={chartOptions}/>
             </div>
 
-            {/* Popup Modal */}
             {selectedData && (
                 <div className="fixed inset-0 flex items-center justify-center z-20">
                     <div className="absolute inset-0 bg-transparent" />
@@ -230,10 +218,6 @@ export default function Statistics() {
                         <p className="mb-4 text-white">
                             <strong>Package name: </strong>
                             {selectedData.package_name}
-                        </p>
-                        <p className="mb-4 text-white">
-                            <strong>Repository: </strong>
-                            {selectedData.repository}
                         </p>
                         <p className="mb-4 text-white">
                             <strong>Ecosystem: </strong>
@@ -252,23 +236,6 @@ export default function Statistics() {
                     </div>
                 </div>
             )}
-
-            <div className="mt-8 w-full max-w-3xl">
-                <button onClick={() => setExpanded(!expanded)} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
-                    {expanded ? "Hide Repository Stats" : "Show Repository Stats"}
-                </button>
-                {expanded && (
-                    <div className="mt-4 space-y-4">
-                        {repositories.map((repo, index) => (
-                            <StatCard
-                                key={index}
-                                title={`Repository: ${repo.repository}, Ecosystem: ${repo.ecosystem}`}
-                                value={`Scanned: ${repo.scanned}, Vulns: ${repo.vulnerabilities}, Blocked: ${repo.blocked}, Safe: ${repo.safe}`}
-                            />
-                        ))}
-                    </div>
-                )}
-            </div>
         </main>
     )
 }
@@ -283,10 +250,8 @@ function StatCard({title, value}: StatCardProps) {
 }
 
 function convertToISOFormat(timestamp: string): string {
-    // Assuming your timestamp format is like 'YYYY-MM-DD-HH-MM-SS'
     return timestamp.replace(
         /(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})/,
         "$1T$2:$3:$4.$5$6Z"
-    );
+    )
 }
-

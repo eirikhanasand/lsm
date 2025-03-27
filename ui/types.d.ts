@@ -106,7 +106,6 @@ type Statistics = {
 type Vulnerability = {
     timestamp: string
     severity: number
-    repository: string
     ecosystem: string
     reason: string
 }

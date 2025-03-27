@@ -58,7 +58,6 @@ export default async function fetchRepoConfig(repository: string): Promise<RepoC
             isGlobal: item.repositories.length === 0
         }))
 
-        console.log(whitelist,blacklist)
         return { whitelist, blacklist }
     } catch (error) {
         console.error(`Error fetching repository config: ${error}`)

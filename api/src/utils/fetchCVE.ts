@@ -1,6 +1,6 @@
-import { loadSQL } from "./loadSQL.js";
-import run from "../db.js";
-import { FastifyReply } from "fastify";
+import run from "../db.js"
+import { loadSQL } from "./loadSQL.js"
+import { FastifyReply } from "fastify"
 
 export async function fetchCVEs(cve: string, res?: FastifyReply) {
     try {

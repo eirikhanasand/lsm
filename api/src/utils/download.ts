@@ -1,41 +1,16 @@
+import pkg from 'ae-cvss-calculator'
 import run from "../db.js"
-import {API} from "../constants.js";
-import pkg from 'ae-cvss-calculator';
-const { Cvss4P0, Cvss3P1 } = pkg;
-
-type DownloadEvent = {
-    package_name: string
-    package_version: string
-    ecosystem: string
-    repository: string
-    client_address: string
-    status: 'passed' | 'blocked',
-    reason: string,
-    severity: string
-}
-
-type APIOSVResponse = {
-    status: any,
-    message: any,
-    headers: any
-}
-
-type GoogleStatus = {
-    status: number
-    data: {
-        whitelist?: any[]
-        blacklist?: any[]
-        vulnerabilties: Vulnerability[]
-    }
-}
+import { API, DEFAULT_MAL_SEVERITY } from "../constants.js"
+import { DownloadStatus } from '../interfaces.js'
+const { Cvss4P0, Cvss3P1 } = pkg
 
 export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
     const query = `
-    INSERT INTO download_events (package_name, package_version, ecosystem, client_address, status, reason, repository, severity)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    ON CONFLICT (timestamp, package_name, package_version, client_address) DO NOTHING
-    RETURNING *;
-  `
+        INSERT INTO download_events (package_name, package_version, ecosystem, client_address, status, reason, severity)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        ON CONFLICT (timestamp, package_name, package_version, client_address) DO NOTHING
+        RETURNING *;
+    `
 
     try {
         const result = await run(query, [
@@ -43,21 +18,19 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
             event.package_version,
             event.ecosystem,
             event.client_address,
-            event.status,
+            String(event.status),
             event.reason,
-            event.repository,
             event.severity,
         ])
         return result.rows[0]
     } catch (error) {
         console.error('Error inserting download event:', error)
+        // Caught in parent function
         throw error
     }
 }
 
-export async function processVulnerabilities(response: any) {
-    console.log("PROCESSING")
-
+export async function processVulnerabilities({response, name, version, ecosystem, clientAddress}: ProcessVulnerabiltiesProps) {
     try {
         const { vulnerabilties } = response
 
@@ -65,11 +38,11 @@ export async function processVulnerabilities(response: any) {
             console.log(vuln)
             console.log(vuln.data)
 
-            const packageResponse: APIOSVResponse = await checkPackage(vuln.package_name, vuln.version_introduced, vuln.ecosystem)
-            console.log(packageResponse)
+            const status: number = await checkPackage({response})
+            console.log(status)
             const vulnName = vuln.name
 
-            let severity = -1 // -1 if no severity score found.
+            let severity = -1
 
             if (vuln.data.severity != null) {
                 console.log("severity data:")
@@ -77,11 +50,11 @@ export async function processVulnerabilities(response: any) {
 
                 const cvss_v4 = vuln.data.severity.find(
                     (elem: { type: string }) => elem.type === "CVSS_V4"
-                );
+                )
 
                 const cvss_v3 = vuln.data.severity.find(
                     (elem: { type: string }) => elem.type === "CVSS_V3"
-                );
+                )
 
                 if (cvss_v4 != null) {
                     const cvss4 = new Cvss4P0(cvss_v4.score)
@@ -96,17 +69,16 @@ export async function processVulnerabilities(response: any) {
                 }
                 if (vulnName.startsWith("MAL")) {
                     console.log("MAL!!!!!")
-                    severity = 6.9
+                    severity = Number(DEFAULT_MAL_SEVERITY)
                 }
             }
             const event =  {
-                package_name: vuln.package_name,
-                package_version: vuln.version_introduced,
-                ecosystem: vuln.ecosystem,
-                client_address: '0.0.0.0',
-                status: packageResponse.status,
+                package_name: name,
+                package_version: version,
+                ecosystem,
+                client_address: clientAddress,
+                status,
                 reason: vuln.data.details,
-                repository: vuln.repository,
                 severity: severity.toString()
             } as DownloadEvent
 
@@ -118,108 +90,14 @@ export async function processVulnerabilities(response: any) {
     }
 }
 
-
-async function fetchOSV(name: string, version: string, ecosystem: string): Promise<GoogleStatus | null> {
-    try {
-        const response = await fetch(`${API}/${ecosystem}/${name}/${version}`);
-        const jsonData = await response.json();
-
-        return {
-            status: 200,
-            data: jsonData
-        } as GoogleStatus;
-    } catch (error) {
-        return null;
+async function checkPackage({response}: {response: OSVResponse}) : Promise<number> {
+    if (!response || !response.vulnerabilties?.length) {
+        return DownloadStatus.DOWNLOAD_STOP
     }
-}
-
-
-async function checkPackage(name: string | null, version: string | null, key: string | null) : Promise<APIOSVResponse> {
-    if (!name || !version || !key) {
-        //console.log(`DOWNLOAD STOPPED: UNABLE TO EXTRACT NAME AND VERSION - ${metadata.name}`)
-        return {
-            status: "stopped",
-            message: `DOWNLOAD STOPPED - Unable to extract package name and version.`,
-            // @ts-ignore, doesnt exist locally but does exist remotely
-            headers: {}
+    if (JSON.stringify(response) !== '{}') {
+        if ('blacklist' in response) {
+            return DownloadStatus.DOWNLOAD_STOP
         }
     }
-
-    const osvData = await fetchOSV(name, version, key)
-
-    if (!osvData) return {
-        status: "stopped",
-        message: `DOWNLOAD STOPPED - Failed to fetch from API..`,
-        // @ts-ignore, doesnt exist locally but does exist remotely
-        headers: {}
-    }
-
-    console.log(osvData)
-    if (osvData.status !== 200) {
-        console.log('DOWNLOAD STOPPED: UNABLE TO FETCH OSV', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
-
-        console.log(osvData)
-        return {
-            status: "stopped",
-            message: `DOWNLOAD STOPPED - Unable to fetch package info from OSV.`,
-            // @ts-ignore - Required field, doesn't exist locally but does exist remotely
-            headers: {}
-        }
-    }
-
-    if ((osvData.data as any).length) {
-        // TITLE SECTION
-        //log('DOWNLOAD STOPPED: MALICIOUS', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
-        if ('vulnerabilties' in osvData.data) {
-            console.log('-----------------------------')
-            for (const vulnerability of osvData.data.vulnerabilties) {
-                //logDetails(vulnerability)
-            }
-        }
-        return {
-            status: "stopped",
-            message: `DOWNLOAD STOPPED: Malicious package detected.`,
-            // @ts-ignore - Required field, doesnt exist locally but does exist remotely
-            headers: {}
-        }
-    }
-
-    if (JSON.stringify(osvData.data) !== '{}') {
-        console.log("OSV data was not empty:")
-        console.log(osvData.data)
-
-        // Checking blacklist
-        if ('blacklist' in osvData.data) {
-            //log('DOWNLOAD STOPPED: BLACKLISTED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
-
-            return {
-                status: "stopped",
-                message: `DOWNLOAD STOPPED: Blacklisted.`,
-                headers: {}
-            }
-        }
-
-        // Checking whitelist
-        if ('whitelist' in osvData.data && osvData.data.vulnerabilties.length) {
-            if ('vulns' in osvData.data) {
-                console.log('-----------------------------')
-                for (const vulnerability of osvData.data.vulnerabilties) {
-                    //logDetails(vulnerability)
-                }
-            }
-            console.log('DOWNLOAD CONTINUED: MALICIOUS BUT WHITELISTED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
-            return {
-                status: "passed",
-                message: `DOWNLOAD CONTINUED: Malicious but whitelisted.`,
-                headers: {}
-            }
-        }
-    }
-
-    //log('DOWNLOAD CONTINUED', `Name: ${name}`, `Version: ${version}`, `Key: ${key}`)
-    return {
-        status: "passed",
-        message: `DOWNLOAD CONTINUED: Nothing observed.`,
-        headers: {}
-    }
+    return DownloadStatus.DOWNLOAD_PROCEED
 }
