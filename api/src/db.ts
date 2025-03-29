@@ -1,16 +1,25 @@
 import pg from 'pg'
-import { DB_PASSWORD } from './constants.js'
+import { 
+    DB, 
+    DB_USER, 
+    DB_HOST, 
+    DB_PASSWORD, 
+    DB_PORT, 
+    DB_MAX_CONN, 
+    DB_IDLE_TIMEOUT_MS, 
+    DB_TIMEOUT_MS
+} from './constants.js'
 const { Pool } = pg
 
 const pool = new Pool({
-    user: "osvuser",
-    host: "lsm_database",
-    database: "osvdb",
+    user: DB_USER || "osvuser",
+    host: DB_HOST || "lsm_database",
+    database: DB || "osv_db",
     password: DB_PASSWORD,
-    port: 5432,
-    max: 20,
-    idleTimeoutMillis: 5000,
-    connectionTimeoutMillis: 3000
+    port: Number(DB_PORT) || 5432,
+    max: Number(DB_MAX_CONN) || 20,
+    idleTimeoutMillis: Number(DB_IDLE_TIMEOUT_MS) || 5000,
+    connectionTimeoutMillis: Number(DB_TIMEOUT_MS) || 3000
 })
 
 export default async function run(query: string, params: string[]) {

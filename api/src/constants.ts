@@ -6,33 +6,45 @@ type ENV = {
     CLIENT_SECRET: string
     FRONTEND_URL: string
     DEFAULT_MAL_SEVERITY: string
-    DB_PASSWORD: string
     LOCAL_OSV: string
     OSV_URL: string
+    DB: string
+    DB_PASSWORD: string
+    DB_USER: string
+    DB_HOST: string
+    DB_PORT: string
+    DB_MAX_CONN: string
+    DB_IDLE_TIMEOUT_MS: string
+    DB_TIMEOUT_MS: string
 }
 
 dotenv.config({path: '../.env'})
 
-const REDHAT_API = "https://access.redhat.com/hydra/rest/securitydata"
 const { 
     API, 
     CLIENT_ID, 
     CLIENT_SECRET, 
     FRONTEND_URL, 
     DEFAULT_MAL_SEVERITY, 
-    DB_PASSWORD, 
     LOCAL_OSV, 
-    OSV_URL
+    OSV_URL,
+    DB,
+    DB_USER,
+    DB_HOST,
+    DB_PASSWORD,
+    DB_PORT,
+    DB_MAX_CONN,
+    DB_IDLE_TIMEOUT_MS,
+    DB_TIMEOUT_MS,
 } = process.env as ENV
 if (!API 
     || !CLIENT_ID 
     || !CLIENT_SECRET 
     || !FRONTEND_URL 
-    || !DB_PASSWORD 
     || !LOCAL_OSV 
-    || !OSV_URL
+    || !DB_PASSWORD
 ) {
-    throw new Error("Missing API, CLIENT_ID, CLIENT_SECRET, DEFAULT_MAL_SEVERITY, DB_PASSWORD, LOCAL_OSV, OSV_URL and / or FRONTEND_URL env variable.")
+    throw new Error("Missing one or more environment variables.")
 }
 
 export { 
@@ -40,9 +52,15 @@ export {
     CLIENT_ID, 
     CLIENT_SECRET, 
     FRONTEND_URL, 
-    REDHAT_API, 
     DEFAULT_MAL_SEVERITY, 
-    DB_PASSWORD, 
     LOCAL_OSV, 
-    OSV_URL
+    OSV_URL,
+    DB,
+    DB_HOST,
+    DB_USER,
+    DB_PASSWORD, 
+    DB_PORT,
+    DB_MAX_CONN,
+    DB_IDLE_TIMEOUT_MS,
+    DB_TIMEOUT_MS
 }

@@ -2,7 +2,9 @@
 
 export PGPASSWORD=$DB_PASSWORD
 PSQL="psql -h postgres -U osvuser -d osvdb -t -c"
-REDHAT_API="https://access.redhat.com/hydra/rest/securitydata/cve.json"
+if [ -z "$REDHAT_API" ]; then
+    REDHAT_API="https://access.redhat.com/hydra/rest/securitydata/cve.json"
+fi
 OUTPUT_FILE="cve_data.json"
 
 # Fetches CVE data

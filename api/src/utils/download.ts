@@ -64,8 +64,7 @@ export async function processVulnerabilities({response, name, version, ecosystem
                     const CVE = await fetch(`${API}/cve/${vulnName}`)
                 }
                 if (vulnName.startsWith("MAL")) {
-                    console.log("MAL!!!!!")
-                    severity = Number(DEFAULT_MAL_SEVERITY)
+                    severity = Number(DEFAULT_MAL_SEVERITY) || 6.9
                 }
             }
             const event =  {

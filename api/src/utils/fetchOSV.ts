@@ -33,7 +33,7 @@ export default async function fetchOSV({name, version, ecosystem, clientAddress}
         response = { vulnerabilties: result.rows } as OSVResponse
     } else {
         try {
-            const res = await fetch(OSV_URL, {
+            const res = await fetch(OSV_URL || "https://api.osv.dev/v1/query", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
