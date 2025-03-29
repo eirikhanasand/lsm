@@ -76,6 +76,7 @@ type OSVResponseVulnerability = {
     version_introduced: string
     version_fixed: string
     data: WorkerVulnerability
+    aliases: string[]
 }
 
 type WorkerVulnerability = {

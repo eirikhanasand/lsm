@@ -47,4 +47,4 @@ RUN echo '0 * * * * /bin/sh /app/update_cve.sh' >> /etc/crontabs/root
 EXPOSE 8080
 
 # Starts the update script if using local osv and executes the entrypoint script
-CMD ["/bin/bash", "-c", "[ \"$LOCAL_OSV\" = \"false\" ] && /app/remote_osv.sh || /app/update_osv.sh && /app/update_cve.sh && /app/entrypoint.sh"]
+CMD ["stdbuf", "-oL", "-eL", "/bin/bash", "-c", "[ \"$LOCAL_OSV\" = \"false\" ] && /app/remote_osv.sh || /app/update_osv.sh && /app/update_cve.sh && /app/entrypoint.sh"]

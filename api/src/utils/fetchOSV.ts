@@ -33,6 +33,10 @@ export default async function fetchOSV({name, version, ecosystem, clientAddress}
         response = { vulnerabilties: result.rows } as OSVResponse
     } else {
         try {
+            if (ecosystem.toLowerCase() === "go") {
+                ecosystem = "Go"
+            }
+
             const res = await fetch(OSV_URL || "https://api.osv.dev/v1/query", {
                 method: 'POST',
                 headers: {
@@ -44,7 +48,6 @@ export default async function fetchOSV({name, version, ecosystem, clientAddress}
             if (!res.ok) {
                 throw new Error(JSON.stringify(res))
             }
-
             const data = await res.json()
             response = { vulnerabilties: data.vulns }
             osvLength = data.vulns.length

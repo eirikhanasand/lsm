@@ -2,12 +2,14 @@
 
 export PGPASSWORD=$DB_PASSWORD
 PSQL="psql -h postgres -U osvuser -d osvdb -t -c"
+
 if [ -z "$REDHAT_API" ]; then
     REDHAT_API="https://access.redhat.com/hydra/rest/securitydata/cve.json"
 fi
+
 OUTPUT_FILE="cve_data.json"
 
-# Fetches CVE data
+# Fetch CVE data
 echo "Fetching CVE data from Red Hat API..."
 wget -q -O "$OUTPUT_FILE" "$REDHAT_API"
 
@@ -18,6 +20,32 @@ fi
 
 echo "CVE data fetched successfully."
 echo "Inserting CVEs into the database..."
+
+# Count total CVEs
+total=$(jq -c '.[]' "$OUTPUT_FILE" | wc -l)
+current=0
+
+# We'll use these to make sure we print each threshold *once*.
+printed25=0
+printed50=0
+printed75=0
+
+# Optional: draw a textual bar with # / -
+draw_progress() {
+    local progress=$1
+    local total=$2
+    local width=40
+
+    local percent=$((100 * progress / total))
+    local filled=$((width * progress / total))
+    local empty=$((width - filled))
+
+    printf -v bar   "%0.s#" $(seq 1 "$filled")
+    printf -v space "%0.s-" $(seq 1 "$empty")
+
+    # Prints a new line so Docker logs show each milestone
+    printf "[%s%s] %3d%% (%d/%d)\n" "$bar" "$space" "$percent" "$progress" "$total"
+}
 
 jq -c '.[]' "$OUTPUT_FILE" | while read -r line; do
     cve=$(echo "$line" | jq -r '.CVE // "unknown"')
@@ -37,10 +65,36 @@ jq -c '.[]' "$OUTPUT_FILE" | while read -r line; do
 
     $PSQL "INSERT INTO CVEs (CVE, severity, public_date, advisories, bugzilla, bugzilla_description, cvss_score, cvss_scoring_vector, CWE, affected_packages, package_state, resource_url, cvss3_scoring_vector, cvss3_score)
         VALUES ('$cve', '$severity', '$public_date', '$advisories', '$bugzilla', '$bugzilla_description', $cvss_score, '$cvss_scoring_vector', '$cwe', '$affected_packages', '$package_state', '$resource_url', '$cvss3_scoring_vector', $cvss3_score)
-        ON CONFLICT (CVE) DO UPDATE SET severity = EXCLUDED.severity, public_date = EXCLUDED.public_date, advisories = EXCLUDED.advisories, bugzilla = EXCLUDED.bugzilla, bugzilla_description = EXCLUDED.bugzilla_description, cvss_score = EXCLUDED.cvss_score, cvss_scoring_vector = EXCLUDED.cvss_scoring_vector, CWE = EXCLUDED.CWE, affected_packages = EXCLUDED.affected_packages, package_state = EXCLUDED.package_state, resource_url = EXCLUDED.resource_url, cvss3_scoring_vector = EXCLUDED.cvss3_scoring_vector, cvss3_score = EXCLUDED.cvss3_score;" > /dev/null 2>&1
+        ON CONFLICT (CVE) DO UPDATE SET severity = EXCLUDED.severity, public_date = EXCLUDED.public_date, advisories = EXCLUDED.advisories, bugzilla = EXCLUDED.bugzilla, bugzilla_description = EXCLUDED.bugzilla_description, cvss_score = EXCLUDED.cvss_score, cvss_scoring_vector = EXCLUDED.cvss_scoring_vector, CWE = EXCLUDED.CWE, affected_packages = EXCLUDED.affected_packages, package_state = EXCLUDED.package_state, resource_url = EXCLUDED.resource_url, cvss3_scoring_vector = EXCLUDED.cvss3_scoring_vector, cvss3_score = EXCLUDED.cvss3_score;" \
+        > /dev/null 2>&1
+
+    current=$((current + 1))
+    percent=$((100 * current / total))
+
+    # Check thresholds and print *once* each
+    if [ $percent -ge 25 ] && [ $printed25 -eq 0 ]; then
+        draw_progress "$current" "$total"
+        printed25=1
+    fi
+
+    if [ $percent -ge 50 ] && [ $printed50 -eq 0 ]; then
+        draw_progress "$current" "$total"
+        printed50=1
+    fi
+
+    if [ $percent -ge 75 ] && [ $printed75 -eq 0 ]; then
+        draw_progress "$current" "$total"
+        printed75=1
+    fi
+
+    # Always print 100% if we just finished
+    if [ "$current" -eq "$total" ]; then
+        draw_progress "$current" "$total"
+    fi
 done
 
-echo "CVE insertion complete."
+echo "[✓] CVE insertion complete."
 
+# Cleanup
 rm "$OUTPUT_FILE"
 echo "Temporary files cleaned up."

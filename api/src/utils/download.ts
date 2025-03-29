@@ -31,6 +31,7 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
 }
 
 export async function processVulnerabilities({response, name, version, ecosystem, clientAddress}: ProcessVulnerabiltiesProps) {
+    console.log("PROCESSING")
     try {
         const { vulnerabilties } = response
 
@@ -60,11 +61,23 @@ export async function processVulnerabilities({response, name, version, ecosystem
                     severity = cvss3.calculateScores().overall
                 }
             } else {
-                if (vulnName.startsWith("CVE")) {
-                    const CVE = await fetch(`${API}/cve/${vulnName}`)
-                }
                 if (vulnName.startsWith("MAL")) {
                     severity = Number(DEFAULT_MAL_SEVERITY) || 6.9
+                } else if ('aliases' in vuln) {
+                    const cveAlias = vuln.aliases.indexOf("CVE")
+                    let CVE: string = ""
+
+                    if (cveAlias != -1) {
+                        CVE = vuln.aliases[cveAlias]
+                    } else if (vulnName.startsWith("CVE")) {
+                        CVE = vulnName
+                    } else {
+                        console.log("no CVE data.")
+                    }
+                    const cveResponse = await fetch(`${API}/cve/${CVE}`)
+
+                    console.log("CVE RESPONSE")
+                    console.log(cveResponse)
                 }
             }
             const event =  {
