@@ -14,7 +14,7 @@ const { Pool } = pg
 const pool = new Pool({
     user: DB_USER || "osvuser",
     host: DB_HOST || "lsm_database",
-    database: DB || "osv_db",
+    database: DB || "osvdb",
     password: DB_PASSWORD,
     port: Number(DB_PORT) || 5432,
     max: Number(DB_MAX_CONN) || 20,
