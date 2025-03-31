@@ -6,6 +6,7 @@ type ENV = {
     CLIENT_SECRET: string
     FRONTEND_URL: string
     DEFAULT_MAL_SEVERITY: string
+    DEFAULT_CVE_SEVERITY: string
     LOCAL_OSV: string
     OSV_URL: string
     DB: string
@@ -25,7 +26,8 @@ const {
     CLIENT_ID, 
     CLIENT_SECRET, 
     FRONTEND_URL, 
-    DEFAULT_MAL_SEVERITY, 
+    DEFAULT_MAL_SEVERITY,
+    DEFAULT_CVE_SEVERITY,
     LOCAL_OSV, 
     OSV_URL,
     DB,
@@ -52,7 +54,8 @@ export {
     CLIENT_ID, 
     CLIENT_SECRET, 
     FRONTEND_URL, 
-    DEFAULT_MAL_SEVERITY, 
+    DEFAULT_MAL_SEVERITY,
+    DEFAULT_CVE_SEVERITY,
     LOCAL_OSV, 
     OSV_URL,
     DB,

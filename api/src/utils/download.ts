@@ -1,6 +1,6 @@
 import pkg from 'ae-cvss-calculator'
 import run from "../db.js"
-import { API, DEFAULT_MAL_SEVERITY } from "../constants.js"
+import { API, DEFAULT_MAL_SEVERITY, DEFAULT_CVE_SEVERITY } from "../constants.js"
 import { DownloadStatus } from '../interfaces.js'
 const { Cvss4P0, Cvss3P1 } = pkg
 
@@ -59,10 +59,12 @@ export async function processVulnerabilities({response, name, version, ecosystem
                 } else if (cvss_v3 != null) {
                     const cvss3 = new Cvss3P1(cvss_v3.score)
                     severity = cvss3.calculateScores().overall
+                } else {
+                    severity = Number(DEFAULT_CVE_SEVERITY) || 6.0
                 }
             } else {
                 if (vulnName.startsWith("MAL")) {
-                    severity = Number(DEFAULT_MAL_SEVERITY) || 6.9
+                    severity = Number(DEFAULT_MAL_SEVERITY) || 8.0
                 } else if ('aliases' in vuln) {
                     const cveAlias = vuln.aliases.indexOf("CVE")
                     let CVE: string = ""
@@ -74,10 +76,9 @@ export async function processVulnerabilities({response, name, version, ecosystem
                     } else {
                         console.log("no CVE data.")
                     }
-                    const cveResponse = await fetch(`${API}/cve/${CVE}`)
 
                     console.log("CVE RESPONSE")
-                    console.log(cveResponse)
+                    console.log(vuln)
                 }
             }
             const event =  {

@@ -1,7 +1,6 @@
 import indexHandler from "./get/index.js"
 import osvHandler from "./get/osv.js"
 import auditHandler from "./get/audit.js"
-import cveHandler from "./get/cve.js"
 import packageStatsHandler from "./get/statistics.js"
 import whitelistIndexHandler, { whitelistHandler, whitelistByRepositoryHandler } from "./get/whitelist.js"
 import blacklistIndexHandler, { blacklistHandler, blacklistByRepositoryHandler } from "./get/blacklist.js"
@@ -30,7 +29,6 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.get("/oauth2/logout", logoutHandler)
     fastify.get("/statistics/:timestart/:timeend", packageStatsHandler)
     fastify.get("/audit", auditHandler)
-    fastify.get("/cve/:name", cveHandler)
 
     // POST handlers
     fastify.post("/whitelist", whitelistPostHandler)

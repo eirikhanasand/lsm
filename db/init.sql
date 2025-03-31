@@ -192,24 +192,6 @@ CREATE TABLE IF NOT EXISTS download_events (
     CONSTRAINT unique_event UNIQUE (timestamp, package_name, package_version, client_address)
 );
 
-CREATE TABLE IF NOT EXISTS CVEs (
-    id SERIAL PRIMARY KEY,
-    CVE TEXT UNIQUE,
-    severity TEXT,
-    public_date TIMESTAMP,
-    advisories JSONB,
-    bugzilla TEXT,
-    bugzilla_description TEXT,
-    cvss_score NUMERIC,
-    cvss_scoring_vector TEXT,
-    CWE TEXT,
-    affected_packages JSONB,
-    package_state JSONB,
-    resource_url TEXT,
-    cvss3_scoring_vector TEXT,
-    cvss3_score NUMERIC
-);
-
 -- Audit log table
 CREATE TABLE IF NOT EXISTS audit_log (
     id SERIAL PRIMARY KEY,
