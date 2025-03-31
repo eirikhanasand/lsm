@@ -27,6 +27,7 @@ type StatCardProps = {
 type ChartData = {
     date: Date
     package_name: string
+    package_version: string
     timestamp: string
     severity: number
     reason: string
@@ -218,6 +219,10 @@ export default function Statistics() {
                         <p className="mb-4 text-white">
                             <strong>Package name: </strong>
                             {selectedData.package_name}
+                        </p>
+                        <p className="mb-4 text-white">
+                            <strong>Package version: </strong>
+                            {selectedData.package_version}
                         </p>
                         <p className="mb-4 text-white">
                             <strong>Ecosystem: </strong>

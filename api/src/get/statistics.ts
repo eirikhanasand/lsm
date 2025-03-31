@@ -49,6 +49,7 @@ export default async function packageStatsHandler(req: FastifyRequest, res: Fast
         const vulnerabilitiesOverTime = severityResult.rows.map(row => ({
             timestamp: row.timestamp,
             package_name: row.package_name,
+            package_version: row.package_version,
             repository: row.repository,
             ecosystem: row.ecosystem,
             status: row.status,
