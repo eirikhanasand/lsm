@@ -7,6 +7,7 @@ type ENV = {
     FRONTEND_URL: string
     DEFAULT_MAL_SEVERITY: string
     DEFAULT_CVE_SEVERITY: string
+    DEFAULT_SEVERITY: string
     LOCAL_OSV: string
     OSV_URL: string
     DB: string
@@ -28,6 +29,7 @@ const {
     FRONTEND_URL, 
     DEFAULT_MAL_SEVERITY,
     DEFAULT_CVE_SEVERITY,
+    DEFAULT_SEVERITY,
     LOCAL_OSV, 
     OSV_URL,
     DB,
@@ -56,6 +58,7 @@ export {
     FRONTEND_URL, 
     DEFAULT_MAL_SEVERITY,
     DEFAULT_CVE_SEVERITY,
+    DEFAULT_SEVERITY,
     LOCAL_OSV, 
     OSV_URL,
     DB,

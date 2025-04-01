@@ -35,16 +35,13 @@ COPY ../.env ../.env
 RUN npm run build
 
 # Adds script execution permissions
-RUN chmod +x /app/entrypoint.sh /app/update_osv.sh /app/update_cve.sh /app/remote_osv.sh
+RUN chmod +x /app/entrypoint.sh /app/update_osv.sh /app/remote_osv.sh
 
 # Cronjob to update osv hourly if using local osv
 RUN sh -c '[ "$LOCAL_OSV" = "true" ] && echo "0 * * * * /bin/sh /app/update_osv.sh" >> /etc/crontabs/root || true'
-
-# Cronjob to update CVE hourly
-RUN echo '0 * * * * /bin/sh /app/update_cve.sh' >> /etc/crontabs/root
 
 # Exposes API port
 EXPOSE 8080
 
 # Starts the update script if using local osv and executes the entrypoint script
-CMD ["stdbuf", "-oL", "-eL", "/bin/bash", "-c", "[ \"$LOCAL_OSV\" = \"false\" ] && /app/remote_osv.sh || /app/update_osv.sh && /app/update_cve.sh && /app/entrypoint.sh"]
+CMD ["stdbuf", "-oL", "-eL", "/bin/bash", "-c", "[ \"$LOCAL_OSV\" = \"false\" ] && /app/remote_osv.sh || /app/update_osv.sh && /app/entrypoint.sh"]

@@ -75,9 +75,19 @@ type OSVResponseVulnerability = {
     ecosystem: string
     version_introduced: string
     version_fixed: string
-    data: WorkerVulnerability
     aliases: string[]
-}
+} & WorkerVulnerability
+
+type ProcessedOSVVulnerability = {
+    id?: string
+    details?: string
+    name: string
+    package_name: string
+    ecosystem: string
+    version_introduced: string
+    version_fixed: string
+    aliases: string[]
+} & WorkerVulnerability
 
 type WorkerVulnerability = {
     id: string

@@ -1,6 +1,6 @@
 import pkg from 'ae-cvss-calculator'
 import run from "../db.js"
-import { API, DEFAULT_MAL_SEVERITY, DEFAULT_CVE_SEVERITY } from "../constants.js"
+import { DEFAULT_MAL_SEVERITY, DEFAULT_CVE_SEVERITY, DEFAULT_SEVERITY } from "../constants.js"
 import { DownloadStatus } from '../interfaces.js'
 const { Cvss4P0, Cvss3P1 } = pkg
 
@@ -31,28 +31,19 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
 }
 
 export async function processVulnerabilities({response, name, version, ecosystem, clientAddress}: ProcessVulnerabiltiesProps) {
-    console.log("PROCESSING")
     try {
         const { vulnerabilties } = response
-
         for (const vuln of vulnerabilties) {
-            console.log(vuln)
-
             const status: number = await checkPackage({response})
             const vulnName = vuln.name || vuln.id || ''
             let severity = -1
-            if ('data' in vuln && 'severity' in vuln.data && vuln.data.severity != null) {
-                console.log("severity data:")
-                console.log(vuln.data.severity)
-
-                const cvss_v4 = vuln.data.severity.find(
+            if ('severity' in vuln && vuln.severity != null) {
+                const cvss_v4 = vuln.severity.find(
                     (elem: { type: string }) => elem.type === "CVSS_V4"
                 )
-
-                const cvss_v3 = vuln.data.severity.find(
+                const cvss_v3 = vuln.severity.find(
                     (elem: { type: string }) => elem.type === "CVSS_V3"
                 )
-
                 if (cvss_v4 != null) {
                     const cvss4 = new Cvss4P0(cvss_v4.score)
                     severity = cvss4.calculateScores().overall
@@ -65,20 +56,8 @@ export async function processVulnerabilities({response, name, version, ecosystem
             } else {
                 if (vulnName.startsWith("MAL")) {
                     severity = Number(DEFAULT_MAL_SEVERITY) || 8.0
-                } else if ('aliases' in vuln) {
-                    const cveAlias = vuln.aliases.indexOf("CVE")
-                    let CVE: string = ""
-
-                    if (cveAlias != -1) {
-                        CVE = vuln.aliases[cveAlias]
-                    } else if (vulnName.startsWith("CVE")) {
-                        CVE = vulnName
-                    } else {
-                        console.log("no CVE data.")
-                    }
-
-                    console.log("CVE RESPONSE")
-                    console.log(vuln)
+                } else {
+                    severity = Number(DEFAULT_SEVERITY) || 5.0
                 }
             }
             const event =  {
@@ -87,7 +66,7 @@ export async function processVulnerabilities({response, name, version, ecosystem
                 ecosystem,
                 client_address: clientAddress,
                 status,
-                reason: vuln?.data?.details || vuln?.details,
+                reason: vuln?.details,
                 severity: severity.toString()
             } as DownloadEvent
 
@@ -100,7 +79,10 @@ export async function processVulnerabilities({response, name, version, ecosystem
 }
 
 async function checkPackage({response}: {response: OSVResponse}) : Promise<number> {
-    if (!response || !response.vulnerabilties?.length) {
+    if (!response || response.vulnerabilties?.length) {
+        if ('whitelist' in response) {
+            return DownloadStatus.DOWNLOAD_PROCEED
+        }
         return DownloadStatus.DOWNLOAD_STOP
     }
     if (JSON.stringify(response) !== '{}') {

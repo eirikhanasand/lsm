@@ -30,7 +30,7 @@ export default async function fetchOSV({name, version, ecosystem, clientAddress}
             );
         `, [name, ecosystem, version])
         osvLength = result.rows.length
-        response = { vulnerabilties: result.rows } as OSVResponse
+        response = { vulnerabilties: result.rows.map((row) => row.data) } as OSVResponse
     } else {
         try {
             if (ecosystem.toLowerCase() === "go") {

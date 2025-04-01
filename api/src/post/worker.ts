@@ -206,7 +206,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
         if ('vulnerabilties' in response) {
             log.push('-----------------------------')
             for (const vulnerability of response.vulnerabilties) {
-                log.push(...logDetails(vulnerability.data))
+                log.push(...logDetails(vulnerability))
             }
         }
         return res.send({
@@ -237,7 +237,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
             if ('vulnerabilties' in response) {
                 log.push('-----------------------------')
                 for (const vulnerability of response.vulnerabilties) {
-                    logDetails(vulnerability.data)
+                    logDetails(vulnerability)
                 }
             }
             log.push('DOWNLOAD CONTINUED: MALICIOUS BUT WHITELISTED', `Name: ${name}`, `Version: ${version}`, `Ecosystem: ${ecosystem}`)
