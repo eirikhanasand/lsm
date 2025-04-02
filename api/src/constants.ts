@@ -18,6 +18,7 @@ type ENV = {
     DB_MAX_CONN: string
     DB_IDLE_TIMEOUT_MS: string
     DB_TIMEOUT_MS: string
+    DEFAULT_RESULTS_PER_PAGE: string
 }
 
 dotenv.config({path: '../.env'})
@@ -40,6 +41,7 @@ const {
     DB_MAX_CONN,
     DB_IDLE_TIMEOUT_MS,
     DB_TIMEOUT_MS,
+    DEFAULT_RESULTS_PER_PAGE,
 } = process.env as ENV
 if (!API 
     || !CLIENT_ID 
@@ -68,5 +70,6 @@ export {
     DB_PORT,
     DB_MAX_CONN,
     DB_IDLE_TIMEOUT_MS,
-    DB_TIMEOUT_MS
+    DB_TIMEOUT_MS,
+    DEFAULT_RESULTS_PER_PAGE
 }

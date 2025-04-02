@@ -1,12 +1,3 @@
-import { FastifyReply } from "fastify"
-
-export interface FetchListProps {
-    name: string
-    version: string
-    ecosystem: string
-    res?: FastifyReply
-}
-
 export enum DownloadStatus {
     DOWNLOAD_UNSPECIFIED = 0,
     DOWNLOAD_PROCEED = 1,

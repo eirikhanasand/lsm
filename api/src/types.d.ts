@@ -67,7 +67,7 @@ type OSVResponse = {
     blacklist?: any[]
 }
 
-type OSVResponseVulnerability = {
+type wOSVResponseVulnerability = {
     id?: string
     details?: string
     name: string
@@ -211,4 +211,12 @@ type FetchOSVResponse = {
     whitelist?: any[]
     blacklist?: any[]
     osvLength: number
+}
+
+type IndexListQueryProps = {
+    ecosystem?: string
+    name?: string
+    page?: string
+    resultsPerPage?: number
+    version?: string
 }

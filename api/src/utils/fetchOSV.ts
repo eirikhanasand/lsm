@@ -1,6 +1,5 @@
 import run from "../db.js"
-import fetchBlacklist from "./fetchBlacklist.js"
-import fetchWhiteList from "./fetchWhitelist.js"
+import fetchList from "./list/fetchList.js"
 import { processVulnerabilities } from "./download.js"
 import { LOCAL_OSV, OSV_URL } from "../constants.js"
 
@@ -58,8 +57,8 @@ export default async function fetchOSV({name, version, ecosystem, clientAddress}
             }
         }
     }
-    const whitelist = await fetchWhiteList({name, ecosystem, version})
-    const blacklist = await fetchBlacklist({name, ecosystem, version})
+    const whitelist = await fetchList({name, ecosystem, version, list: 'white'})
+    const blacklist = await fetchList({name, ecosystem, version, list: 'black'})
     if (whitelist.length) {
         response['whitelist'] = whitelist
     }
