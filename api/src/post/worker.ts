@@ -201,7 +201,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
     const { response, osvLength } = osv
     if (osvLength) {
         const log = []
-        // TITLE SECTION
+        // Title section
         log.push(`DOWNLOAD STOPPED: MALICIOUS, Name: ${name}, Version: ${version}, Ecosystem: ${ecosystem}\n`)
         if ('vulnerabilties' in response) {
             log.push('-----------------------------')
@@ -273,7 +273,7 @@ function parseKey(key: string): string {
 
 function logDetails(vulnerability: WorkerVulnerability): string[] {
     const log: string[] = []
-    // SEVERITY
+    // Severity
     if ('severity' in vulnerability) {
         log.push(`Severity ${vulnerability.database_specific.severity}`)
         for (const severity of (vulnerability.severity || [])) {
@@ -284,7 +284,7 @@ function logDetails(vulnerability: WorkerVulnerability): string[] {
         log.push("CWEs", vulnerability.database_specific.cwe_ids.join(', '), '-----------------------------')
     }
 
-    // FIRST INFO SECTION
+    // First info section
     log.push(
         `${vulnerability.id} - ${vulnerability.summary}`,
         `Published ${formatDate(vulnerability.published)}`,
@@ -297,7 +297,7 @@ function logDetails(vulnerability: WorkerVulnerability): string[] {
         log.push("Aliases", ...vulnerability.aliases)
     }
 
-    // VERSIONS SECTION
+    // Versions section
     if ('affected' in vulnerability && Array.isArray(vulnerability.affected)) {
         log.push('-----------------------------')
         log.push("Affected versions:")
@@ -308,7 +308,7 @@ function logDetails(vulnerability: WorkerVulnerability): string[] {
         }
     }
 
-    // SPECIFICS SECTION
+    // Specifics section
     if (
         'malicious-packages-origins' in vulnerability.database_specific 
         && Array.isArray(vulnerability.database_specific["malicious-packages-origins"])

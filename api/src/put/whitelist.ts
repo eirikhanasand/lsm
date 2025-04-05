@@ -84,7 +84,7 @@ export default async function whitelistPutHandler(req: FastifyRequest, res: Fast
 
         return res.send({ message: "Whitelist entry updated successfully." })
     } catch (error: any) {
-        console.error("Database error:", error)
+        console.error(`Database error: ${JSON.stringify(error)}`)
         if (error.message.includes("not found")) {
             return res.status(404).send({ error: error.message })
         }

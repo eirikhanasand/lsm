@@ -76,7 +76,7 @@ export default async function whitelistPostHandler(req: FastifyRequest, res: Fas
 
         return res.send({ message: "Added to whitelist successfully." })
     } catch (error) {
-        console.error("Database error:", error)
+        console.error(`Database error: ${JSON.stringify(error)}`)
         return res.status(500).send({ error: "Internal Server Error" })
     }
 }

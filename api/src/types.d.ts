@@ -213,10 +213,22 @@ type FetchOSVResponse = {
     osvLength: number
 }
 
-type IndexListQueryProps = {
+type ListQueryProps = {
+    ecosystem?: string
+    name?: string
+    page?: number
+    resultsPerPage?: number
+    version?: string
+}
+
+type AuditLogQueryProps = {
+    author?: string
+    startDate?: string
+    endDate?: string
     ecosystem?: string
     name?: string
     page?: string
     resultsPerPage?: number
     version?: string
+    list?: 'white' | 'black'
 }

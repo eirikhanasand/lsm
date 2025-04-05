@@ -1,5 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
+import { loadSQL } from "../utils/loadSQL.js"
+import { DEFAULT_RESULTS_PER_PAGE } from "../constants.js"
 
 type AuditResponse = {
     id: number
@@ -7,11 +9,50 @@ type AuditResponse = {
     author: User
 }
 
-export default async function auditHandler(_: FastifyRequest, res: FastifyReply) {
+export default async function auditHandler(req: FastifyRequest, res: FastifyReply) {
+    const { 
+        author, 
+        startDate, 
+        endDate, 
+        ecosystem, 
+        name, 
+        page, 
+        resultsPerPage: clientResultsPerPage, 
+        version,
+        list
+    } = req.query as AuditLogQueryProps
+    const resultsPerPage = (clientResultsPerPage || Number(DEFAULT_RESULTS_PER_PAGE) || 50)
     try {
-        console.log(`Fetching audit log`)
-        const auditResult = await run(`SELECT id, event, author, timestamp FROM audit_log;`, [])
-        const auditLog: AuditResponse[] = await Promise.all(auditResult.rows.map(async(row) => {
+        console.log(`Fetching audit log with author=${author}, startDate=${startDate}, endDate=${endDate}, name=${name}, ecosystem=${ecosystem}, version=${version}, list=${list}`)
+        const query = await loadSQL("fetchAuditLog.sql")
+        const result = await run(query, [
+            author || null, 
+            startDate || null, 
+            endDate || null, 
+            name || null, 
+            ecosystem || null, 
+            version || null,
+            list || null,
+            resultsPerPage,
+            Number(page) || 1
+        ])
+
+        // if no length return error
+        // if length check how many pages there are etc.
+        console.log(result)
+        const pages = Math.ceil((result.rowCount || 1) / resultsPerPage)
+        if ((Number(page) || 1) > pages) {
+            console.error(`Page does not exist (${page} / ${pages})`)
+            return res.send({
+                page,
+                pages,
+                resultsPerPage,
+                error: `Page does not exist (${page} / ${pages})`,
+                results: []
+            })
+        }
+        // pass the results through here, not sure if result.rows is correct 
+        const auditLog: AuditResponse[] = await Promise.all(result.rows.map(async(row) => {
             const details = await getDetails(row.author)
             return {
                 id: row.id,
@@ -25,9 +66,14 @@ export default async function auditHandler(_: FastifyRequest, res: FastifyReply)
             }
         }))
 
-        return res.send(auditLog)
+        return res.send({
+            page,
+            pages,
+            resultsPerPage,
+            results: auditLog
+        })
     } catch (error) {
-        console.error("Database error:", error)
+        console.error(`Database error: ${JSON.stringify(error)}`)
         return res.status(500).send({ error: "Internal Server Error" })
     }
 }

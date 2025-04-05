@@ -57,4 +57,36 @@ COALESCE((
     JOIN users u ON cl.author = u.id
     WHERE cl.name = w.name
 ), '[]'::jsonb) AS "changeLog"
-FROM whitelist w;
+FROM whitelist w
+LEFT JOIN (
+    SELECT name, array_agg(version) AS versions
+    FROM blacklist_versions
+    GROUP BY name
+) bv ON bv.name = b.name
+LEFT JOIN (
+    SELECT name, array_agg(ecosystem) AS ecosystems
+    FROM blacklist_ecosystems
+    GROUP BY name
+) be ON be.name = b.name
+LEFT JOIN (
+    SELECT name, array_agg(repository) AS repositories
+    FROM blacklist_repositories
+    GROUP BY name
+) br ON br.name = b.name
+LEFT JOIN (
+    SELECT name, array_agg(reference) AS references
+    FROM blacklist_references
+    GROUP BY name
+) brf ON brf.name = b.name
+-- name filter
+WHERE ($1::TEXT IS NULL OR (SELECT w.name = $1))
+-- ecosystem filter
+AND ($2::TEXT IS NULL OR (SELECT w.ecosystem = $2))
+-- version filter
+AND ($3::TEXT IS NULL OR (SELECT w.version = $3))
+-- startDate filter
+AND ($4::TIMESTAMP IS NULL OR w.timestamp >= $4::TIMESTAMP)
+-- endDate filter
+AND ($5::TIMESTAMP IS NULL OR w.timestamp <= $5::TIMESTAMP)
+LIMIT $6 OFFSET ($7 - 1) * $6;
+;

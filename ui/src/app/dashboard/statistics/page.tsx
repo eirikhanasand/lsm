@@ -139,7 +139,7 @@ export default function Statistics() {
                     })
                 }
             } catch (error) {
-                console.error("Error fetching statistics:", error)
+                console.error(`Error fetching statistics: ${JSON.stringify(error)}`)
             }
         }
         fetchStatistics()

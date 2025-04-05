@@ -24,7 +24,7 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
         }
         return res.send(response)
     } catch (error) {
-        console.error("Database error:", error)
+        console.error(`Database error: ${JSON.stringify(error)}`)
         return res.status(500).send({ error: "Internal Server Error" })
     }
 }

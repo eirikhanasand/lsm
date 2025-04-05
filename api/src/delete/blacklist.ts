@@ -32,7 +32,7 @@ export default async function blacklistDeleteHandler(req: FastifyRequest, res: F
             return res.status(404).send({ error: error.message })
         }
 
-        console.error("Database error:", error)
+        console.error(`Database error: ${JSON.stringify(error)}`)
         return res.status(500).send({ error: "Internal Server Error" })
     }
 }

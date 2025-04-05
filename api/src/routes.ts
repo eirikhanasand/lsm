@@ -11,20 +11,13 @@ import whitelistDeleteHandler from "./delete/whitelist.js"
 import blacklistDeleteHandler from "./delete/blacklist.js"
 import { loginHandler, logoutHandler, loginCallbackHandler } from "./get/auth.js"
 import { FastifyInstance, FastifyPluginOptions } from "fastify"
-import listRepositoryHandler from "./get/listRepository.js"
 import listHandler from "./get/listHandler.js"
-import indexListHandler from "./get/indexListHandler.js"
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // GET handlers
     fastify.get("/", indexHandler)
     fastify.get("/osv/:ecosystem/:name/:version", osvHandler)
-    fastify.get("/whitelist", (req, res) => indexListHandler({req, res, list: 'white'}))
-    fastify.get("/blacklist", (req, res) => indexListHandler({req, res, list: 'black'}))
-    fastify.get("/whitelist/:ecosystem/:name/:version", (req, res) => listHandler({req, res, list: 'white'}))
-    fastify.get("/blacklist/:ecosystem/:name/:version", (req, res) => listHandler({req, res, list: 'black'}))
-    fastify.get("/whitelist/:repository", (req, res) => listRepositoryHandler({req, res, list: 'white'}))
-    fastify.get("/blacklist/:repository", (req, res) => listRepositoryHandler({req, res, list: 'black'}))
+    fastify.get("/list/:list", listHandler)
     fastify.get("/oauth2/login", loginHandler)
     fastify.get("/oauth2/callback", loginCallbackHandler)
     fastify.get("/oauth2/logout", logoutHandler)

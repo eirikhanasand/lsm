@@ -22,7 +22,7 @@ const pool = new Pool({
     connectionTimeoutMillis: Number(DB_TIMEOUT_MS) || 3000
 })
 
-export default async function run(query: string, params: (string | null)[]) {
+export default async function run(query: string, params: (string | number | null)[]) {
     const client = await pool.connect()
     try {
         return await client.query(query, params)

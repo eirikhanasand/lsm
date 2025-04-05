@@ -37,6 +37,8 @@ COALESCE((SELECT array_agg(reference) FROM blacklist_references WHERE name = b.n
     FROM blacklist_updated bu
     JOIN users u ON bu.id = u.id
     WHERE bu.name = b.name
+    AND ($4::TIMESTAMP IS NULL OR bu.timestamp >= $4)
+    AND ($5::TIMESTAMP IS NULL OR bu.timestamp <= $5)
     LIMIT 1
 ) AS updated,
 COALESCE((
@@ -57,4 +59,12 @@ COALESCE((
     JOIN users u ON cl.author = u.id
     WHERE cl.name = b.name
 ), '[]'::jsonb) AS "changeLog"
-FROM blacklist b;
+FROM blacklist b
+-- name filter
+WHERE ($1::TEXT IS NULL OR (SELECT b.name = $1))
+-- ecosystem filter
+AND ($2::TEXT IS NULL OR (SELECT b.ecosystem = $2))
+-- version filter
+AND ($3::TEXT IS NULL OR (SELECT b.version = $3))
+LIMIT $6 OFFSET ($7 - 1) * $6;
+;

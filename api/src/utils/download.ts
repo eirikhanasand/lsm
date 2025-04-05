@@ -24,7 +24,7 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
         ])
         return result.rows[0]
     } catch (error) {
-        console.error('Error inserting download event:', error)
+        console.error(`Error inserting download event: ${JSON.stringify(error)}`)
         // Caught in parent function
         throw error
     }

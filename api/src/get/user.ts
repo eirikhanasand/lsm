@@ -18,7 +18,7 @@ export default async function userHandler(req: FastifyRequest, res: FastifyReply
 
         return res.send(user)
     } catch (error) {
-        console.error("Database error:", error)
+        console.error(`Database error: ${JSON.stringify(error)}`)
         return res.status(500).send({ error: "Internal Server Error" })
     }
 }
