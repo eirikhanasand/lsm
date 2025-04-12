@@ -170,3 +170,16 @@ type Ecosystem =
     "vagrant" |
     "yum" |
     "generic"
+
+type Repository = {
+    key: string
+    description: string
+    type: "LOCAL" | "REMOTE" | "VIRTUAL"
+    url: string
+    packageType: string
+}
+
+type RepositoryProps = {
+    repository: Repository
+    index: number
+}
