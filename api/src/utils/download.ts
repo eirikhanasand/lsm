@@ -1,7 +1,8 @@
 import pkg from 'ae-cvss-calculator'
 import run from "../db.js"
-import { DEFAULT_MAL_SEVERITY, DEFAULT_CVE_SEVERITY, DEFAULT_SEVERITY } from "../constants.js"
+import config from "../constants.js"
 import { DownloadStatus } from '../interfaces.js'
+const { DEFAULT_MAL_SEVERITY, DEFAULT_CVE_SEVERITY, DEFAULT_SEVERITY } = config
 const { Cvss4P0, Cvss3P1 } = pkg
 
 export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {

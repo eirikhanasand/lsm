@@ -219,6 +219,8 @@ type ListQueryProps = {
     page?: number
     resultsPerPage?: number
     version?: string
+    startDate?: string
+    endDate?: string
 }
 
 type AuditLogQueryProps = {

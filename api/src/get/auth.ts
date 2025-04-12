@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL } from "../constants.js"
+import config from "../constants.js"
+const { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL } = config
 import run from "../db.js"
 
 export function loginHandler(_: FastifyRequest, res: FastifyReply) {

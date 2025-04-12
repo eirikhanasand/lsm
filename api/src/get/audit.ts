@@ -1,7 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 import { loadSQL } from "../utils/loadSQL.js"
-import { DEFAULT_RESULTS_PER_PAGE } from "../constants.js"
+import config from "../constants.js"
+
+const { DEFAULT_RESULTS_PER_PAGE } = config
 
 type AuditResponse = {
     id: number

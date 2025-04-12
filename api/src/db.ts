@@ -1,5 +1,7 @@
 import pg from 'pg'
-import { 
+import config from './constants.js'
+
+const { 
     DB, 
     DB_USER, 
     DB_HOST, 
@@ -8,9 +10,8 @@ import {
     DB_MAX_CONN, 
     DB_IDLE_TIMEOUT_MS, 
     DB_TIMEOUT_MS
-} from './constants.js'
+} = config
 const { Pool } = pg
-
 const pool = new Pool({
     user: DB_USER || "osvuser",
     host: DB_HOST || "lsm_database",

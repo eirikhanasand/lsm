@@ -53,7 +53,7 @@ if (!API
     throw new Error("Missing one or more environment variables.")
 }
 
-export { 
+const config = {
     API, 
     CLIENT_ID, 
     CLIENT_SECRET, 
@@ -73,3 +73,5 @@ export {
     DB_TIMEOUT_MS,
     DEFAULT_RESULTS_PER_PAGE
 }
+
+export default config

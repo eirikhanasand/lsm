@@ -1,7 +1,9 @@
 import run from "../db.js"
 import fetchList from "./list/fetchList.js"
 import { processVulnerabilities } from "./download.js"
-import { LOCAL_OSV, OSV_URL } from "../constants.js"
+import config from "../constants.js"
+
+const { LOCAL_OSV, OSV_URL } = config
 
 export default async function fetchOSV({name, version, ecosystem, clientAddress}: FetchOSVProps): Promise<FetchOSVResponse | {error: string}> {
     let response = {} as { vulnerabilties: any[], whitelist?: any[], blacklist?: any[] }
