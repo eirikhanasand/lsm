@@ -1,0 +1,47 @@
+name: Test Docker
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      JFROG_ID: ${{ secrets.JFROG_ID }}
+      JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }}
+      JFROG_EMAIL: ${{ secrets.JFROG_EMAIL }}
+      JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
+      API: ${{ secrets.API }}
+      SERVER_API: ${{ secrets.SERVER_API }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+      LOCAL_OSV: false
+      OSV_URL: ${{ secrets.OSV_URL }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      SELF_URL: ${{ secrets.SELF_URL }}
+      OAUTH_TOKEN_URL: ${{ secrets.OAUTH_TOKEN_URL }}
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: test_docker_compose_up
+      run: |
+        docker compose up -d
+        sleep 20
+
+        if docker compose ps | grep "running"; then
+          echo "Docker Compose services are running."
+          docker compose down
+          exit 0
+        else
+          echo "Docker Compose services failed to start."
+          docker compose logs
+          docker compose down
+          exit 1
+        fi
