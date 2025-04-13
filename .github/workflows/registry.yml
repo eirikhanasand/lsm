@@ -20,6 +20,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: test_docker_compose_up
+      run: |
+        docker compose up -d
+        sleep 10  # Wait for services to start (adjust as needed)
+
+        if docker compose ps | grep "running"; then
+          echo "Docker Compose services are running."
+          docker compose down
+          exit 0
+        else
+          echo "Docker Compose services failed to start."
+          docker compose logs
+          docker compose down
+          exit 1
+        fi
     - name: test_docker_oci_helm
       run: |
         echo $JFROG_TOKEN | docker login $JFROG_ID.jfrog.io --username $JFROG_USERNAME --password-stdin
