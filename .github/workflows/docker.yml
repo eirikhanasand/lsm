@@ -51,14 +51,15 @@ jobs:
     - name: test_docker_compose_up
       run: |
         docker compose up -d
-        sleep 20
+        sleep 30
 
-        if docker compose ps | grep "running"; then
-          echo "Docker Compose services are running."
+        if docker compose ps | grep -q "Up.*healthy"; then
+          echo "All services are running and healthy."
           docker compose down
           exit 0
         else
-          echo "Docker Compose services failed to start."
+          echo "One or more services failed to start or are not healthy."
+          docker compose ps
           docker compose logs
           docker compose down
           exit 1
