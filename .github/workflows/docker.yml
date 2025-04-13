@@ -30,6 +30,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+
+    - name: Create .env file
+      run: |
+        echo "JFROG_ID=${{ secrets.JFROG_ID }}" > .env
+        echo "JFROG_USERNAME=${{ secrets.JFROG_USERNAME }}" >> .env
+        echo "JFROG_EMAIL=${{ secrets.JFROG_EMAIL }}" >> .env
+        echo "JFROG_TOKEN=${{ secrets.JFROG_TOKEN }}" >> .env
+        echo "API=${{ secrets.API }}" >> .env
+        echo "SERVER_API=${{ secrets.SERVER_API }}" >> .env
+        echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
+        echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
+        echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+        echo "LOCAL_OSV=false" >> .env
+        echo "OSV_URL=${{ secrets.OSV_URL }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+        echo "SELF_URL=${{ secrets.SELF_URL }}" >> .env
+        echo "OAUTH_TOKEN_URL=${{ secrets.OAUTH_TOKEN_URL }}" >> .env
+
     - name: test_docker_compose_up
       run: |
         docker compose up -d
