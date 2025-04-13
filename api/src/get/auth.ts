@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import config from "../constants.js"
-const { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL } = config
+const { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL, OAUTH_TOKEN_URL, SELF_URL } = config
 import run from "../db.js"
 
 export function loginHandler(_: FastifyRequest, res: FastifyReply) {
@@ -21,7 +21,7 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
     }
 
     try {
-        const response = await fetch("https://discord.com/api/oauth2/token", {
+        const response = await fetch(OAUTH_TOKEN_URL, {
             method: 'POST',
             headers: { 
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -41,7 +41,7 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
 
         const data = await response.json()
         const { access_token } = data as any
-        const userResponse = await fetch("https://discord.com/api/users/@me", {
+        const userResponse = await fetch(SELF_URL, {
             headers: { Authorization: `Bearer ${access_token}` }
         })
         const userData = await userResponse.json()

@@ -19,6 +19,8 @@ type ENV = {
     DB_IDLE_TIMEOUT_MS: string
     DB_TIMEOUT_MS: string
     DEFAULT_RESULTS_PER_PAGE: string
+    OAUTH_TOKEN_URL: string
+    SELF_URL: string
 }
 
 dotenv.config({path: '../.env'})
@@ -42,6 +44,8 @@ const {
     DB_IDLE_TIMEOUT_MS,
     DB_TIMEOUT_MS,
     DEFAULT_RESULTS_PER_PAGE,
+    SELF_URL,
+    OAUTH_TOKEN_URL
 } = process.env as ENV
 if (!API 
     || !CLIENT_ID 
@@ -49,6 +53,8 @@ if (!API
     || !FRONTEND_URL 
     || !LOCAL_OSV 
     || !DB_PASSWORD
+    || !SELF_URL
+    || !OAUTH_TOKEN_URL
 ) {
     throw new Error("Missing one or more environment variables.")
 }
@@ -71,7 +77,9 @@ const config = {
     DB_MAX_CONN,
     DB_IDLE_TIMEOUT_MS,
     DB_TIMEOUT_MS,
-    DEFAULT_RESULTS_PER_PAGE
+    DEFAULT_RESULTS_PER_PAGE,
+    SELF_URL,
+    OAUTH_TOKEN_URL
 }
 
 export default config

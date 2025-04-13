@@ -45,9 +45,10 @@ type Cookie = {
 }
 
 type ClientPageProps = {
-    list: 'whitelist' | 'blacklist'
+    list: 'white' | 'black'
     packages: APIPackage[]
     repositories: Repository[]
+    serverShowGlobalOnly: boolean
 }
 
 type RepoWhitelistItem = {
@@ -89,7 +90,7 @@ type StatisticResponse = {
     vulnerabilitiesFound: number
     criticalBlocked: number
     safeApproved: number
-    lastScan: string | null
+    lastScan: string
     repositoryStats: Statistics[]
     vulnerabilitiesOverTime: Vulnerability[]
 }
@@ -111,11 +112,17 @@ type Vulnerability = {
 }
 
 type GetStatisticProps = {
-    timeStart: string
-    timeEnd: string
+    startTime: string
+    endTime: string
 }
 
 type AuditProps = {
+    pages: number
+    resultsPerPage: number
+    results: AuditResult[]
+}
+
+type AuditResult = {
     id: number
     event: string
     author: Author
@@ -182,4 +189,18 @@ type Repository = {
 type RepositoryProps = {
     repository: Repository
     index: number
+}
+
+type RepoListItem = {
+    name: string
+    versions: string[]       
+    ecosystems: string[]  
+    repositories: string[]  
+    comment: string
+    isGlobal?: boolean 
+}
+
+type RepoConfig = {
+    whitelist: RepoListItem[]
+    blacklist: RepoListItem[]
 }

@@ -8,10 +8,9 @@ import { useState } from "react"
 
 type PageProps = {
     repositories: Repository[]
-    userAgent: string
 }
 
-export default function page({repositories, userAgent}: PageProps) {
+export default function Page({repositories}: PageProps) {
     const searchParams = useSearchParams()
     const initialPage = Number(searchParams.get('page')) || 1
     const [page, setPage] = useState(initialPage)
@@ -20,15 +19,21 @@ export default function page({repositories, userAgent}: PageProps) {
 
     return (
         <main className="min-h-full max-h-full overflow-hidden w-full flex flex-col p-4 gap-2">
-            <Paging 
-                page={page} 
-                setPage={setPage} 
-                userAgent={userAgent} 
-                resultsPerPage={resultsPerPage} 
-                items={repositories} 
-                setResultsPerPage={setResultsPerPage}
-                searchParams={searchParams}
-            />
+            <div className="flex justify-between w-full">
+                <div>
+                    <h1 className="text-3xl font-bold text-blue-600">Repositories</h1>
+                    <p className="mt-2 text-foreground mb-2">List of repositories in Artifactory.</p>
+                </div>
+                <Paging 
+                    customStyle="pt-2"
+                    page={page} 
+                    setPage={setPage} 
+                    resultsPerPage={resultsPerPage} 
+                    items={repositories} 
+                    setResultsPerPage={setResultsPerPage}
+                    searchParams={searchParams}
+                />
+            </div>
             <div className="grid grid-cols-8 bg-normal w-full max-h-[200px] items-center pl-4 text-foreground py-4 font-semibold">
                 <h1>Key</h1>
                 <h1>Type</h1>

@@ -2,8 +2,8 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../db.js"
 
 type StatisticHandlerParams = {
-    timestart: string
-    timeend: string
+    startTime: string
+    endTime: string
 }
 
 type StatisticResponse = {
@@ -16,15 +16,15 @@ type StatisticResponse = {
 }
 
 export default async function packageStatsHandler(req: FastifyRequest, res: FastifyReply) {
-    const { timestart, timeend} = req.params as StatisticHandlerParams
-    if (!timestart || !timeend) {
+    const { startTime, endTime } = req.query as StatisticHandlerParams
+    if (!startTime || !endTime) {
         return res.status(400).send({ error: "Missing start or end time." })
     }
 
-    const queryParams =  [timestart, timeend]
+    const queryParams =  [startTime, endTime]
 
     try {
-        console.log(`Fetching package stats: start=${timestart}, end=${timeend}`)
+        console.log(`Fetching package stats: start=${startTime}, end=${endTime}`)
 
          // Fetching overall summary stats
         const summaryResult = await run(`

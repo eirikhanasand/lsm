@@ -84,8 +84,15 @@ WHERE ($1::TEXT IS NULL OR (SELECT l.name = $1))
 AND ($2::TEXT IS NULL OR (SELECT $2 = ANY(le.ecosystems)))
 -- version filter
 AND ($3::TEXT IS NULL OR (SELECT $3 = ANY(lv.versions)))
--- repository filter
-AND ($4::TEXT IS NULL OR (SELECT $4 = ANY(lr.repositories)))
+-- repository filter (checks for unique word since the repository is often 
+-- '[REMOTE] npm', but could also be '[LOCAL] npm-other'), which should not be
+-- included since 'npm-other' !== 'npm' and 'other-npm' !== 'npm'
+AND (
+    $4::TEXT IS NULL OR EXISTS (
+        SELECT 1 FROM unnest(lr.repositories) AS repo
+        WHERE repo ~* ('\y' || $4 || '\y')
+    )
+)
 -- startDate filter
 AND ($5::TIMESTAMP IS NULL OR (
     SELECT lc.timestamp
@@ -100,5 +107,5 @@ AND ($6::TIMESTAMP IS NULL OR (
     WHERE lc.name = l.name
     LIMIT 1
 ) <= $6::TIMESTAMP)
-LIMIT $7 OFFSET ($8 - 1) * $7;
+LIMIT $8::INT OFFSET ($7::INT * $8::INT) - $8::INT;
 ;

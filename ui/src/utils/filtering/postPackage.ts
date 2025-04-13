@@ -1,13 +1,13 @@
 import { API } from "@constants"
 
 type PostListProps = {
-    list: 'whitelist' | 'blacklist'
+    list: 'white' | 'black'
     newPackage: AddPackage
 }
 
 export default async function postPackage({list, newPackage}: PostListProps) {
     try {
-        const response = await fetch(`${API}/${list}`, {
+        const response = await fetch(`${API}/list/${list}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

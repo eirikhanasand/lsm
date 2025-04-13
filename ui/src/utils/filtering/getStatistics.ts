@@ -1,9 +1,10 @@
 import { API } from "@constants"
 
-export async function getStatistics({timeStart, timeEnd}: GetStatisticProps): Promise<StatisticResponse | null>  {
+export async function getStatistics({startTime, endTime}: GetStatisticProps): Promise<StatisticResponse | null>  {
     try {
-        console.log(`Fetching statistics for time period ${timeStart} to ${timeEnd}`)
-        const response = await fetch(`${API}/statistics/${timeStart}/${timeEnd}`)
+        console.log(`Fetching statistics from ${startTime} to ${endTime}`)
+        const params = new URLSearchParams({startTime, endTime})
+        const response = await fetch(`${API}/statistics?${params}`)
 
         if (!response.ok) {
             throw new Error(await response.text())

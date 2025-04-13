@@ -1,13 +1,13 @@
 import { API } from "@constants"
 
 type PutListProps = {
-    list: 'whitelist' | 'blacklist'
+    list: 'white' | 'black'
     pkg: PutPackage
 }
 
 export default async function putPackage({list, pkg}: PutListProps) {
     try {
-        const response = await fetch(`${API}/${list}`, {
+        const response = await fetch(`${API}/list/${list}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

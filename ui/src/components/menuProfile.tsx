@@ -43,7 +43,7 @@ export default function MenuProfile({token}: {token: string | undefined}) {
 function Content() {
     return (
         <div className="bg-dark absolute h-[4.5vh] w-[15vw] right-2 mt-6 rounded-lg p-2 z-1000">
-            <Link href="/logout" className="flex justify-between">
+            <Link href="/logout" className="flex justify-between items-center">
                 <h1>Log out</h1>
                 <div
                     className='relative w-[2.5vh] h-[2.5vh]' 

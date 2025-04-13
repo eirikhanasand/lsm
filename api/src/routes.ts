@@ -2,13 +2,10 @@ import indexHandler from "./get/index.js"
 import osvHandler from "./get/osv.js"
 import auditHandler from "./get/audit.js"
 import packageStatsHandler from "./get/statistics.js"
-import whitelistPostHandler from "./post/whitelist.js"
-import blacklistPostHandler from "./post/blacklist.js"
+import listPostHandler from "./post/list.js"
 import workerPostHandler from "./post/worker.js"
-import whitelistPutHandler from "./put/whitelist.js"
-import blacklistPutHandler from "./put/blacklist.js"
-import whitelistDeleteHandler from "./delete/whitelist.js"
-import blacklistDeleteHandler from "./delete/blacklist.js"
+import listPutHandler from "./put/list.js"
+import listDeleteHandler from "./delete/list.js"
 import { loginHandler, logoutHandler, loginCallbackHandler } from "./get/auth.js"
 import { FastifyInstance, FastifyPluginOptions } from "fastify"
 import listHandler from "./get/listHandler.js"
@@ -21,19 +18,16 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.get("/oauth2/login", loginHandler)
     fastify.get("/oauth2/callback", loginCallbackHandler)
     fastify.get("/oauth2/logout", logoutHandler)
-    fastify.get("/statistics/:timestart/:timeend", packageStatsHandler)
+    fastify.get("/statistics", packageStatsHandler)
     fastify.get("/audit", auditHandler)
 
     // POST handlers
-    fastify.post("/whitelist", whitelistPostHandler)
-    fastify.post("/blacklist", blacklistPostHandler)
+    fastify.post("/list/:list", listPostHandler)
     fastify.post("/worker", workerPostHandler)
 
     // PUT handlers 
-    fastify.put("/whitelist", whitelistPutHandler)
-    fastify.put("/blacklist", blacklistPutHandler)
+    fastify.put("/list/:list", listPutHandler)
 
     // DELETE handlers
-    fastify.delete("/whitelist/:name", whitelistDeleteHandler)
-    fastify.delete("/blacklist/:name", blacklistDeleteHandler)
+    fastify.delete("/list/:list/:name", listDeleteHandler)
 }

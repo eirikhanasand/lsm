@@ -1,14 +1,14 @@
 import { API, SERVER_API } from "@constants"
 
 type GetListProps = {
-    list: 'whitelist' | 'blacklist'
+    list: 'white' | 'black'
     side: 'server' | 'client'
 }
 
 // Fetches all packages from lsm API
 export default async function getPackages({list, side}: GetListProps) {
     try {
-        const response = await fetch(`${side === 'server' ? SERVER_API : API}/${list}`)
+        const response = await fetch(`${side === 'server' ? SERVER_API : API}/list/${list}`)
 
         if (!response.ok) {
             throw new Error(await response.text())

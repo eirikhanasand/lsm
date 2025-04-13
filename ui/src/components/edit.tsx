@@ -7,7 +7,7 @@ import { ECOSYSTEMS } from "@parent/constants"
 type EditProps = {
     pkg: Package
     setEditing: Dispatch<SetStateAction<boolean>>
-    list: 'whitelist' | 'blacklist'
+    list: 'white' | 'black'
     packages: Package[]
     setPackages: Dispatch<SetStateAction<Package[]>>
     author: Author

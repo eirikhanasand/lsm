@@ -219,6 +219,7 @@ type ListQueryProps = {
     page?: number
     resultsPerPage?: number
     version?: string
+    repository?: string
     startDate?: string
     endDate?: string
 }

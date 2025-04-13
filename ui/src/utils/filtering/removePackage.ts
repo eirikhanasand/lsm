@@ -5,7 +5,7 @@ type RemovePackageProps = {
     name: string
     setPackages: (value: SetStateAction<Package[]>) => void
     packages: Package[]
-    list: 'whitelist' | 'blacklist'
+    list: 'white' | 'black'
 }
 
 export default async function removePackage({name, setPackages, packages, list}: RemovePackageProps) {

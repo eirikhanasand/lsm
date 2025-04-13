@@ -39,9 +39,6 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
             Number(page) || 1
         ])
 
-        // if no length return error
-        // if length check how many pages there are etc.
-        console.log(result)
         const pages = Math.ceil((result.rowCount || 1) / resultsPerPage)
         if ((Number(page) || 1) > pages) {
             console.error(`Page does not exist (${page} / ${pages})`)

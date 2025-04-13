@@ -1,7 +1,7 @@
 import { API } from "@constants"
 
 type DeleteListProps = {
-    list: 'whitelist' | 'blacklist'
+    list: 'white' | 'black'
     name: string
 }
 

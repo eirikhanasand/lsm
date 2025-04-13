@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+const SELF_URL = 'https://discord.com/api/v10/users/@me'
+
 export async function middleware(req: NextRequest) {
     const tokenCookie = req.cookies.get('token')
     if (!pathIsAllowedWhileUnauthenticated(req.nextUrl.pathname)) {
@@ -35,7 +37,7 @@ function pathIsAllowedWhileUnauthenticated(path: string) {
 }
 
 async function tokenIsValid(req: NextRequest, token: string): Promise<boolean> {
-    const discordResponse = await fetch('https://discord.com/api/v10/users/@me', {
+    const discordResponse = await fetch(SELF_URL, {
         headers: { Authorization: `Bearer ${token}` }
     })
 

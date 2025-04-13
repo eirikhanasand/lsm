@@ -40,8 +40,8 @@ export default async function fetchList({
         repository || null,
         startDate || null,
         endDate || null,
-        page || '1',
-        String(resultsPerPage || DEFAULT_RESULTS_PER_PAGE || 50)
+        page || 1,
+        resultsPerPage || Number(DEFAULT_RESULTS_PER_PAGE) || 50
     ])
 
     return res 

@@ -1,37 +1,11 @@
 import { SERVER_API } from "@parent/constants"
 
-export interface RepoWhitelistItem {
-    name: string
-    versions: string[]       
-    ecosystems: string[]  
-    repositories: string[]  
-    comment: string
-    isGlobal?: boolean 
-}
-
-export interface RepoBlacklistItem {
-    name: string
-    versions: string[]
-    ecosystems: string[]    
-    repositories: string[]  
-    comment: string
-    isGlobal?: boolean  
-}
-
-export interface RepoConfig {
-    whitelist: RepoWhitelistItem[]
-    blacklist: RepoBlacklistItem[]
-}
-
 export default async function fetchRepoConfig(repository: string): Promise<RepoConfig> {
+    const params =  new URLSearchParams({ repository: encodeURIComponent(repository) })
     try {
         const [whitelistRes, blacklistRes] = await Promise.all([
-            fetch(
-                `${SERVER_API}/whitelist/${repository}`
-            ),
-            fetch(
-                `${SERVER_API}/blacklist/${repository}`
-            ),
+            fetch(`${SERVER_API}/list/white?${params}`),
+            fetch(`${SERVER_API}/list/black?${params}`)
         ])
 
         if (!whitelistRes.ok) {
