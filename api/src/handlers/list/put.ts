@@ -9,7 +9,7 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
     }
 
     const { list } = req.params as { list: string }
-    const { ecosystems, name, versions, comment, repositories, author, references } = req.body as UpdateBody
+    const { ecosystems, name, versions, comment, repositories, author, references } = req.body as UpdateBody || {}
     if (!name || !comment || !author) {
         return res
             .status(400)

@@ -3,7 +3,7 @@ COALESCE((SELECT array_agg(version) FROM {list}list_versions WHERE name = l.name
 COALESCE((SELECT array_agg(ecosystem) FROM {list}list_ecosystems WHERE name = l.name), '{}'::TEXT[]) AS ecosystems, 
 COALESCE((SELECT array_agg(repository) FROM {list}list_repositories WHERE name = l.name), '{}'::TEXT[]) AS repositories,
 COALESCE((SELECT array_agg(reference) FROM {list}list_references WHERE name = l.name), '{}'::TEXT[]) AS "references",
-(
+COALESCE((
     SELECT jsonb_agg(
         jsonb_build_object(
             'id', u.id,
@@ -14,8 +14,8 @@ COALESCE((SELECT array_agg(reference) FROM {list}list_references WHERE name = l.
     FROM {list}list_authors la
     JOIN users u ON la.author = u.id
     WHERE la.name = l.name
-) AS authors,
-(
+), '[]'::jsonb) AS authors,
+COALESCE((
     SELECT jsonb_build_object(
         'id', u.id,
         'name', u.name,
@@ -26,8 +26,8 @@ COALESCE((SELECT array_agg(reference) FROM {list}list_references WHERE name = l.
     JOIN users u ON lc.id = u.id
     WHERE lc.name = l.name
     LIMIT 1
-) AS created,
-(
+), '{}'::jsonb) AS created,
+COALESCE((
     SELECT jsonb_build_object(
         'id', u.id,
         'name', u.name,
@@ -38,7 +38,7 @@ COALESCE((SELECT array_agg(reference) FROM {list}list_references WHERE name = l.
     JOIN users u ON lu.id = u.id
     WHERE lu.name = l.name
     LIMIT 1
-) AS updated,
+), '{}'::jsonb) AS updated,
 COALESCE((
     SELECT jsonb_agg(
         jsonb_build_object(

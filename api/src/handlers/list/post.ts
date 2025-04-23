@@ -9,7 +9,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
     }
 
     const { list } = req.params as { list: string }
-    const { ecosystems, name, versions, repositories, comment, references, author } = req.body as PostBody
+    const { ecosystems, name, versions, repositories, comment, references, author } = req.body as PostBody || {}
     if (!name || !comment || !author) {
         return res.status(400).send({ error: 'Missing name, comment or author.' })
     }

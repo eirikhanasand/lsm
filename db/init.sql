@@ -73,20 +73,16 @@ CREATE TABLE IF NOT EXISTS whitelist_authors (
 
 -- Created info for specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_created (
-    name TEXT NOT NULL,
-    id TEXT NOT NULL,
+    name TEXT PRIMARY KEY,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES whitelist(name),
-    PRIMARY KEY (name, id, timestamp)
+    FOREIGN KEY (name) REFERENCES whitelist(name)
 );
 
 -- Updated info for specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_updated (
-    name TEXT NOT NULL,
-    id TEXT NOT NULL,
+    name TEXT PRIMARY KEY,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES whitelist(name),
-    PRIMARY KEY (name, id, timestamp)
+    FOREIGN KEY (name) REFERENCES whitelist(name)
 );
 
 -- Changelog for specific whitelisted dependencies
@@ -141,20 +137,16 @@ CREATE TABLE IF NOT EXISTS blacklist_authors (
 
 -- Created info for specific blacklisted dependencies
 CREATE TABLE IF NOT EXISTS blacklist_created (
-    name TEXT NOT NULL,
-    id TEXT NOT NULL,
+    name TEXT PRIMARY KEY,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES blacklist(name),
-    PRIMARY KEY (name, id, timestamp)
+    FOREIGN KEY (name) REFERENCES blacklist(name)
 );
 
 -- Updated info for specific blacklisted dependencies
 CREATE TABLE IF NOT EXISTS blacklist_updated (
-    name TEXT NOT NULL,
-    id TEXT NOT NULL,
+    name TEXT PRIMARY KEY,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES blacklist(name),
-    PRIMARY KEY (name, id, timestamp)
+    FOREIGN KEY (name) REFERENCES blacklist(name)
 );
 
 -- Changelog for specific blacklisted dependencies
