@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { DISABLE_TOKEN_CHECK, SELF_URL, DISABLE_AUTH } from '@parent/constants'
 
 export async function middleware(req: NextRequest) {
     const tokenCookie = req.cookies.get('token')
-    if (!pathIsAllowedWhileUnauthenticated(req.nextUrl.pathname) && DISABLE_AUTH) {
+    if (!pathIsAllowedWhileUnauthenticated(req.nextUrl.pathname) && process.env.NEXT_PUBLIC_DISABLE_AUTH !== 'true') {
         if (!tokenCookie) {
             return NextResponse.redirect(new URL('/', req.url))
         }
@@ -36,11 +35,16 @@ function pathIsAllowedWhileUnauthenticated(path: string) {
 }
 
 async function tokenIsValid(req: NextRequest, token: string): Promise<boolean> {
-    if (DISABLE_TOKEN_CHECK === 'true') {
+    if (process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK === 'true') {
         return true
     }
 
-    const tokenResponse = await fetch(SELF_URL, {
+    if (!process.env.NEXT_PUBLIC_SELF_URL) {
+        console.error(`Missing process.env.NEXT_PUBLIC_SELF_URL`)
+        return false
+    }
+
+    const tokenResponse = await fetch(process.env.NEXT_PUBLIC_SELF_URL, {
         headers: { Authorization: `Bearer ${token}` }
     })
 

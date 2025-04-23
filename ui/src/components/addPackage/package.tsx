@@ -6,7 +6,6 @@ import removePackage from '@/utils/filtering/removePackage'
 import Trash from '../svg/trash'
 import { useRouter } from 'next/navigation'
 import { getCookie } from '@/utils/cookies'
-import { DISABLE_TOKEN_CHECK } from '@parent/constants'
 
 type PackageProps = {
     pkg: Package
@@ -25,7 +24,7 @@ export default function Package({ pkg, setPackages, packages, list, author, repo
 
     function handleDelete() {
         const token = getCookie('token')
-        if (!token && DISABLE_TOKEN_CHECK !== 'true') {
+        if (!token && process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true') {
             alert('Missing token, redirecting to login.')
             return router.push('/logout')
         }

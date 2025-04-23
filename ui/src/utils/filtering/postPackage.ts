@@ -1,4 +1,4 @@
-import { API, DISABLE_AUTH } from '@constants'
+import { API } from '@constants'
 
 type PostListProps = {
     list: 'white' | 'black'
@@ -9,7 +9,7 @@ type PostListProps = {
 export default async function postPackage({ list, newPackage, token }: PostListProps) {
     try {
         const headers = {
-            ...( !DISABLE_AUTH && { 'Authorization': `Bearer ${token}` } ),
+            ...( !process.env.NEXT_PUBLIC_DISABLE_AUTH && { 'Authorization': `Bearer ${token}` } ),
             'Content-Type': 'application/json'
         }
         const response = await fetch(`${API}/list/${list}`, {

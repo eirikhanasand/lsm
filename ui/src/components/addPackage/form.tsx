@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
 import Dropdown from '../dropdown'
-import { DISABLE_TOKEN_CHECK, ECOSYSTEMS } from '@parent/constants'
+import { ECOSYSTEMS } from '@parent/constants'
 import addPackage from '@/utils/filtering/addPackage'
 import { useRouter } from 'next/navigation'
 import { getCookie } from '@/utils/cookies'
@@ -33,7 +33,7 @@ export default function Form({
     const router = useRouter()
     function handleAdd() {
         const token = getCookie('token')
-        if (!token && DISABLE_TOKEN_CHECK !== 'true') {
+        if (!token && process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true') {
             alert('Missing token, redirecting to login.')
             return router.push('/logout')
         }

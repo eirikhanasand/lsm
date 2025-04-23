@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import editPackage from '@/utils/filtering/editPackage'
 import Image from 'next/image'
 import Dropdown from './dropdown'
-import { DISABLE_TOKEN_CHECK, ECOSYSTEMS, IMAGE_URL } from '@parent/constants'
+import { ECOSYSTEMS, IMAGE_URL } from '@parent/constants'
 import { getCookie } from '@/utils/cookies'
 import { useRouter } from 'next/navigation'
 
@@ -44,7 +44,7 @@ export default function Edit({
     function handleSave() {
         if (isEdited()) {
             const token = getCookie('token')
-            if (!token && DISABLE_TOKEN_CHECK !== 'true') {
+            if (!token && process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true') {
                 alert('Missing token, redirecting to login.')
                 return router.push('/logout')
             }

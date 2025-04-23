@@ -4,7 +4,7 @@ import { getCookie } from '@/utils/cookies'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { DISABLE_TOKEN_CHECK, IMAGE_URL } from '@parent/constants'
+import { IMAGE_URL } from '@parent/constants'
 
 export default function MenuProfile({ token }: { token: string | undefined }) {
     const [open, setOpen] = useState(false)
@@ -18,7 +18,7 @@ export default function MenuProfile({ token }: { token: string | undefined }) {
         if (tempAvatar) setAvatar(tempAvatar)
     }, [])
 
-    if (!token && DISABLE_TOKEN_CHECK !== 'true') {
+    if (!token && process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true') {
         return <></>
     }
     if (!id || !avatar) {

@@ -23,7 +23,7 @@ type ENV = {
     SELF_URL: string
     OAUTH_BASE_URL: string
     OAUTH_AUTH_URL: string
-    DISABLE_AUTH: string
+    NEXT_PUBLIC_DISABLE_AUTH: string
 }
 
 dotenv.config({ path: '../.env' })
@@ -50,7 +50,7 @@ const {
     SELF_URL,
     OAUTH_TOKEN_URL,
     OAUTH_BASE_URL,
-    DISABLE_AUTH,
+    NEXT_PUBLIC_DISABLE_AUTH,
     OAUTH_AUTH_URL,
 } = process.env as ENV
 if (!API
@@ -63,9 +63,9 @@ if (!API
 
 if (
     (!CLIENT_ID || !CLIENT_SECRET || !OAUTH_BASE_URL || !OAUTH_TOKEN_URL)
-    && DISABLE_AUTH !== 'true'
+    && NEXT_PUBLIC_DISABLE_AUTH !== 'true'
 ) {
-    throw new Error('Either OAuth URLs or DISABLE_AUTH=true must be set.')
+    throw new Error('Either OAuth URLs or NEXT_PUBLIC_DISABLE_AUTH=true must be set.')
 }
 
 const config = {
@@ -91,7 +91,7 @@ const config = {
     OAUTH_TOKEN_URL,
     OAUTH_BASE_URL,
     OAUTH_AUTH_URL,
-    DISABLE_AUTH
+    DISABLE_AUTH: NEXT_PUBLIC_DISABLE_AUTH
 }
 
 export default config
