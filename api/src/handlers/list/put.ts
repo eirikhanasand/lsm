@@ -8,7 +8,11 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
         return res.status(400).send({ error: 'Unauthorized' })
     }
 
-    const { list } = req.params as { list: string }
+    const { list } = req.params as { list: 'white' | 'black' }
+    if (list !== 'white' && list !== 'black') {
+        return res.status(400).send({ error: "List must be either white or black." })
+    }
+
     const { ecosystems, name, versions, comment, repositories, author, references } = req.body as UpdateBody || {}
     if (!name || !comment || !author) {
         return res
@@ -92,7 +96,7 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
                 }
             }
 
-            await client.query(`INSERT INTO ${list}list_updated (name, id) VALUES ($1, $2);`, [name, author.id])
+            await client.query(`UPDATE ${list}list_updated SET id = $1, timestamp = $2 WHERE name = $3;`, [author.id, new Date().toISOString(), name])
             const audit = `Updated ${name} with versions ${versions.join(', ')} ${Array.isArray(ecosystems) && ecosystems.length ? `with ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the ${list}list for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references.join(', ')}` : ''}.`
             await client.query(`INSERT INTO ${list}list_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
             await client.query(`INSERT INTO audit_log (event, author) VALUES ($1, $2);`, [audit, author.id])

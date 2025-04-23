@@ -23,6 +23,7 @@ type ENV = {
     OAUTH_BASE_URL: string
     OAUTH_AUTH_URL: string
     NEXT_PUBLIC_DISABLE_AUTH: string
+    NEXT_PUBLIC_API: string
 }
 
 dotenv.config({ path: '../.env' })
@@ -50,12 +51,14 @@ const {
     OAUTH_BASE_URL,
     NEXT_PUBLIC_DISABLE_AUTH,
     OAUTH_AUTH_URL,
+    NEXT_PUBLIC_API
 } = process.env as ENV
-if (!FRONTEND_URL
+if (!NEXT_PUBLIC_API 
+    || !FRONTEND_URL
     || !LOCAL_OSV
     || !DB_PASSWORD
 ) {
-    throw new Error('Missing one or more environment variables.')
+    throw new Error('Missing NEXT_PUBLIC_API, FRONTEND_URL, LOCAL_OSV or DB_PASSWORD.')
 }
 
 if (
@@ -66,6 +69,7 @@ if (
 }
 
 const config = {
+    API: NEXT_PUBLIC_API,
     CLIENT_ID,
     CLIENT_SECRET,
     FRONTEND_URL,

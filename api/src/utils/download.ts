@@ -81,7 +81,7 @@ export async function processVulnerabilities({
             console.log(`Inserted event for ${event.package_name} ${event.package_version}`)
         }
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 

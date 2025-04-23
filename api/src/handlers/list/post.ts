@@ -8,7 +8,11 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
         return res.status(400).send({ error: 'Unauthorized' })
     }
 
-    const { list } = req.params as { list: string }
+    const { list } = req.params as { list: 'white' | 'black' }
+    if (list !== 'white' && list !== 'black') {
+        return res.status(400).send({ error: "List must be either white or black." })
+    }
+
     const { ecosystems, name, versions, repositories, comment, references, author } = req.body as PostBody || {}
     if (!name || !comment || !author) {
         return res.status(400).send({ error: 'Missing name, comment or author.' })

@@ -7,10 +7,10 @@ type DeleteListProps = {
 export default async function deletePackage({ list, name, token }: DeleteListProps) {
     try {
         const headers = {
-            ...( !process.env.NEXT_PUBLIC_DISABLE_AUTH && { 'Authorization': `Bearer ${token}` } ),
-            'Content-Type': 'application/json'
+            ...( !process.env.NEXT_PUBLIC_DISABLE_AUTH && { 'Authorization': `Bearer ${token}` } )
         }
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/${list}/${name}`, { 
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/list/${list}/${name}`, { 
             method: 'DELETE', 
             headers 
         })

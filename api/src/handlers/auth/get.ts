@@ -1,14 +1,14 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import config from '../../constants.js'
 const {
-    API,
     CLIENT_ID,
     CLIENT_SECRET,
     FRONTEND_URL,
     OAUTH_TOKEN_URL,
     SELF_URL,
     OAUTH_BASE_URL,
-    OAUTH_AUTH_URL
+    OAUTH_AUTH_URL,
+    API
 } = config
 import run from '../../db.js'
 

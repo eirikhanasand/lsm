@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS whitelist_authors (
 -- Created info for specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_created (
     name TEXT PRIMARY KEY,
+    id TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
     FOREIGN KEY (name) REFERENCES whitelist(name)
 );
@@ -81,6 +82,7 @@ CREATE TABLE IF NOT EXISTS whitelist_created (
 -- Updated info for specific whitelisted dependencies
 CREATE TABLE IF NOT EXISTS whitelist_updated (
     name TEXT PRIMARY KEY,
+    id TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
     FOREIGN KEY (name) REFERENCES whitelist(name)
 );
@@ -138,6 +140,7 @@ CREATE TABLE IF NOT EXISTS blacklist_authors (
 -- Created info for specific blacklisted dependencies
 CREATE TABLE IF NOT EXISTS blacklist_created (
     name TEXT PRIMARY KEY,
+    id TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
     FOREIGN KEY (name) REFERENCES blacklist(name)
 );
@@ -145,6 +148,7 @@ CREATE TABLE IF NOT EXISTS blacklist_created (
 -- Updated info for specific blacklisted dependencies
 CREATE TABLE IF NOT EXISTS blacklist_updated (
     name TEXT PRIMARY KEY,
+    id TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
     FOREIGN KEY (name) REFERENCES blacklist(name)
 );
@@ -167,7 +171,8 @@ CREATE TABLE IF NOT EXISTS vulnerabilities (
     version_introduced TEXT NOT NULL,
     version_fixed TEXT NOT NULL,
     data JSONB NOT NULL,
-    CONSTRAINT unique_name_ecosystem_version UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
+    CONSTRAINT unique_name_ecosystem_version 
+    UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
 );
 
 -- Download events table
@@ -181,7 +186,8 @@ CREATE TABLE IF NOT EXISTS download_events (
     status INTEGER NOT NULL CHECK (status IN (1, 2)),
     reason TEXT CHECK (LENGTH(reason) > 0),
     severity FLOAT(1) DEFAULT -1,
-    CONSTRAINT unique_event UNIQUE (timestamp, package_name, package_version, client_address)
+    CONSTRAINT unique_event 
+    UNIQUE (timestamp, package_name, package_version, client_address)
 );
 
 -- Audit log table
@@ -199,6 +205,10 @@ CREATE TABLE IF NOT EXISTS users (
     avatar TEXT NOT NULL
 );
 
+-- Fallback user for no-auth implementation
+INSERT INTO users (id, name, avatar)
+VALUES ('0', 'Unknown User', 'null');
+
 -- Indexes for downloaded packages
 CREATE INDEX idx_download_timestamp ON download_events (timestamp);
 CREATE INDEX idx_download_package_name ON download_events (package_name);
@@ -206,18 +216,37 @@ CREATE INDEX idx_download_ecosystem ON download_events (ecosystem);
 CREATE INDEX idx_download_version ON download_events (package_version);
 
 -- Indexes for Vulnerability
-CREATE INDEX IF NOT EXISTS idx_name_ecosystem_version ON vulnerabilities (name, package_name, ecosystem, version_introduced, version_fixed);
-CREATE INDEX IF NOT EXISTS idx_package_name ON vulnerabilities (name, package_name);
-CREATE INDEX IF NOT EXISTS idx_vuln_name ON vulnerabilities (name);
+CREATE INDEX IF NOT EXISTS idx_name_ecosystem_version 
+ON vulnerabilities (name, package_name, ecosystem, version_introduced, version_fixed);
+
+CREATE INDEX IF NOT EXISTS idx_package_name 
+ON vulnerabilities (name, package_name);
+
+CREATE INDEX IF NOT EXISTS idx_vuln_name 
+ON vulnerabilities (name);
 
 -- Indexes for Whitelist
-CREATE INDEX IF NOT EXISTS idx_whitelist_versions_name ON whitelist_versions (name);
-CREATE INDEX IF NOT EXISTS idx_whitelist_ecosystems_name ON whitelist_ecosystems (name);
-CREATE INDEX IF NOT EXISTS idx_whitelist_repositories_name ON whitelist_repositories (name);
-CREATE INDEX IF NOT EXISTS idx_whitelist_authors_name ON whitelist_authors (name);
+CREATE INDEX IF NOT EXISTS idx_whitelist_versions_name
+ON whitelist_versions (name);
+
+CREATE INDEX IF NOT EXISTS idx_whitelist_ecosystems_name
+ON whitelist_ecosystems (name);
+
+CREATE INDEX IF NOT EXISTS idx_whitelist_repositories_name
+ON whitelist_repositories (name);
+
+CREATE INDEX IF NOT EXISTS idx_whitelist_authors_name
+ON whitelist_authors (name);
 
 -- Indexes for Blacklist
-CREATE INDEX IF NOT EXISTS idx_blacklist_versions_name ON blacklist_versions (name);
-CREATE INDEX IF NOT EXISTS idx_blacklist_ecosystems_name ON blacklist_ecosystems (name);
-CREATE INDEX IF NOT EXISTS idx_blacklist_repositories_name ON blacklist_repositories (name);
-CREATE INDEX IF NOT EXISTS idx_blacklist_authors_name ON blacklist_authors (name);
+CREATE INDEX IF NOT EXISTS idx_blacklist_versions_name
+ON blacklist_versions (name);
+
+CREATE INDEX IF NOT EXISTS idx_blacklist_ecosystems_name
+ON blacklist_ecosystems (name);
+
+CREATE INDEX IF NOT EXISTS idx_blacklist_repositories_name
+ON blacklist_repositories (name);
+
+CREATE INDEX IF NOT EXISTS idx_blacklist_authors_name
+ON blacklist_authors (name);
