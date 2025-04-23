@@ -1,5 +1,3 @@
-import { API } from '@constants'
-
 type PostListProps = {
     list: 'white' | 'black'
     newPackage: AddPackage
@@ -12,7 +10,8 @@ export default async function postPackage({ list, newPackage, token }: PostListP
             ...( !process.env.NEXT_PUBLIC_DISABLE_AUTH && { 'Authorization': `Bearer ${token}` } ),
             'Content-Type': 'application/json'
         }
-        const response = await fetch(`${API}/list/${list}`, {
+        
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/list/${list}`, {
             method: 'POST',
             headers,
             body: JSON.stringify({ ...newPackage })

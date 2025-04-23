@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 
 type ENV = {
-    API: string
     CLIENT_ID: string
     CLIENT_SECRET: string
     FRONTEND_URL: string
@@ -29,7 +28,6 @@ type ENV = {
 dotenv.config({ path: '../.env' })
 
 const {
-    API,
     CLIENT_ID,
     CLIENT_SECRET,
     FRONTEND_URL,
@@ -53,8 +51,7 @@ const {
     NEXT_PUBLIC_DISABLE_AUTH,
     OAUTH_AUTH_URL,
 } = process.env as ENV
-if (!API
-    || !FRONTEND_URL
+if (!FRONTEND_URL
     || !LOCAL_OSV
     || !DB_PASSWORD
 ) {
@@ -69,7 +66,6 @@ if (
 }
 
 const config = {
-    API,
     CLIENT_ID,
     CLIENT_SECRET,
     FRONTEND_URL,

@@ -1,5 +1,3 @@
-import { API } from '@constants'
-
 type PutListProps = {
     list: 'white' | 'black'
     pkg: PutPackage
@@ -12,7 +10,7 @@ export default async function putPackage({ list, pkg, token }: PutListProps) {
             ...( !process.env.NEXT_PUBLIC_DISABLE_AUTH && { 'Authorization': `Bearer ${token}` } ),
             'Content-Type': 'application/json'
         }
-        const response = await fetch(`${API}/list/${list}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/list/${list}`, {
             method: 'PUT',
             headers,
             body: JSON.stringify({ ...pkg })

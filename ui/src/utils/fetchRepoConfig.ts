@@ -1,4 +1,6 @@
-import { SERVER_API } from '@parent/constants'
+import config from '@parent/constants'
+
+const { SERVER_API } = config
 
 export default async function fetchRepoConfig(repository: string): Promise<RepoConfig> {
     const params = new URLSearchParams({ repository: encodeURIComponent(repository) })

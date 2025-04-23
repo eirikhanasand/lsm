@@ -1,4 +1,6 @@
-import { API, SERVER_API } from '@constants'
+import config from '@constants'
+
+const { SERVER_API } = config
 
 type GetListProps = {
     list: 'white' | 'black'
@@ -6,9 +8,9 @@ type GetListProps = {
 }
 
 // Fetches all packages from lsm API
-export default async function getPackages({ list, side }: GetListProps) {
+export default async function getPackages({ list, side }: GetListProps): Promise<Package[] | number> {
     try {
-        const response = await fetch(`${side === 'server' ? SERVER_API : API}/list/${list}`)
+        const response = await fetch(`${side === 'server' ? SERVER_API : process.env.NEXT_PUBLIC_API}/list/${list}`)
 
         if (!response.ok) {
             throw new Error(await response.text())
@@ -25,7 +27,7 @@ export default async function getPackages({ list, side }: GetListProps) {
 // Fetches a specific package from lsm API
 export async function getPackage({ list }: GetListProps) {
     try {
-        const response = await fetch(`${API}/${list}`)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/${list}`)
 
         if (!response.ok) {
             throw new Error(await response.text())
