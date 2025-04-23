@@ -13,13 +13,15 @@ export default async function page() {
             <h1 className="text-3xl font-bold text-blue-600">Audit log</h1>
             <p className="mt-2 text-foreground mb-2">{auditLog.results.length ? "Recent changes." : 'No recent changes.'}</p>
             <div className="space-y-2">
-                {auditLog.results.reverse().map((log: AuditResult) => <Log key={log.id} log={log} /> )}
+                {auditLog.results.reverse().map((log: AuditResult) =>
+                    <Log key={log.id} log={log} />
+                )}
             </div>
         </main>
     )
 }
 
-function Log({log}: LogProps) {
+function Log({ log }: LogProps) {
     const date = new Date(log.timestamp).toLocaleString("en-GB").replaceAll('/', '.')
     return (
         <div className="flex w-full bg-dark rounded-lg px-4 min-h-[40px]">

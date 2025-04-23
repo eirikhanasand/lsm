@@ -5,14 +5,14 @@ type PutListProps = {
     pkg: PutPackage
 }
 
-export default async function putPackage({list, pkg}: PutListProps) {
+export default async function putPackage({ list, pkg }: PutListProps) {
     try {
         const response = await fetch(`${API}/list/${list}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({...pkg})
+            body: JSON.stringify({ ...pkg })
         })
 
         if (!response.ok) {

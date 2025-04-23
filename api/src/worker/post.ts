@@ -30,7 +30,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
             break
         case "python":
             const pythonRegex = /\/([\w\-]+)-([\d.]+)-/
-            const pythonDetails =  data.repoPath.path.match(pythonRegex)
+            const pythonDetails = data.repoPath.path.match(pythonRegex)
             if (Array.isArray(pythonDetails)) {
                 name = pythonDetails[1]
                 version = pythonDetails[2]
@@ -39,7 +39,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
             break
         case "go":
             const goRegex = /([^\/]+\/[^\/]+)\/@v\/v?(\d+\.\d+\.\d+(\.\d+)?)\.(mod|info|zip)/
-            const goDetails =  data.repoPath.path.match(goRegex)
+            const goDetails = data.repoPath.path.match(goRegex)
             if (Array.isArray(goDetails)) {
                 name = goDetails[1]
                 version = goDetails[2]
@@ -64,8 +64,8 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
             }
             break
         case "ruby":
-            const rubyRegex1 =  /^([\w-]+)-(\d+\.\d+\.\d+)/
-            const rubyDetails1 =  data.name.match(rubyRegex1)
+            const rubyRegex1 = /^([\w-]+)-(\d+\.\d+\.\d+)/
+            const rubyDetails1 = data.name.match(rubyRegex1)
             const rubyRegex2 = /([a-zA-Z0-9_-]+)\.(\d+\.\d+)(?:\.gz)?/
             const rubyDetails2 = data.name.match(rubyRegex2)
             if (Array.isArray(rubyDetails1)) {
@@ -166,7 +166,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
                 ecosystem = "GIT"
             }
             break
-        default: 
+        default:
             const genericVersionRegex = /(\d.\d.\d)/
             const genericDetails = data.name.match(genericVersionRegex)
             if (Array.isArray(genericDetails)) {
@@ -187,7 +187,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
         })
     }
 
-    const osv = await fetchOSV({name, version, ecosystem, clientAddress: data.clientAddress})
+    const osv = await fetchOSV({ name, version, ecosystem, clientAddress: data.clientAddress })
     if ('error' in osv) {
         log.push(`Error while fetching OSV ${osv.error}`)
         return res.send({
@@ -216,7 +216,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
             headers: {}
         })
     }
-    
+
     if (JSON.stringify(response) !== '{}') {
         log.push("OSV data was not empty:")
         log.push(JSON.stringify(response))
@@ -249,7 +249,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
             })
         }
     }
-    
+
     log.push('DOWNLOAD CONTINUED', `Name: ${name}`, `Version: ${version}`, `Ecosystem: ${ecosystem}`)
     return res.send({
         status: DownloadStatus.DOWNLOAD_PROCEED,
@@ -267,7 +267,7 @@ function parseKey(key: string): string {
     if (key.includes('_')) {
         return key.split('_')[0]
     }
-    
+
     return key
 }
 
@@ -310,7 +310,7 @@ function logDetails(vulnerability: WorkerVulnerability): string[] {
 
     // Specifics section
     if (
-        'malicious-packages-origins' in vulnerability.database_specific 
+        'malicious-packages-origins' in vulnerability.database_specific
         && Array.isArray(vulnerability.database_specific["malicious-packages-origins"])
     ) {
         log.push('-----------------------------')

@@ -1,18 +1,18 @@
 {
-    "metadata": {
-        "repoPath": {
-          "key": "docker",
-          "path": "library/ubuntu/latest/list.manifest.json",
-          "id": "docker:library/ubuntu/latest/list.manifest.json"
-        },
-        "originalRepoPath": {
-          "key": "docker",
-          "path": "library/ubuntu/latest/list.manifest.json",
-          "id": "docker:library/ubuntu/latest/list.manifest.json"
-        },
-        "name": "list.manifest.json",
-        "ifModifiedSince": -1,
-        "clientAddress": "88.95.182.216",
-        "repoType": 2
-    }    
+  "metadata": {
+    "repoPath": {
+      "key": "docker",
+      "path": "library/ubuntu/latest/list.manifest.json",
+      "id": "docker:library/ubuntu/latest/list.manifest.json"
+    },
+    "originalRepoPath": {
+      "key": "docker",
+      "path": "library/ubuntu/latest/list.manifest.json",
+      "id": "docker:library/ubuntu/latest/list.manifest.json"
+    },
+    "name": "list.manifest.json",
+    "ifModifiedSince": -1,
+    "clientAddress": "88.95.182.216",
+    "repoType": 2
+  }
 }

@@ -51,7 +51,7 @@ async function tokenIsValid(req: NextRequest, token: string): Promise<boolean> {
     }
 
     const userData = await tokenResponse.json()
-    const match = valuesMatch(req, {token, ...userData})
+    const match = valuesMatch(req, { token, ...userData })
     if (!match) {
         return false
     }

@@ -21,12 +21,12 @@ export default async function packageStatisticsHandler(req: FastifyRequest, res:
         return res.status(400).send({ error: "Missing start or end time." })
     }
 
-    const queryParams =  [startTime, endTime]
+    const queryParams = [startTime, endTime]
 
     try {
         console.log(`Fetching package stats: start=${startTime}, end=${endTime}`)
 
-         // Fetching overall summary stats
+        // Fetching overall summary stats
         const summaryResult = await run(`
             SELECT 
                 COUNT(*) AS total_scanned,

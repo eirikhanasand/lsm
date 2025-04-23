@@ -12,7 +12,14 @@ type AddPackageProps = {
     author: Author
 }
 
-export default async function addPackage({newPackage, setPackages, setShowForm, setNewPackage, packages, list}: AddPackageProps) {
+export default async function addPackage({
+    newPackage,
+    setPackages,
+    setShowForm,
+    setNewPackage,
+    packages,
+    list
+}: AddPackageProps) {
     if (!newPackage.name || !newPackage.comment) {
         alert("Please fill in all fields.")
         return
@@ -24,8 +31,8 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
         return window.location.href = '/logout'
     }
 
-    const response = await postPackage({list, newPackage})
-    
+    const response = await postPackage({ list, newPackage })
+
     if (response === 500) {
         alert("Failed to add package. API error.")
         return
@@ -37,10 +44,10 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
     if (!name || !id || !avatar) {
         alert('You`re not logged in. Redirecting to login.')
         // Should implement redirect back later
-        return window.location.href = '/logout' 
+        return window.location.href = '/logout'
     }
 
-    setPackages([...packages, { 
+    setPackages([...packages, {
         name: newPackage.name,
         versions: newPackage.versions,
         ecosystems: newPackage.ecosystems,
@@ -59,7 +66,7 @@ export default async function addPackage({newPackage, setPackages, setShowForm, 
         }]
     }])
     setShowForm(false)
-    setNewPackage({ 
+    setNewPackage({
         name: "",
         comment: "",
         versions: [],

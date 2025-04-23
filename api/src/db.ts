@@ -1,14 +1,14 @@
 import pg from 'pg'
 import config from './constants.js'
 
-const { 
-    DB, 
-    DB_USER, 
-    DB_HOST, 
-    DB_PASSWORD, 
-    DB_PORT, 
-    DB_MAX_CONN, 
-    DB_IDLE_TIMEOUT_MS, 
+const {
+    DB,
+    DB_USER,
+    DB_HOST,
+    DB_PASSWORD,
+    DB_PORT,
+    DB_MAX_CONN,
+    DB_IDLE_TIMEOUT_MS,
     DB_TIMEOUT_MS
 } = config
 const { Pool } = pg

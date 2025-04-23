@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-export default function Repository({repository, index}: RepositoryProps) {
+export default function Repository({ repository, index }: RepositoryProps) {
     const color = index % 2 !== 0 ? 'bg-normal' : ''
     return (
         <div className={`w-full grid grid-cols-8 ${color} p-4 text-foreground`}>

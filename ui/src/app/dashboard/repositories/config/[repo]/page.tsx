@@ -1,7 +1,7 @@
 import fetchRepoConfig from "@/utils/fetchRepoConfig"
 
-type RepoConfigPageProps = { 
-    params: Promise<{ repo: string }> 
+type RepoConfigPageProps = {
+    params: Promise<{ repo: string }>
 }
 
 type SectionProps = {
@@ -25,7 +25,7 @@ export default async function RepoConfigPage({ params }: RepoConfigPageProps) {
     )
 }
 
-function Section({list, items}: SectionProps) {
+function Section({ list, items }: SectionProps) {
     const local = items.filter(item => !item.isGlobal)
     const global = items.filter(item => item.isGlobal)
 

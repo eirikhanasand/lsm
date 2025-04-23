@@ -10,7 +10,7 @@ type PackagesProps = {
     repositories: Repository[]
 }
 
-export default function Packages({groupedPackages, list, setPackages, packages, author, repositories}: PackagesProps) {
+export default function Packages({ groupedPackages, list, setPackages, packages, author, repositories }: PackagesProps) {
     return Object.keys(groupedPackages)
         .sort()
         .map((ecosystem) => (

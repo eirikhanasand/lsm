@@ -1,9 +1,9 @@
-export default function Pencil({className, fill}: {className?: string, fill: string}) {
+export default function Pencil({ className, fill }: { className?: string, fill: string }) {
     return (
         <div className={className}>
-            <svg 
+            <svg
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512" 
+                viewBox="0 0 512 512"
                 className={fill}
             >
                 <g>

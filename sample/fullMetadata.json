@@ -21,49 +21,49 @@
     },
     "headers": {
         "x-forwarded-proto": {
-        "value": [
-            "https"
-        ]
+            "value": [
+                "https"
+            ]
         },
         "x-sigsci-mac": {
-        "value": [
-            "d43ff61987498158c40703ff35132c45"
-        ]
+            "value": [
+                "d43ff61987498158c40703ff35132c45"
+            ]
         },
         "x-sigsci-agentresponse": {
-        "value": [
-            "200"
-        ]
+            "value": [
+                "200"
+            ]
         },
         "connection": {
-        "value": [
-            "Upgrade"
-        ]
+            "value": [
+                "Upgrade"
+            ]
         },
         "x-sigsci-requestid": {
-        "value": [
-            "6783b2508645c66355612d58"
-        ]
+            "value": [
+                "6783b2508645c66355612d58"
+            ]
         },
         "x-jfrog-override-base-url": {
-        "value": [
-            "https://trial9apndc.jfrog.io"
-        ]
+            "value": [
+                "https://trial9apndc.jfrog.io"
+            ]
         },
         "accept-encoding": {
-        "value": [
-            "gzip, deflate"
-        ]
+            "value": [
+                "gzip, deflate"
+            ]
         },
         "accept": {
-        "value": [
-            "*/*"
-        ]
+            "value": [
+                "*/*"
+            ]
         },
         "x-sigsci-tags": {
-        "value": [
-            "DATACENTER,site.agent-use1,site.k8s-prod-use1-natgw-a"
-        ]
+            "value": [
+                "DATACENTER,site.agent-use1,site.k8s-prod-use1-natgw-a"
+            ]
         }
     },
     "userContext": {

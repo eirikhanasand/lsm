@@ -41,15 +41,15 @@ export default function Package({ pkg, setPackages, packages, list, author, repo
                 </h1>
                 <div className="text-sm text-foreground w-full">
                     {
-                        Array.isArray(pkg.ecosystems) && pkg.ecosystems.length 
-                            ? pkg.ecosystems.map((ecosystem) => <h1 key={ecosystem}>{ecosystem}</h1>) 
+                        Array.isArray(pkg.ecosystems) && pkg.ecosystems.length
+                            ? pkg.ecosystems.map((ecosystem) => <h1 key={ecosystem}>{ecosystem}</h1>)
                             : "All ecosystems"
                     }
                 </div>
                 <div className="text-sm text-foreground w-full">
                     {
-                        Array.isArray(pkg.repositories) && pkg.repositories.length 
-                            ? pkg.repositories.map((repository) => <h1 key={repository}>{repository}</h1>) 
+                        Array.isArray(pkg.repositories) && pkg.repositories.length
+                            ? pkg.repositories.map((repository) => <h1 key={repository}>{repository}</h1>)
                             : "Global"
                     }
                 </div>
@@ -73,23 +73,23 @@ export default function Package({ pkg, setPackages, packages, list, author, repo
             </div>
             <div className="absolute right-4 mt-3.5 flex">
                 <div className="mr-[2px]">
-                    {pkg.references && pkg.references.length > 1 
+                    {pkg.references && pkg.references.length > 1
                         ? <div className="relative group inline-block">
                             <Link href={pkg.references[0]} className="info-icon border border-shallow px-[6.6px] rounded-full mb-5 text-shallow">i</Link>
 
                             <div className="grid absolute right-0 hidden w-100 bg-light p-2 border border-blue-500 rounded group-hover:grid group-hover:grid-cols-1">
-                                {pkg.references.map((reference) => <Link 
-                                    key={reference} 
-                                    href={reference} 
+                                {pkg.references.map((reference) => <Link
+                                    key={reference}
+                                    href={reference}
                                     className="text-blue-300 pl-1"
                                 >
                                     {reference}
                                 </Link>)}
                             </div>
-                        </div> 
+                        </div>
                         : pkg.references.length === 1
-                            ?   <Link 
-                                href={pkg.references[0]} 
+                            ? <Link
+                                href={pkg.references[0]}
                                 className="info-icon border border-shallow px-[6.6px] rounded-full mb-5 text-shallow cursor-pointer hover:border-blue-500 hover:text-foreground"
                             >
                                 i
@@ -100,12 +100,12 @@ export default function Package({ pkg, setPackages, packages, list, author, repo
                 <button onClick={() => setEditing(true)} className="h-[20px] w-[20px] self-end mb-[4px] pl-[2px]">
                     <Pencil fill="pencil-icon cursor-pointer" className="pencil-icon max-w-[16px] max-h-[16px]" />
                 </button>
-                <button 
+                <button
                     onClick={() => removePackage({ name: pkg.name, setPackages, packages, list })}
                     className="h-[20px] w-[20px] self-end mb-[4.2px]"
                 >
-                    <Trash 
-                        fill="fill-shallow hover:fill-red-500 cursor-pointer" 
+                    <Trash
+                        fill="fill-shallow hover:fill-red-500 cursor-pointer"
                         className="w-full h-full"
                     />
                 </button>

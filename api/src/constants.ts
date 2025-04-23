@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 
-type ENV = { 
+type ENV = {
     API: string
     CLIENT_ID: string
     CLIENT_SECRET: string
@@ -26,17 +26,17 @@ type ENV = {
     DISABLE_AUTH: string
 }
 
-dotenv.config({path: '../.env'})
+dotenv.config({ path: '../.env' })
 
-const { 
-    API, 
-    CLIENT_ID, 
-    CLIENT_SECRET, 
-    FRONTEND_URL, 
+const {
+    API,
+    CLIENT_ID,
+    CLIENT_SECRET,
+    FRONTEND_URL,
     DEFAULT_MAL_SEVERITY,
     DEFAULT_CVE_SEVERITY,
     DEFAULT_SEVERITY,
-    LOCAL_OSV, 
+    LOCAL_OSV,
     OSV_URL,
     DB,
     DB_USER,
@@ -53,11 +53,11 @@ const {
     DISABLE_AUTH,
     OAUTH_AUTH_URL
 } = process.env as ENV
-if (!API 
-    || !CLIENT_ID 
-    || !CLIENT_SECRET 
-    || !FRONTEND_URL 
-    || !LOCAL_OSV 
+if (!API
+    || !CLIENT_ID
+    || !CLIENT_SECRET
+    || !FRONTEND_URL
+    || !LOCAL_OSV
     || !DB_PASSWORD
     || !SELF_URL
     || !OAUTH_TOKEN_URL
@@ -70,19 +70,19 @@ if (!OAUTH_BASE_URL && DISABLE_AUTH === 'false') {
 }
 
 const config = {
-    API, 
-    CLIENT_ID, 
-    CLIENT_SECRET, 
-    FRONTEND_URL, 
+    API,
+    CLIENT_ID,
+    CLIENT_SECRET,
+    FRONTEND_URL,
     DEFAULT_MAL_SEVERITY,
     DEFAULT_CVE_SEVERITY,
     DEFAULT_SEVERITY,
-    LOCAL_OSV, 
+    LOCAL_OSV,
     OSV_URL,
     DB,
     DB_HOST,
     DB_USER,
-    DB_PASSWORD, 
+    DB_PASSWORD,
     DB_PORT,
     DB_MAX_CONN,
     DB_IDLE_TIMEOUT_MS,

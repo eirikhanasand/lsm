@@ -6,7 +6,13 @@ type DropdownProps = {
     setItems: (value: string[]) => void
 }
 
-export default function Dropdown({className, item, items, allItems, setItems}: DropdownProps) {
+export default function Dropdown({
+    className,
+    item,
+    items,
+    allItems,
+    setItems
+}: DropdownProps) {
     return (
         <div className={`relative group inline-block w-full ${className}`}>
             <div className={`${items.length ? 'text-foreground' : 'text-shallow'} h-7 p-1 border border-dark rounded-lg text-sm bg-light w-full cursor-pointer select-none h-[4vh] flex items-center pl-2`}>

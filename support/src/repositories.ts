@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { repositories, dependantRepositories, } from '../data/repositories.js'
 
-dotenv.config({path: '../.env'})
+dotenv.config({ path: '../.env' })
 
 if (!('JFROG_TOKEN' in process.env) || !process.env.JFROG_TOKEN?.length) {
     throw new Error("Missing JFROG_TOKEN in env.")
@@ -25,7 +25,7 @@ if (createRepositoriesResponse.status === 200) {
 async function createRepositories() {
     try {
         console.log("Creating repositories...")
-        
+
         const response = await fetch(`https://${id}.jfrog.io/artifactory/api/v2/repositories/batch`, {
             method: 'PUT',
             headers: {
@@ -43,7 +43,7 @@ async function createRepositories() {
         console.log(`Successfully created ${repositories.length} repositories.`)
         return { status: 200, data }
     } catch (error) {
-        const parsedError = JSON.parse((error as any).message) 
+        const parsedError = JSON.parse((error as any).message)
         const errorMessage = parsedError?.errors?.[0]?.message
 
         if (errorMessage.includes("repository key already exists")) {
@@ -59,7 +59,7 @@ async function createRepositories() {
 async function createDependantRepositories() {
     try {
         console.log("Creating dependant repositories...")
-        
+
         const response = await fetch(`https://${id}.jfrog.io/artifactory/api/v2/repositories/batch`, {
             method: 'PUT',
             headers: {
@@ -77,7 +77,7 @@ async function createDependantRepositories() {
         console.log(`Successfully created ${dependantRepositories.length} dependant repositories.`)
         return data
     } catch (error) {
-        const parsedError = JSON.parse((error as any).message) 
+        const parsedError = JSON.parse((error as any).message)
         const errorMessage = parsedError?.errors?.[0]?.message
 
         if (errorMessage.includes("dependant repository key already exists")) {

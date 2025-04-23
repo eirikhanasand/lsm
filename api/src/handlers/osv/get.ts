@@ -11,9 +11,17 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
     const Version = decodeURIComponent(version)
 
     try {
-        console.log(`Fetching vulnerabilities: name=${Name}, version=${Version}, ecosystem=${ecosystem}`)
+        console.log(
+            `Fetching vulnerabilities: name=${Name}, version=${Version}, 
+            ecosystem=${ecosystem}`
+        )
 
-        const osv = await fetchOSV({name: Name, version: Version, ecosystem, clientAddress: req.ip})
+        const osv = await fetchOSV({
+            name: Name,
+            version: Version,
+            ecosystem,
+            clientAddress: req.ip
+        })
         if ('error' in osv) {
             return res.send({ error: osv.error })
         }

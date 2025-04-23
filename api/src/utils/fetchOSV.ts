@@ -5,7 +5,7 @@ import config from "../constants.js"
 
 const { LOCAL_OSV, OSV_URL } = config
 
-export default async function fetchOSV({name, version, ecosystem, clientAddress}: FetchOSVProps): Promise<FetchOSVResponse | {error: string}> {
+export default async function fetchOSV({ name, version, ecosystem, clientAddress }: FetchOSVProps): Promise<FetchOSVResponse | { error: string }> {
     let response = {} as { vulnerabilties: any[], whitelist?: any[], blacklist?: any[] }
     let osvLength = 0
     if (LOCAL_OSV === "true") {
@@ -43,7 +43,7 @@ export default async function fetchOSV({name, version, ecosystem, clientAddress}
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ version,package: { name, ecosystem } })
+                body: JSON.stringify({ version, package: { name, ecosystem } })
             })
 
             if (!res.ok) {
@@ -59,14 +59,14 @@ export default async function fetchOSV({name, version, ecosystem, clientAddress}
             }
         }
     }
-    const whitelist = await fetchList({name, ecosystem, version, list: 'white'})
-    const blacklist = await fetchList({name, ecosystem, version, list: 'black'})
+    const whitelist = await fetchList({ name, ecosystem, version, list: 'white' })
+    const blacklist = await fetchList({ name, ecosystem, version, list: 'black' })
     if (whitelist.length) {
         response['whitelist'] = whitelist
     }
     if (blacklist.length) {
         response['blacklist'] = blacklist
     }
-    processVulnerabilities({response, name, version, ecosystem, clientAddress})
+    processVulnerabilities({ response, name, version, ecosystem, clientAddress })
     return { response, osvLength }
 }

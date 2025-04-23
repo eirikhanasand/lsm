@@ -10,7 +10,7 @@ type PageProps = {
     repositories: Repository[]
 }
 
-export default function Page({repositories}: PageProps) {
+export default function Page({ repositories }: PageProps) {
     const searchParams = useSearchParams()
     const initialPage = Number(searchParams.get('page')) || 1
     const [page, setPage] = useState(initialPage)
@@ -24,12 +24,12 @@ export default function Page({repositories}: PageProps) {
                     <h1 className="text-3xl font-bold text-blue-600">Repositories</h1>
                     <p className="mt-2 text-foreground mb-2">List of repositories in Artifactory.</p>
                 </div>
-                <Paging 
+                <Paging
                     customStyle="pt-2"
-                    page={page} 
-                    setPage={setPage} 
-                    resultsPerPage={resultsPerPage} 
-                    items={repositories} 
+                    page={page}
+                    setPage={setPage}
+                    resultsPerPage={resultsPerPage}
+                    items={repositories}
                     setResultsPerPage={setResultsPerPage}
                     searchParams={searchParams}
                 />
@@ -43,8 +43,8 @@ export default function Page({repositories}: PageProps) {
             </div>
             <div className="h-full w-full overflow-auto">
                 {visible.map((repository, index) => <Repository
-                    key={JSON.stringify(repository)} 
-                    repository={repository} 
+                    key={JSON.stringify(repository)}
+                    repository={repository}
                     index={index}
                 />)}
             </div>

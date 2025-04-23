@@ -5,7 +5,7 @@ export PGPASSWORD=$DB_PASSWORD
 PSQL="psql -h postgres -U osvuser -d osvdb -t -c"
 PSQL_MULTILINE="psql -h postgres -U osvuser -d osvdb -t"
 HEALTH_FILE="/tmp/health_status"
-echo "starting" > $HEALTH_FILE
+echo "starting" >$HEALTH_FILE
 
 start_time=$(($(date +%s%N)))
 
@@ -13,14 +13,14 @@ gsutil cp gs://osv-vulnerabilities/all.zip osv.zip
 mkdir -p osv
 
 download_time=$(date +%s%N)
-download_s=$(( (download_time - start_time) / 1000000000 ))
+download_s=$(((download_time - start_time) / 1000000000))
 echo "Downloaded osv.zip in ${download_s}s."
 
 echo "Unzipping vulnerabilities archive..."
-unzip -o osv.zip -d osv > /dev/null
+unzip -o osv.zip -d osv >/dev/null
 rm osv.zip
 unzip_time=$(date +%s%N)
-unzip_s=$(( (unzip_time - download_time) / 1000000000 ))
+unzip_s=$(((unzip_time - download_time) / 1000000000))
 echo "Unzip complete in ${unzip_s}s."
 
 echo "Preparing bulk insert using $(nproc) cores..."
@@ -41,11 +41,11 @@ find osv -name '*.json' -print0 | xargs -P 32 -0 -I {} sh -c '
         (. | @json)
     ] | @csv" "$file" > "$1/${vuln_name}.csv"
 ' _ "$temp_dir"
-find "$temp_dir" -name '*.csv' -exec cat {} + >> "$csv"
+find "$temp_dir" -name '*.csv' -exec cat {} + >>"$csv"
 rm -rf "$temp_dir"
 
 processing_time=$(date +%s%N)
-processing_s=$(( (processing_time - unzip_time) / 1000000000 ))
+processing_s=$(((processing_time - unzip_time) / 1000000000))
 echo "Processing json to csv complete in ${processing_s}s."
 echo "Populating vulnerabilities..."
 
@@ -80,10 +80,10 @@ COMMIT;
 EOF
 
 insert_time=$(date +%s%N)
-insert_s=$(( (insert_time - processing_time) / 1000000000 ))
+insert_s=$(((insert_time - processing_time) / 1000000000))
 echo "Insert complete in ${insert_s}s."
 
 end_time=$(date +%s%N)
-duration_s=$(( (end_time - start_time) / 1000000000 ))
-echo "healthy" > $HEALTH_FILE
+duration_s=$(((end_time - start_time) / 1000000000))
+echo "healthy" >$HEALTH_FILE
 echo "Database ready in ${duration_s}s."

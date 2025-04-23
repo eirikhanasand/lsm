@@ -1,32 +1,32 @@
 [
-    {
-        "metadata": {
-          "name": "estree-1.0.6.tgz"
-        }
-    },
-    {
-        "metadata": {
-          "name": "svelte-5.17.3.tgz"
-        }
-    },
-    {
-        "metadata": {
-          "name": "axobject-query-4.1.0.tgz"
-        }
-    },
-    {
-        "metadata": {
-          "name": "esrap-1.4.2.tgz"
-        }
-    },
-    {
-        "metadata": {
-          "name": "aria-query-5.3.2.tgz"
-        }
-    },
-    {
-        "metadata": {
-          "name": "esm-env-1.2.2.tgz"
-        }
+  {
+    "metadata": {
+      "name": "estree-1.0.6.tgz"
     }
+  },
+  {
+    "metadata": {
+      "name": "svelte-5.17.3.tgz"
+    }
+  },
+  {
+    "metadata": {
+      "name": "axobject-query-4.1.0.tgz"
+    }
+  },
+  {
+    "metadata": {
+      "name": "esrap-1.4.2.tgz"
+    }
+  },
+  {
+    "metadata": {
+      "name": "aria-query-5.3.2.tgz"
+    }
+  },
+  {
+    "metadata": {
+      "name": "esm-env-1.2.2.tgz"
+    }
+  }
 ]

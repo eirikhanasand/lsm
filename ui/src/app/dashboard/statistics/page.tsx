@@ -16,13 +16,13 @@ export default async function page() {
     const endTime = "2030-01-01"
     const serverStats = await getStatistics({ startTime, endTime })
     const stats = (serverStats || fallbackServerStats)
-    const formattedServerStats = { 
+    const formattedServerStats = {
         ...stats,
         lastScan: stats.lastScan === 'Never' ? 'Never' : new Date(stats.lastScan).toLocaleString("no-NO"),
     }
-    return <ClientPage 
-        serverStats={formattedServerStats} 
-        defaultStartTime={startTime} 
-        defaultEndTime={endTime} 
+    return <ClientPage
+        serverStats={formattedServerStats}
+        defaultStartTime={startTime}
+        defaultEndTime={endTime}
     />
 }

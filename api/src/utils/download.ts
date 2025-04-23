@@ -31,11 +31,17 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
     }
 }
 
-export async function processVulnerabilities({response, name, version, ecosystem, clientAddress}: ProcessVulnerabiltiesProps) {
+export async function processVulnerabilities({
+    response,
+    name,
+    version,
+    ecosystem,
+    clientAddress
+}: ProcessVulnerabiltiesProps) {
     try {
         const { vulnerabilties } = response
         for (const vuln of vulnerabilties) {
-            const status: number = await checkPackage({response})
+            const status: number = await checkPackage({ response })
             const vulnName = vuln.name || vuln.id || ''
             let severity = -1
             if ('severity' in vuln && vuln.severity != null) {
@@ -61,7 +67,7 @@ export async function processVulnerabilities({response, name, version, ecosystem
                     severity = Number(DEFAULT_SEVERITY) || 5.0
                 }
             }
-            const event =  {
+            const event = {
                 package_name: name,
                 package_version: version,
                 ecosystem,
@@ -79,7 +85,7 @@ export async function processVulnerabilities({response, name, version, ecosystem
     }
 }
 
-async function checkPackage({response}: {response: OSVResponse}) : Promise<number> {
+async function checkPackage({ response }: { response: OSVResponse }): Promise<number> {
     if (!response || response.vulnerabilties?.length) {
         if ('whitelist' in response) {
             return DownloadStatus.DOWNLOAD_PROCEED

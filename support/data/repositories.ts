@@ -30,7 +30,7 @@ const repositories = [
         "rclass": "local",
         "repoLayoutRef": "maven-2-default"
     },
-    
+
     // remote
     {
         "key": "docker",

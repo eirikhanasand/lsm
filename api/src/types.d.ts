@@ -96,8 +96,8 @@ type WorkerVulnerability = {
     aliases: string[]
     modified: string
     published: string
-    database_specific: { 
-        "malicious-packages-origins": Package[] 
+    database_specific: {
+        "malicious-packages-origins": Package[]
         severity: Severity
         cwe_ids: string[]
     }

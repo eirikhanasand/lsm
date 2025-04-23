@@ -17,16 +17,16 @@ type FormProps = {
 }
 
 export default function Form({
-    showForm, 
-    newPackage, 
-    setShowForm, 
-    setNewPackage, 
-    formStyle, 
-    repositories, 
-    setPackages, 
-    packages, 
+    showForm,
+    newPackage,
+    setShowForm,
+    setNewPackage,
+    formStyle,
+    repositories,
+    setPackages,
+    packages,
     list,
-    author}: FormProps
+    author }: FormProps
 ) {
     if (!showForm) {
         return <></>
@@ -44,7 +44,7 @@ export default function Form({
                 <h2 className="text-lg font-semibold text-foreground">
                     Add New Package
                 </h2>
-    
+
                 <input
                     type="text"
                     placeholder="Package Name"
@@ -66,15 +66,15 @@ export default function Form({
                 <Dropdown
                     className="mt-2"
                     item='ecosystems'
-                    items={newPackage.ecosystems} 
-                    allItems={ECOSYSTEMS} 
+                    items={newPackage.ecosystems}
+                    allItems={ECOSYSTEMS}
                     setItems={(items) => setNewPackage({ ...newPackage, ecosystems: items })}
                 />
                 <Dropdown
                     className="mt-2"
                     item='repositories'
-                    items={newPackage.repositories} 
-                    allItems={repositories.map((repository) => `[${repository.type}] ${repository.key}`)} 
+                    items={newPackage.repositories}
+                    allItems={repositories.map((repository) => `[${repository.type}] ${repository.key}`)}
                     setItems={(items) => setNewPackage({ ...newPackage, repositories: items })}
                 />
                 <input
@@ -92,7 +92,7 @@ export default function Form({
                     onChange={(e) =>
                         setNewPackage({ ...newPackage, comment: e.target.value })
                     }
-                    className={`${formStyle} bg-light text-foreground h-32`} 
+                    className={`${formStyle} bg-light text-foreground h-32`}
                 />
 
                 <div className="mt-4 flex justify-between">
@@ -110,13 +110,13 @@ export default function Form({
                         }
                         className="bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600"
                     >
-                    Add
+                        Add
                     </button>
                     <button
                         onClick={() => setShowForm(false)}
                         className="bg-red-500 px-4 py-2 rounded-md text-white hover:bg-red-600"
                     >
-                    Cancel
+                        Cancel
                     </button>
                 </div>
             </div>

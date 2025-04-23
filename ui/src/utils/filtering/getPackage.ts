@@ -6,7 +6,7 @@ type GetListProps = {
 }
 
 // Fetches all packages from lsm API
-export default async function getPackages({list, side}: GetListProps) {
+export default async function getPackages({ list, side }: GetListProps) {
     try {
         const response = await fetch(`${side === 'server' ? SERVER_API : API}/list/${list}`)
 
@@ -23,7 +23,7 @@ export default async function getPackages({list, side}: GetListProps) {
 }
 
 // Fetches a specific package from lsm API
-export async function getPackage({list}: GetListProps) {
+export async function getPackage({ list }: GetListProps) {
     try {
         const response = await fetch(`${API}/${list}`)
 

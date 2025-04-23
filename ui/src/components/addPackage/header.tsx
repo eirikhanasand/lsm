@@ -21,18 +21,18 @@ type HeaderProps = {
 }
 
 export default function Header({
-    list, 
-    selectedEcosystem, 
-    setSelectedEcosystem, 
-    groupedPackages, 
-    selectedVersion, 
-    setSelectedVersion, 
+    list,
+    selectedEcosystem,
+    setSelectedEcosystem,
+    groupedPackages,
+    selectedVersion,
+    setSelectedVersion,
     allVersions,
-    showGlobalOnly, 
-    setShowGlobalOnly, 
-    searchTerm, 
-    setSearchTerm, 
-    showForm, 
+    showGlobalOnly,
+    setShowGlobalOnly,
+    searchTerm,
+    setSearchTerm,
+    showForm,
     setShowForm
 }: HeaderProps) {
     const searchParams = useSearchParams()
@@ -51,7 +51,7 @@ export default function Header({
                 <div className="w-1/2">
                     <h1 className="text-3xl font-bold text-blue-600">{`${list === "white" ? "Whitelisted" : "Blacklisted"} Packages`}</h1>
                     <p className="text-foreground">
-                    Manage the list of{" "}
+                        Manage the list of{" "}
                         {list === "white" ? "safe" : "dangerous"} packages.
                     </p>
                 </div>
@@ -114,10 +114,10 @@ export default function Header({
                     />
                 </div>
                 <Paging
-                    page={page} 
-                    setPage={setPage} 
+                    page={page}
+                    setPage={setPage}
                     resultsPerPage={resultsPerPage}
-                    items={items} 
+                    items={items}
                     setResultsPerPage={setResultsPerPage}
                     searchParams={searchParams}
                 />

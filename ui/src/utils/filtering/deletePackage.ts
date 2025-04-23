@@ -5,9 +5,9 @@ type DeleteListProps = {
     name: string
 }
 
-export default async function deletePackage({list, name}: DeleteListProps) {
+export default async function deletePackage({ list, name }: DeleteListProps) {
     try {
-        const response = await fetch(`${API}/${list}/${name}`, {method: 'DELETE'})
+        const response = await fetch(`${API}/${list}/${name}`, { method: 'DELETE' })
         if (!response.ok) {
             throw new Error(await response.text())
         }

@@ -5,14 +5,14 @@ type PostListProps = {
     newPackage: AddPackage
 }
 
-export default async function postPackage({list, newPackage}: PostListProps) {
+export default async function postPackage({ list, newPackage }: PostListProps) {
     try {
         const response = await fetch(`${API}/list/${list}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({...newPackage})
+            body: JSON.stringify({ ...newPackage })
         })
 
         if (!response.ok) {

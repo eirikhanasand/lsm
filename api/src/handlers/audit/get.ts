@@ -12,27 +12,31 @@ type AuditResponse = {
 }
 
 export default async function auditHandler(req: FastifyRequest, res: FastifyReply) {
-    const { 
-        author, 
-        startDate, 
-        endDate, 
-        ecosystem, 
-        name, 
-        page, 
-        resultsPerPage: clientResultsPerPage, 
+    const {
+        author,
+        startDate,
+        endDate,
+        ecosystem,
+        name,
+        page,
+        resultsPerPage: clientResultsPerPage,
         version,
         list
     } = req.query as AuditLogQueryProps
     const resultsPerPage = (clientResultsPerPage || Number(DEFAULT_RESULTS_PER_PAGE) || 50)
     try {
-        console.log(`Fetching audit log with author=${author}, startDate=${startDate}, endDate=${endDate}, name=${name}, ecosystem=${ecosystem}, version=${version}, list=${list}`)
+        console.log(
+            `Fetching audit log with author=${author}, startDate=${startDate}, 
+            endDate=${endDate}, name=${name}, ecosystem=${ecosystem}, 
+            version=${version}, list=${list}`
+        )
         const query = await loadSQL("fetchAuditLog.sql")
         const result = await run(query, [
-            author || null, 
-            startDate || null, 
-            endDate || null, 
-            name || null, 
-            ecosystem || null, 
+            author || null,
+            startDate || null,
+            endDate || null,
+            name || null,
+            ecosystem || null,
             version || null,
             list || null,
             resultsPerPage,
@@ -50,8 +54,7 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
                 results: []
             })
         }
-        // pass the results through here, not sure if result.rows is correct 
-        const auditLog: AuditResponse[] = await Promise.all(result.rows.map(async(row) => {
+        const auditLog: AuditResponse[] = await Promise.all(result.rows.map(async (row) => {
             const details = await getDetails(row.author)
             return {
                 id: row.id,

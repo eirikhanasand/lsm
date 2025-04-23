@@ -1,7 +1,7 @@
 import { SERVER_API } from "@parent/constants"
 
 export default async function fetchRepoConfig(repository: string): Promise<RepoConfig> {
-    const params =  new URLSearchParams({ repository: encodeURIComponent(repository) })
+    const params = new URLSearchParams({ repository: encodeURIComponent(repository) })
     try {
         const [whitelistRes, blacklistRes] = await Promise.all([
             fetch(`${SERVER_API}/list/white?${params}`),

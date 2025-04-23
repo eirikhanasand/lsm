@@ -7,14 +7,19 @@ import Form from "./form"
 import Packages from "./packages"
 import Header from "./header"
 
-export default function AddPackage({ list, packages: serverPackages, repositories, serverShowGlobalOnly}: ClientPageProps) {
+export default function AddPackage({
+    list,
+    packages: serverPackages,
+    repositories,
+    serverShowGlobalOnly
+}: ClientPageProps) {
     const [packages, setPackages] = useState<Package[]>([...serverPackages])
     const [selectedEcosystem, setSelectedEcosystem] = useState<string>("")
     const [showForm, setShowForm] = useState(false)
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [selectedVersion, setSelectedVersion] = useState<string>("")
     const [showGlobalOnly, setShowGlobalOnly] = useState<boolean>(serverShowGlobalOnly)
-    const [author, setAuthor] = useState<Author>({id: "", name: "", avatar: ""})
+    const [author, setAuthor] = useState<Author>({ id: "", name: "", avatar: "" })
     const [newPackage, setNewPackage] = useState<AddPackage>({
         name: "",
         comment: "",
@@ -35,10 +40,10 @@ export default function AddPackage({ list, packages: serverPackages, repositorie
         const avatar = getCookie('avatar')
         if (id && name && avatar) {
             setAuthor({ id, name, avatar })
-            setNewPackage({...newPackage, author: { id, name, avatar }})
+            setNewPackage({ ...newPackage, author: { id, name, avatar } })
         }
     }, [])
-    
+
     const allVersions = Array.from(
         new Set(
             packages
@@ -110,7 +115,7 @@ export default function AddPackage({ list, packages: serverPackages, repositorie
                     <div>
                         <PackageHeader />
                         <Packages
-                            groupedPackages={groupedPackages} 
+                            groupedPackages={groupedPackages}
                             list={list}
                             setPackages={setPackages}
                             packages={packages}

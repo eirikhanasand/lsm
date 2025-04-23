@@ -1,9 +1,11 @@
 import { API } from "@constants"
 
-export async function getStatistics({startTime, endTime}: GetStatisticProps): Promise<StatisticResponse | null>  {
+export async function getStatistics({
+    startTime, endTime
+}: GetStatisticProps): Promise<StatisticResponse | null> {
     try {
         console.log(`Fetching statistics from ${startTime} to ${endTime}`)
-        const params = new URLSearchParams({startTime, endTime})
+        const params = new URLSearchParams({ startTime, endTime })
         const response = await fetch(`${API}/statistics?${params}`)
 
         if (!response.ok) {

@@ -61,7 +61,11 @@ type PageProps = {
     defaultEndTime: string
 }
 
-export default function Page({serverStats, defaultStartTime, defaultEndTime}: PageProps) {
+export default function Page({
+    serverStats,
+    defaultStartTime,
+    defaultEndTime
+}: PageProps) {
     const [summary, setSummary] = useState<Summary>({
         criticalBlocked: Number(serverStats.criticalBlocked),
         lastScan: serverStats.lastScan,
@@ -113,7 +117,8 @@ export default function Page({serverStats, defaultStartTime, defaultEndTime}: Pa
                         })
                         .filter((entry: ChartData) => {
                             const entryDate = entry.date
-                            return entryDate >= normalizeStartTime(startTime) && entryDate <= normalizeEndTime(endTime)
+                            return entryDate >= normalizeStartTime(startTime)
+                                && entryDate <= normalizeEndTime(endTime)
                         })
 
                     setLoadedData(filteredValues)
@@ -146,8 +151,8 @@ export default function Page({serverStats, defaultStartTime, defaultEndTime}: Pa
 
     useEffect(() => {
         if (summary.lastScan !== serverStats.lastScan) {
-            setLastScan(summary.lastScan 
-                ? new Date(summary.lastScan).toLocaleString("no-NO", { timeZone: 'Europe/Oslo'}) 
+            setLastScan(summary.lastScan
+                ? new Date(summary.lastScan).toLocaleString("no-NO", { timeZone: 'Europe/Oslo' })
                 : 'Never'
             )
         }
@@ -198,15 +203,30 @@ export default function Page({serverStats, defaultStartTime, defaultEndTime}: Pa
 
             <div className="flex justify-between mt-6 min-h-[41vh]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
-                    <StatCard title="Total Dependencies Scanned" value={summary.totalScanned} />
-                    <StatCard title="Vulnerabilities Found" value={summary.vulnerabilitiesFound} />
-                    <StatCard title="Critical Vulnerabilities Blocked" value={summary.criticalBlocked} />
-                    <StatCard title="Safe Packages Approved" value={summary.safeApproved} />
-                    <StatCard title="Last Scan Date" value={lastScan} />
+                    <StatCard
+                        title="Total Dependencies Scanned"
+                        value={summary.totalScanned}
+                    />
+                    <StatCard
+                        title="Vulnerabilities Found"
+                        value={summary.vulnerabilitiesFound}
+                    />
+                    <StatCard
+                        title="Critical Vulnerabilities Blocked"
+                        value={summary.criticalBlocked}
+                    />
+                    <StatCard
+                        title="Safe Packages Approved"
+                        value={summary.safeApproved}
+                    />
+                    <StatCard
+                        title="Last Scan Date"
+                        value={lastScan}
+                    />
                 </div>
 
                 <div className="mt-8 w-full max-w-3xl">
-                    <Line data={data} options={chartOptions}/>
+                    <Line data={data} options={chartOptions} />
                 </div>
             </div>
 
@@ -243,7 +263,7 @@ export default function Page({serverStats, defaultStartTime, defaultEndTime}: Pa
     )
 }
 
-function StatCard({title, value}: StatCardProps) {
+function StatCard({ title, value }: StatCardProps) {
     return (
         <div className="rounded-lg p-4 text-center border border-blue-500 text-foreground">
             <h2 className="text-lg font-semibold text-bright">{title}</h2>

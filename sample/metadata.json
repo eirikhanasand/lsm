@@ -1,146 +1,146 @@
 [
-    {
-        "metadata": {
-          "repoPath": {
-            "key": "npm",
-            "path": "@types/estree/-/estree-1.0.6.tgz",
-            "id": "npm:@types/estree/-/estree-1.0.6.tgz"
-          },
-          "originalRepoPath": {
-            "key": "npm",
-            "path": "@types/estree/-/estree-1.0.6.tgz",
-            "id": "npm:@types/estree/-/estree-1.0.6.tgz"
-          },
-          "name": "estree-1.0.6.tgz",
-          "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
-          "uri": "/artifactory/npm/@types/estree/-/estree-1.0.6.tgz",
-          "clientAddress": "18.214.241.149",
-          "repoType": 2
-        },
-        "repoPath": {
-          "key": "npm-cache",
-          "path": "@types/estree/-/estree-1.0.6.tgz",
-          "id": "npm-cache:@types/estree/-/estree-1.0.6.tgz"
-        }
+  {
+    "metadata": {
+      "repoPath": {
+        "key": "npm",
+        "path": "@types/estree/-/estree-1.0.6.tgz",
+        "id": "npm:@types/estree/-/estree-1.0.6.tgz"
+      },
+      "originalRepoPath": {
+        "key": "npm",
+        "path": "@types/estree/-/estree-1.0.6.tgz",
+        "id": "npm:@types/estree/-/estree-1.0.6.tgz"
+      },
+      "name": "estree-1.0.6.tgz",
+      "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+      "uri": "/artifactory/npm/@types/estree/-/estree-1.0.6.tgz",
+      "clientAddress": "18.214.241.149",
+      "repoType": 2
     },
-    {
-        "metadata": {
-          "repoPath": {
-            "key": "npm",
-            "path": "svelte/-/svelte-5.17.3.tgz",
-            "id": "npm:svelte/-/svelte-5.17.3.tgz"
-          },
-          "originalRepoPath": {
-            "key": "npm",
-            "path": "svelte/-/svelte-5.17.3.tgz",
-            "id": "npm:svelte/-/svelte-5.17.3.tgz"
-          },
-          "name": "svelte-5.17.3.tgz",
-          "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
-          "uri": "/artifactory/npm/svelte/-/svelte-5.17.3.tgz",
-          "clientAddress": "34.233.58.83",
-          "repoType": 2
-        },
-        "repoPath": {
-          "key": "npm-cache",
-          "path": "svelte/-/svelte-5.17.3.tgz",
-          "id": "npm-cache:svelte/-/svelte-5.17.3.tgz"
-        }
-    },
-    {
-        "metadata": {
-          "repoPath": {
-            "key": "npm",
-            "path": "axobject-query/-/axobject-query-4.1.0.tgz",
-            "id": "npm:axobject-query/-/axobject-query-4.1.0.tgz"
-          },
-          "originalRepoPath": {
-            "key": "npm",
-            "path": "axobject-query/-/axobject-query-4.1.0.tgz",
-            "id": "npm:axobject-query/-/axobject-query-4.1.0.tgz"
-          },
-          "name": "axobject-query-4.1.0.tgz",
-          "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
-          "uri": "/artifactory/npm/axobject-query/-/axobject-query-4.1.0.tgz",
-          "clientAddress": "34.201.191.93",
-          "repoType": 2
-        },
-        "repoPath": {
-          "key": "npm-cache",
-          "path": "axobject-query/-/axobject-query-4.1.0.tgz",
-          "id": "npm-cache:axobject-query/-/axobject-query-4.1.0.tgz"
-        }
-    },
-    {
-        "metadata": {
-          "repoPath": {
-            "key": "npm",
-            "path": "esrap/-/esrap-1.4.2.tgz",
-            "id": "npm:esrap/-/esrap-1.4.2.tgz"
-          },
-          "originalRepoPath": {
-            "key": "npm",
-            "path": "esrap/-/esrap-1.4.2.tgz",
-            "id": "npm:esrap/-/esrap-1.4.2.tgz"
-          },
-          "name": "esrap-1.4.2.tgz",
-          "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
-          "uri": "/artifactory/npm/esrap/-/esrap-1.4.2.tgz",
-          "clientAddress": "18.214.241.149",
-          "repoType": 2
-        },
-        "repoPath": {
-          "key": "npm-cache",
-          "path": "esrap/-/esrap-1.4.2.tgz",
-          "id": "npm-cache:esrap/-/esrap-1.4.2.tgz"
-        }
-    },
-    {
-        "metadata": {
-          "repoPath": {
-            "key": "npm",
-            "path": "aria-query/-/aria-query-5.3.2.tgz",
-            "id": "npm:aria-query/-/aria-query-5.3.2.tgz"
-          },
-          "originalRepoPath": {
-            "key": "npm",
-            "path": "aria-query/-/aria-query-5.3.2.tgz",
-            "id": "npm:aria-query/-/aria-query-5.3.2.tgz"
-          },
-          "name": "aria-query-5.3.2.tgz",
-          "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
-          "uri": "/artifactory/npm/aria-query/-/aria-query-5.3.2.tgz",
-          "clientAddress": "18.214.241.149",
-          "repoType": 2
-        },
-        "repoPath": {
-          "key": "npm-cache",
-          "path": "aria-query/-/aria-query-5.3.2.tgz",
-          "id": "npm-cache:aria-query/-/aria-query-5.3.2.tgz"
-        }
-    },
-    {
-        "metadata": {
-          "repoPath": {
-            "key": "npm",
-            "path": "esm-env/-/esm-env-1.2.2.tgz",
-            "id": "npm:esm-env/-/esm-env-1.2.2.tgz"
-          },
-          "originalRepoPath": {
-            "key": "npm",
-            "path": "esm-env/-/esm-env-1.2.2.tgz",
-            "id": "npm:esm-env/-/esm-env-1.2.2.tgz"
-          },
-          "name": "esm-env-1.2.2.tgz",
-          "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
-          "uri": "/artifactory/npm/esm-env/-/esm-env-1.2.2.tgz",
-          "clientAddress": "34.233.58.83",
-          "repoType": 2
-        },
-        "repoPath": {
-          "key": "npm-cache",
-          "path": "esm-env/-/esm-env-1.2.2.tgz",
-          "id": "npm-cache:esm-env/-/esm-env-1.2.2.tgz"
-        }
+    "repoPath": {
+      "key": "npm-cache",
+      "path": "@types/estree/-/estree-1.0.6.tgz",
+      "id": "npm-cache:@types/estree/-/estree-1.0.6.tgz"
     }
+  },
+  {
+    "metadata": {
+      "repoPath": {
+        "key": "npm",
+        "path": "svelte/-/svelte-5.17.3.tgz",
+        "id": "npm:svelte/-/svelte-5.17.3.tgz"
+      },
+      "originalRepoPath": {
+        "key": "npm",
+        "path": "svelte/-/svelte-5.17.3.tgz",
+        "id": "npm:svelte/-/svelte-5.17.3.tgz"
+      },
+      "name": "svelte-5.17.3.tgz",
+      "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+      "uri": "/artifactory/npm/svelte/-/svelte-5.17.3.tgz",
+      "clientAddress": "34.233.58.83",
+      "repoType": 2
+    },
+    "repoPath": {
+      "key": "npm-cache",
+      "path": "svelte/-/svelte-5.17.3.tgz",
+      "id": "npm-cache:svelte/-/svelte-5.17.3.tgz"
+    }
+  },
+  {
+    "metadata": {
+      "repoPath": {
+        "key": "npm",
+        "path": "axobject-query/-/axobject-query-4.1.0.tgz",
+        "id": "npm:axobject-query/-/axobject-query-4.1.0.tgz"
+      },
+      "originalRepoPath": {
+        "key": "npm",
+        "path": "axobject-query/-/axobject-query-4.1.0.tgz",
+        "id": "npm:axobject-query/-/axobject-query-4.1.0.tgz"
+      },
+      "name": "axobject-query-4.1.0.tgz",
+      "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+      "uri": "/artifactory/npm/axobject-query/-/axobject-query-4.1.0.tgz",
+      "clientAddress": "34.201.191.93",
+      "repoType": 2
+    },
+    "repoPath": {
+      "key": "npm-cache",
+      "path": "axobject-query/-/axobject-query-4.1.0.tgz",
+      "id": "npm-cache:axobject-query/-/axobject-query-4.1.0.tgz"
+    }
+  },
+  {
+    "metadata": {
+      "repoPath": {
+        "key": "npm",
+        "path": "esrap/-/esrap-1.4.2.tgz",
+        "id": "npm:esrap/-/esrap-1.4.2.tgz"
+      },
+      "originalRepoPath": {
+        "key": "npm",
+        "path": "esrap/-/esrap-1.4.2.tgz",
+        "id": "npm:esrap/-/esrap-1.4.2.tgz"
+      },
+      "name": "esrap-1.4.2.tgz",
+      "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+      "uri": "/artifactory/npm/esrap/-/esrap-1.4.2.tgz",
+      "clientAddress": "18.214.241.149",
+      "repoType": 2
+    },
+    "repoPath": {
+      "key": "npm-cache",
+      "path": "esrap/-/esrap-1.4.2.tgz",
+      "id": "npm-cache:esrap/-/esrap-1.4.2.tgz"
+    }
+  },
+  {
+    "metadata": {
+      "repoPath": {
+        "key": "npm",
+        "path": "aria-query/-/aria-query-5.3.2.tgz",
+        "id": "npm:aria-query/-/aria-query-5.3.2.tgz"
+      },
+      "originalRepoPath": {
+        "key": "npm",
+        "path": "aria-query/-/aria-query-5.3.2.tgz",
+        "id": "npm:aria-query/-/aria-query-5.3.2.tgz"
+      },
+      "name": "aria-query-5.3.2.tgz",
+      "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+      "uri": "/artifactory/npm/aria-query/-/aria-query-5.3.2.tgz",
+      "clientAddress": "18.214.241.149",
+      "repoType": 2
+    },
+    "repoPath": {
+      "key": "npm-cache",
+      "path": "aria-query/-/aria-query-5.3.2.tgz",
+      "id": "npm-cache:aria-query/-/aria-query-5.3.2.tgz"
+    }
+  },
+  {
+    "metadata": {
+      "repoPath": {
+        "key": "npm",
+        "path": "esm-env/-/esm-env-1.2.2.tgz",
+        "id": "npm:esm-env/-/esm-env-1.2.2.tgz"
+      },
+      "originalRepoPath": {
+        "key": "npm",
+        "path": "esm-env/-/esm-env-1.2.2.tgz",
+        "id": "npm:esm-env/-/esm-env-1.2.2.tgz"
+      },
+      "name": "esm-env-1.2.2.tgz",
+      "servletContextUrl": "https://trial9apndc.jfrog.io/artifactory",
+      "uri": "/artifactory/npm/esm-env/-/esm-env-1.2.2.tgz",
+      "clientAddress": "34.233.58.83",
+      "repoType": 2
+    },
+    "repoPath": {
+      "key": "npm-cache",
+      "path": "esm-env/-/esm-env-1.2.2.tgz",
+      "id": "npm-cache:esm-env/-/esm-env-1.2.2.tgz"
+    }
+  }
 ]

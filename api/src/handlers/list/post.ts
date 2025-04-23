@@ -9,12 +9,17 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
     }
 
     try {
-        console.log(`Adding to ${list}list: name=${name}, versions=${versions}, ecosystems=${ecosystems}, repositories=${repositories}, comment=${comment}, references=${references}, author=${author}`)
+        console.log(
+            `Adding to ${list}list: name=${name}, versions=${versions}, 
+            ecosystems=${ecosystems}, repositories=${repositories}, 
+            comment=${comment}, references=${references}, 
+            author=${author}`
+        )
 
         await run(
             `INSERT INTO ${list}list (name, comment) 
              SELECT $1, $2
-             WHERE NOT EXISTS (SELECT 1 FROM ${list}list WHERE name = $1);`, 
+             WHERE NOT EXISTS (SELECT 1 FROM ${list}list WHERE name = $1);`,
             [name, comment]
         )
 
@@ -23,7 +28,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
                 await run(
                     `INSERT INTO ${list}list_versions (name, version) 
                      SELECT $1, $2 
-                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_versions WHERE name = $1 AND version = $2);`, 
+                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_versions WHERE name = $1 AND version = $2);`,
                     [name, version]
                 )
             }
@@ -34,7 +39,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
                 await run(
                     `INSERT INTO ${list}list_ecosystems (name, ecosystem) 
                      SELECT $1, $2 
-                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_ecosystems WHERE name = $1 AND ecosystem = $2);`, 
+                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_ecosystems WHERE name = $1 AND ecosystem = $2);`,
                     [name, ecosystem]
                 )
             }
@@ -45,7 +50,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
                 await run(
                     `INSERT INTO ${list}list_repositories (name, repository) 
                      SELECT $1, $2 
-                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_repositories WHERE name = $1 AND repository = $2);`, 
+                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_repositories WHERE name = $1 AND repository = $2);`,
                     [name, repository]
                 )
             }
@@ -56,7 +61,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
                 await run(
                     `INSERT INTO ${list}list_references (name, reference) 
                      SELECT $1, $2 
-                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_references WHERE name = $1 AND reference = $2);`, 
+                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_references WHERE name = $1 AND reference = $2);`,
                     [name, reference]
                 )
             }
@@ -65,7 +70,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
         await run(
             `INSERT INTO ${list}list_authors (name, author) 
              SELECT $1, $2 
-             WHERE NOT EXISTS (SELECT 1 FROM ${list}list_authors WHERE name = $1 AND author = $2);`, 
+             WHERE NOT EXISTS (SELECT 1 FROM ${list}list_authors WHERE name = $1 AND author = $2);`,
             [name, author.id]
         )
 

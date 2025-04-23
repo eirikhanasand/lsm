@@ -18,24 +18,30 @@ type FetchListProps = {
     endDate?: string
 }
 
-export default async function fetchList({ 
-    ecosystem, 
-    name, 
-    version, 
-    repository, 
-    list, 
-    page, 
+export default async function fetchList({
+    ecosystem,
+    name,
+    version,
+    repository,
+    list,
+    page,
     resultsPerPage,
     startDate,
     endDate,
-    res, 
+    res,
 }: FetchListProps) {
-    console.log(`Fetching ${list}list entry: ecosystem=${ecosystem}, name=${name}, version=${version}, repository=${repository}, startDate=${startDate}, endDate=${endDate}, page=${page ? page : 'undefined (Fallback: 1)'}, resultsPerPage=${resultsPerPage ? resultsPerPage : `undefined (Fallback: ${DEFAULT_RESULTS_PER_PAGE})`}`)
+    console.log(
+        `Fetching ${list}list entry: ecosystem=${ecosystem}, name=${name}, 
+        version=${version}, repository=${repository}, startDate=${startDate}, 
+        endDate=${endDate}, page=${page ? page : 'undefined (Fallback: 1)'}, 
+        resultsPerPage=${resultsPerPage ? resultsPerPage : `undefined (Fallback: 
+        ${DEFAULT_RESULTS_PER_PAGE})`}`
+    )
 
     const query = (await loadSQL("getList.sql")).replaceAll('{list}', list)
     const result = await run(query, [
-        name || null, 
-        ecosystem || null, 
+        name || null,
+        ecosystem || null,
         version || null,
         repository || null,
         startDate || null,
@@ -44,7 +50,7 @@ export default async function fetchList({
         resultsPerPage || Number(DEFAULT_RESULTS_PER_PAGE) || 50
     ])
 
-    return res 
+    return res
         ? res.send(result.rows)
         : result.rows
 }
