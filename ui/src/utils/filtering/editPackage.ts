@@ -1,5 +1,7 @@
 import { SetStateAction } from "react"
 import putPackage from "./putPackage"
+import { getCookie } from "../cookies"
+import { useRouter } from "next/navigation"
 
 type RemovePackageProps = {
     pkg: Package
@@ -14,10 +16,18 @@ export default async function editPackage({
     setPackages,
     packages,
     list,
-    author
+    author,
 }: RemovePackageProps) {
+    const router = useRouter()
+    const token = getCookie('token')
+    if (!token) {
+        alert("Missing token, redirecting to login.")
+        return router.push('/logout')
+    }
+
     const response = await putPackage({
-        list, pkg: {
+        list, 
+        pkg: {
             name: pkg.name,
             ecosystems: pkg.ecosystems,
             versions: pkg.versions,
@@ -25,7 +35,8 @@ export default async function editPackage({
             references: pkg.references,
             repositories: pkg.repositories,
             author
-        }
+        },
+        token
     })
 
     if (response === 500) {

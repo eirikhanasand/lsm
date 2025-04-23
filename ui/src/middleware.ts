@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { DISABLE_TOKEN_CHECK, SELF_URL } from '@parent/constants'
-import { DISABLE_AUTH } from '@parent/constants'
+import { DISABLE_TOKEN_CHECK, SELF_URL, DISABLE_AUTH } from '@parent/constants'
 
 export async function middleware(req: NextRequest) {
     const tokenCookie = req.cookies.get('token')

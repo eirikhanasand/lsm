@@ -1,13 +1,21 @@
-import { API } from "@constants"
+import { API, DISABLE_AUTH } from "@constants"
 
 type DeleteListProps = {
     list: 'white' | 'black'
     name: string
+    token: string
 }
 
-export default async function deletePackage({ list, name }: DeleteListProps) {
+export default async function deletePackage({ list, name, token }: DeleteListProps) {
     try {
-        const response = await fetch(`${API}/${list}/${name}`, { method: 'DELETE' })
+        const headers = {
+            ...( !DISABLE_AUTH && { 'Authorization': `Bearer ${token}` } ),
+            'Content-Type': 'application/json'
+        }
+        const response = await fetch(`${API}/${list}/${name}`, { 
+            method: 'DELETE', 
+            headers 
+        })
         if (!response.ok) {
             throw new Error(await response.text())
         }

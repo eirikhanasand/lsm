@@ -1,17 +1,20 @@
-import { API } from "@constants"
+import { API, DISABLE_AUTH } from "@constants"
 
 type PutListProps = {
     list: 'white' | 'black'
     pkg: PutPackage
+    token: string
 }
 
-export default async function putPackage({ list, pkg }: PutListProps) {
+export default async function putPackage({ list, pkg, token }: PutListProps) {
     try {
+        const headers = {
+            ...( !DISABLE_AUTH && { 'Authorization': `Bearer ${token}` } ),
+            'Content-Type': 'application/json'
+        }
         const response = await fetch(`${API}/list/${list}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers,
             body: JSON.stringify({ ...pkg })
         })
 

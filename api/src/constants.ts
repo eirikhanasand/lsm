@@ -51,22 +51,21 @@ const {
     OAUTH_TOKEN_URL,
     OAUTH_BASE_URL,
     DISABLE_AUTH,
-    OAUTH_AUTH_URL
+    OAUTH_AUTH_URL,
 } = process.env as ENV
 if (!API
-    || !CLIENT_ID
-    || !CLIENT_SECRET
     || !FRONTEND_URL
     || !LOCAL_OSV
     || !DB_PASSWORD
-    || !SELF_URL
-    || !OAUTH_TOKEN_URL
 ) {
     throw new Error("Missing one or more environment variables.")
 }
 
-if (!OAUTH_BASE_URL && DISABLE_AUTH === 'false') {
-    throw new Error("Either oauth base url or disable auth must be set.")
+if (
+    (!CLIENT_ID || !CLIENT_SECRET || !OAUTH_BASE_URL || !OAUTH_TOKEN_URL)
+    && DISABLE_AUTH !== 'true'
+) {
+    throw new Error("Either OAuth URLs or DISABLE_AUTH=true must be set.")
 }
 
 const config = {

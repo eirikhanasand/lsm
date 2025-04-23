@@ -1,7 +1,13 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import run from "../../db.js"
+import tokenWrapper from "../../utils/tokenWrapper.js"
 
 export default async function listPostHandler(req: FastifyRequest, res: FastifyReply) {
+    const { valid } = await tokenWrapper(req, res)
+    if (!valid) {
+        return res.status(400).send({ error: "Unauthorized" })
+    }
+
     const { list } = req.params as { list: string }
     const { ecosystems, name, versions, repositories, comment, references, author } = req.body as PostBody
     if (!name || !comment || !author) {

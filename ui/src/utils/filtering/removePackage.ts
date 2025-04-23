@@ -1,5 +1,7 @@
 import { SetStateAction } from "react"
 import deletePackage from "./deletePackage"
+import { useRouter } from "next/navigation"
+import { getCookie } from "../cookies"
 
 type RemovePackageProps = {
     name: string
@@ -9,9 +11,19 @@ type RemovePackageProps = {
 }
 
 export default async function removePackage({
-    name, setPackages, packages, list
+    name,
+    setPackages,
+    packages,
+    list
 }: RemovePackageProps) {
-    const response = await deletePackage({ list, name })
+    const router = useRouter()
+    const token = getCookie('token')
+    if (!token) {
+        alert("Missing token, redirecting to login.")
+        return router.push('/logout')
+    }
+
+    const response = await deletePackage({ list, name, token })
 
     if (response === 500) {
         alert("Failed to delete package. API error.")

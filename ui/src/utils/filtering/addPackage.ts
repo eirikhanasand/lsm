@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 import postPackage from "./postPackage"
 import { getCookie } from "../cookies"
+import { useRouter } from "next/navigation"
 
 type AddPackageProps = {
     newPackage: AddPackage
@@ -31,7 +32,13 @@ export default async function addPackage({
         return window.location.href = '/logout'
     }
 
-    const response = await postPackage({ list, newPackage })
+    const router = useRouter()
+    const token = getCookie('token')
+    if (!token) {
+        alert("Missing token, redirecting to login.")
+        return router.push('/logout')
+    }
+    const response = await postPackage({ list, newPackage, token })
 
     if (response === 500) {
         alert("Failed to add package. API error.")
