@@ -1,11 +1,11 @@
-"use client"
-import { useEffect, useState } from "react"
-import "./addPackage.css"
-import { getCookie } from "@/utils/cookies"
-import groupPackagesByEcosystem from "@/utils/filtering/groupPackageByEcosystem"
-import Form from "./form"
-import Packages from "./packages"
-import Header from "./header"
+'use client'
+import { useEffect, useState } from 'react'
+import { getCookie } from '@/utils/cookies'
+import groupPackagesByEcosystem from '@/utils/filtering/groupPackageByEcosystem'
+import Form from './form'
+import Packages from './packages'
+import Header from './header'
+import './addPackage.css'
 
 export default function AddPackage({
     list,
@@ -14,23 +14,23 @@ export default function AddPackage({
     serverShowGlobalOnly
 }: ClientPageProps) {
     const [packages, setPackages] = useState<Package[]>([...serverPackages])
-    const [selectedEcosystem, setSelectedEcosystem] = useState<string>("")
+    const [selectedEcosystem, setSelectedEcosystem] = useState<string>('')
     const [showForm, setShowForm] = useState(false)
-    const [searchTerm, setSearchTerm] = useState<string>("")
-    const [selectedVersion, setSelectedVersion] = useState<string>("")
+    const [searchTerm, setSearchTerm] = useState<string>('')
+    const [selectedVersion, setSelectedVersion] = useState<string>('')
     const [showGlobalOnly, setShowGlobalOnly] = useState<boolean>(serverShowGlobalOnly)
-    const [author, setAuthor] = useState<Author>({ id: "", name: "", avatar: "" })
+    const [author, setAuthor] = useState<Author>({ id: '', name: '', avatar: '' })
     const [newPackage, setNewPackage] = useState<AddPackage>({
-        name: "",
-        comment: "",
+        name: '',
+        comment: '',
         versions: [],
         ecosystems: [],
         repositories: [],
         references: [],
         author: {
-            id: "",
-            name: "",
-            avatar: ""
+            id: '',
+            name: '',
+            avatar: ''
         }
     })
 
@@ -73,10 +73,10 @@ export default function AddPackage({
     })
 
     const groupedPackages = groupPackagesByEcosystem(filtered)
-    const formStyle = "w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+    const formStyle = 'w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
 
     return (
-        <main className="relative min-h-full">
+        <main className='relative min-h-full'>
             <Header
                 list={list}
                 selectedEcosystem={selectedEcosystem}
@@ -106,9 +106,9 @@ export default function AddPackage({
                 packages={packages}
             />
 
-            <div className="w-full px-6">
+            <div className='w-full px-6'>
                 {Object.keys(groupedPackages).length === 0 ? (
-                    <p className="text-foreground text-center">
+                    <p className='text-foreground text-center'>
                         No {list}listed packages yet.
                     </p>
                 ) : (
@@ -131,18 +131,18 @@ export default function AddPackage({
 
 function PackageHeader() {
     return (
-        <div className="grid grid-cols-12 w-full h-8 rounded-lg px-4 items-center border border-blue-500">
-            <div className="flex col-span-4 w-full">
-                <h1 className="w-full">Name</h1>
-                <h1 className="w-full">Ecosystems</h1>
-                <h1 className="w-full">Repositories</h1>
+        <div className='grid grid-cols-12 w-full h-8 rounded-lg px-4 items-center border border-blue-500'>
+            <div className='flex col-span-4 w-full'>
+                <h1 className='w-full'>Name</h1>
+                <h1 className='w-full'>Ecosystems</h1>
+                <h1 className='w-full'>Repositories</h1>
             </div>
             <h1>Versions</h1>
-            <div className="flex col-span-7 w-full">
-                <h1 className="w-103.5">Comment</h1>
-                <h1 className="w-44">Created</h1>
-                <h1 className="w-44">Updated</h1>
-                <h1 className="w-20">Revisions</h1>
+            <div className='flex col-span-7 w-full'>
+                <h1 className='w-103.5'>Comment</h1>
+                <h1 className='w-44'>Created</h1>
+                <h1 className='w-44'>Updated</h1>
+                <h1 className='w-20'>Revisions</h1>
             </div>
         </div>
     )

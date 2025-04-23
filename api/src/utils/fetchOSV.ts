@@ -1,14 +1,14 @@
-import run from "../db.js"
-import fetchList from "./list/fetchList.js"
-import { processVulnerabilities } from "./download.js"
-import config from "../constants.js"
+import run from '../db.js'
+import fetchList from './list/fetchList.js'
+import { processVulnerabilities } from './download.js'
+import config from '../constants.js'
 
 const { LOCAL_OSV, OSV_URL } = config
 
 export default async function fetchOSV({ name, version, ecosystem, clientAddress }: FetchOSVProps): Promise<FetchOSVResponse | { error: string }> {
     let response = {} as { vulnerabilties: any[], whitelist?: any[], blacklist?: any[] }
     let osvLength = 0
-    if (LOCAL_OSV === "true") {
+    if (LOCAL_OSV === 'true') {
         const result = await run(`
             SELECT * FROM vulnerabilities
             WHERE package_name = $1
@@ -34,11 +34,11 @@ export default async function fetchOSV({ name, version, ecosystem, clientAddress
         response = { vulnerabilties: result.rows.map((row) => row.data) } as OSVResponse
     } else {
         try {
-            if (ecosystem.toLowerCase() === "go") {
-                ecosystem = "Go"
+            if (ecosystem.toLowerCase() === 'go') {
+                ecosystem = 'Go'
             }
 
-            const res = await fetch(OSV_URL || "https://api.osv.dev/v1/query", {
+            const res = await fetch(OSV_URL || 'https://api.osv.dev/v1/query', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -55,7 +55,7 @@ export default async function fetchOSV({ name, version, ecosystem, clientAddress
         } catch (error) {
             console.error(`Unable to fetch OSV ${JSON.stringify(error)}`)
             return {
-                "error": `Unable to fetch OSV ${JSON.stringify(error)}`
+                'error': `Unable to fetch OSV ${JSON.stringify(error)}`
             }
         }
     }

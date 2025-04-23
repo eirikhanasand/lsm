@@ -1,17 +1,17 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import run from "../../db.js"
-import tokenWrapper from "../../utils/tokenWrapper.js"
+import { FastifyReply, FastifyRequest } from 'fastify'
+import run from '../../db.js'
+import tokenWrapper from '../../utils/tokenWrapper.js'
 
 export default async function listPostHandler(req: FastifyRequest, res: FastifyReply) {
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
-        return res.status(400).send({ error: "Unauthorized" })
+        return res.status(400).send({ error: 'Unauthorized' })
     }
 
     const { list } = req.params as { list: string }
     const { ecosystems, name, versions, repositories, comment, references, author } = req.body as PostBody
     if (!name || !comment || !author) {
-        return res.status(400).send({ error: "Missing name, comment or author." })
+        return res.status(400).send({ error: 'Missing name, comment or author.' })
     }
 
     try {
@@ -89,6 +89,6 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
         return res.send({ message: `Added to ${list}list successfully.` })
     } catch (error) {
         console.error(`Database error: ${JSON.stringify(error)}`)
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

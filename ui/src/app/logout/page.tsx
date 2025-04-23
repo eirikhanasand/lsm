@@ -1,8 +1,8 @@
 'use client'
 
-import { removeCookies } from "@/utils/cookies"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { removeCookies } from '@/utils/cookies'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function Login() {
     const router = useRouter()

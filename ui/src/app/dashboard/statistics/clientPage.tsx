@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 import {
     ActiveElement,
     CategoryScale,
@@ -13,9 +13,9 @@ import {
     PointElement,
     Title,
     Tooltip,
-} from "chart.js"
-import { getStatistics } from "@utils/filtering/getStatistics"
-import { Line } from "react-chartjs-2"
+} from 'chart.js'
+import { getStatistics } from '@utils/filtering/getStatistics'
+import { Line } from 'react-chartjs-2'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
@@ -123,21 +123,21 @@ export default function Page({
 
                     setLoadedData(filteredValues)
                     setData({
-                        labels: filteredValues.map((entry) => entry.date.toLocaleString("no-NO", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
+                        labels: filteredValues.map((entry) => entry.date.toLocaleString('no-NO', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
                             hour12: false,
                         }).replace(/\//g, '.')),
                         datasets: [
                             {
-                                label: "Vulnerability Severity Over Time",
+                                label: 'Vulnerability Severity Over Time',
                                 data: filteredValues.map((entry) => entry.severity),
                                 fill: true,
-                                borderColor: "#3b82f6",
-                                backgroundColor: "rgba(59, 130, 246, 0.5)"
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.5)'
                             }
                         ]
                     })
@@ -152,19 +152,19 @@ export default function Page({
     useEffect(() => {
         if (summary.lastScan !== serverStats.lastScan) {
             setLastScan(summary.lastScan
-                ? new Date(summary.lastScan).toLocaleString("no-NO", { timeZone: 'Europe/Oslo' })
+                ? new Date(summary.lastScan).toLocaleString('no-NO', { timeZone: 'Europe/Oslo' })
                 : 'Never'
             )
         }
     }, [summary])
 
-    const chartOptions: ChartOptions<"line"> = {
+    const chartOptions: ChartOptions<'line'> = {
         responsive: true,
         plugins: {
-            legend: { position: "top" },
+            legend: { position: 'top' },
             title: {
                 display: true,
-                text: "Vulnerability Severity Over Time"
+                text: 'Vulnerability Severity Over Time'
             }
         },
         onClick: (_: ChartEvent, elements: ActiveElement[]) => {
@@ -176,83 +176,83 @@ export default function Page({
     }
 
     return (
-        <main className="flex min-h-full flex-col p-6">
-            <div className="flex justify-between">
+        <main className='flex min-h-full flex-col p-6'>
+            <div className='flex justify-between'>
                 <div>
-                    <h1 className="text-3xl font-bold text-blue-600">Statistics</h1>
-                    <p className="mt-2 text-foreground">
+                    <h1 className='text-3xl font-bold text-blue-600'>Statistics</h1>
+                    <p className='mt-2 text-foreground'>
                         Statistics surrounding package security. Check how many vulnerabilities were found and blocked.
                     </p>
                 </div>
-                <div className="mt-6 flex space-x-4">
+                <div className='mt-6 flex space-x-4'>
                     <input
-                        type="date"
+                        type='date'
                         value={startTime}
                         onChange={(e) => setStartTime(e.target.value)}
-                        className="border p-2 rounded border-blue-500"
+                        className='border p-2 rounded border-blue-500'
                     />
-                    <span className="self-center">to</span>
+                    <span className='self-center'>to</span>
                     <input
-                        type="date"
+                        type='date'
                         value={endTime}
                         onChange={(e) => setEndTime(e.target.value)}
-                        className="border p-2 rounded border-blue-500"
+                        className='border p-2 rounded border-blue-500'
                     />
                 </div>
             </div>
 
-            <div className="flex justify-between mt-6 min-h-[41vh]">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
+            <div className='flex justify-between mt-6 min-h-[41vh]'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl'>
                     <StatCard
-                        title="Total Dependencies Scanned"
+                        title='Total Dependencies Scanned'
                         value={summary.totalScanned}
                     />
                     <StatCard
-                        title="Vulnerabilities Found"
+                        title='Vulnerabilities Found'
                         value={summary.vulnerabilitiesFound}
                     />
                     <StatCard
-                        title="Critical Vulnerabilities Blocked"
+                        title='Critical Vulnerabilities Blocked'
                         value={summary.criticalBlocked}
                     />
                     <StatCard
-                        title="Safe Packages Approved"
+                        title='Safe Packages Approved'
                         value={summary.safeApproved}
                     />
                     <StatCard
-                        title="Last Scan Date"
+                        title='Last Scan Date'
                         value={lastScan}
                     />
                 </div>
 
-                <div className="mt-8 w-full max-w-3xl">
+                <div className='mt-8 w-full max-w-3xl'>
                     <Line data={data} options={chartOptions} />
                 </div>
             </div>
 
             {selectedData && (
-                <div className="fixed inset-0 flex items-center justify-center z-20">
-                    <div className="absolute inset-0 bg-transparent" />
+                <div className='fixed inset-0 flex items-center justify-center z-20'>
+                    <div className='absolute inset-0 bg-transparent' />
                     <div
-                        className="bg-black shadow-lg rounded-lg p-4 text-center border border-blue-500 text-foreground z-30">
-                        <h3 className="text-lg font-bold mb-4 text-white">
-                            {selectedData.date.toLocaleDateString().replaceAll(/\//g, ".")}
+                        className='bg-black shadow-lg rounded-lg p-4 text-center border border-blue-500 text-foreground z-30'>
+                        <h3 className='text-lg font-bold mb-4 text-white'>
+                            {selectedData.date.toLocaleDateString().replaceAll(/\//g, '.')}
                         </h3>
-                        <p className="mb-2 text-white">
+                        <p className='mb-2 text-white'>
                             <strong>Severity Level:</strong> {selectedData.severity}
                         </p>
-                        <p className="mb-4 text-white">
+                        <p className='mb-4 text-white'>
                             <strong>Package name: </strong> {selectedData.package_name}
                         </p>
-                        <p className="mb-4 text-white">
+                        <p className='mb-4 text-white'>
                             <strong>Ecosystem: </strong> {selectedData.ecosystem}
                         </p>
-                        <p className="mb-4 text-white">
+                        <p className='mb-4 text-white'>
                             <strong>Status: </strong> {selectedData.status}
                         </p>
                         <button
                             onClick={() => setSelectedData(null)}
-                            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            className='w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
                         >
                             Close
                         </button>
@@ -265,9 +265,9 @@ export default function Page({
 
 function StatCard({ title, value }: StatCardProps) {
     return (
-        <div className="rounded-lg p-4 text-center border border-blue-500 text-foreground">
-            <h2 className="text-lg font-semibold text-bright">{title}</h2>
-            <p className="text-2xl font-bold text-bright mt-2">{value}</p>
+        <div className='rounded-lg p-4 text-center border border-blue-500 text-foreground'>
+            <h2 className='text-lg font-semibold text-bright'>{title}</h2>
+            <p className='text-2xl font-bold text-bright mt-2'>{value}</p>
         </div>
     )
 }
@@ -275,6 +275,6 @@ function StatCard({ title, value }: StatCardProps) {
 function convertToISOFormat(timestamp: string): string {
     return timestamp.replace(
         /(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})/,
-        "$1T$2:$3:$4.$5$6Z"
+        '$1T$2:$3:$4.$5$6Z'
     )
 }

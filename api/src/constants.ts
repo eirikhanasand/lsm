@@ -58,14 +58,14 @@ if (!API
     || !LOCAL_OSV
     || !DB_PASSWORD
 ) {
-    throw new Error("Missing one or more environment variables.")
+    throw new Error('Missing one or more environment variables.')
 }
 
 if (
     (!CLIENT_ID || !CLIENT_SECRET || !OAUTH_BASE_URL || !OAUTH_TOKEN_URL)
     && DISABLE_AUTH !== 'true'
 ) {
-    throw new Error("Either OAuth URLs or DISABLE_AUTH=true must be set.")
+    throw new Error('Either OAuth URLs or DISABLE_AUTH=true must be set.')
 }
 
 const config = {

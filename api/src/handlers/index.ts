@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify"
+import { FastifyReply, FastifyRequest } from 'fastify'
 
 export default async function IndexHandler(request: FastifyRequest, _: FastifyReply) {
     const routes = request.server.printRoutes({ commonPrefix: false })

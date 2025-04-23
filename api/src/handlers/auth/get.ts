@@ -1,5 +1,5 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import config from "../../constants.js"
+import { FastifyReply, FastifyRequest } from 'fastify'
+import config from '../../constants.js'
 const {
     API,
     CLIENT_ID,
@@ -10,11 +10,11 @@ const {
     OAUTH_BASE_URL,
     OAUTH_AUTH_URL
 } = config
-import run from "../../db.js"
+import run from '../../db.js'
 
 export function loginHandler(_: FastifyRequest, res: FastifyReply) {
     const redirectUri = encodeURIComponent(`${API}/oauth2/callback`)
-    const scope = encodeURIComponent("identify email guilds openid")
+    const scope = encodeURIComponent('identify email guilds openid')
     const authUrl = `${OAUTH_AUTH_URL || `${OAUTH_BASE_URL}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`}`
         .replace('{CLIENT_ID}', CLIENT_ID)
         .replace('{redirectUri}', redirectUri)
@@ -23,25 +23,25 @@ export function loginHandler(_: FastifyRequest, res: FastifyReply) {
 }
 
 export function logoutHandler(_: FastifyRequest, res: FastifyReply) {
-    res.send({ "result": "user tried to logout" })
+    res.send({ 'result': 'user tried to logout' })
 }
 
 export async function loginCallbackHandler(req: FastifyRequest, res: FastifyReply) {
     const { code } = req.query as { code?: string }
     if (!code) {
-        return res.status(400).send({ error: "Authorization code missing" })
+        return res.status(400).send({ error: 'Authorization code missing' })
     }
 
     try {
         const response = await fetch(OAUTH_TOKEN_URL, {
             method: 'POST',
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: new URLSearchParams({
                 client_id: CLIENT_ID,
                 client_secret: CLIENT_SECRET,
-                grant_type: "authorization_code",
+                grant_type: 'authorization_code',
                 code,
                 redirect_uri: `${API}/oauth2/callback`,
             })
@@ -69,6 +69,6 @@ export async function loginCallbackHandler(req: FastifyRequest, res: FastifyRepl
         res.redirect(`${FRONTEND_URL}/login?token=${token}`)
     } catch (error) {
         console.error(`Error during OAuth2 process: ${error}`)
-        res.status(500).send({ error: "OAuth2 login failed" })
+        res.status(500).send({ error: 'OAuth2 login failed' })
     }
 }

@@ -2,7 +2,7 @@ import { PlatformContext, BeforeDownloadRequest, DownloadStatus, DownloadMetadat
 import { BeforeDownload } from './interfaces.js';
 // LAST IMPORT MUST HAVE SEMICOLON, OTHERWISE JFROG ARTIFACTORY PARSING FAILS
 
-const OSV_URL = "http://129.241.150.86:8080/api/worker"
+const OSV_URL = 'http://129.241.150.86:8080/api/worker'
 
 export default async function runWorker(context: PlatformContext, data: BeforeDownloadRequest): Promise<BeforeDownload> {
     const metadata = data.metadata

@@ -1,11 +1,11 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import { runInTransaction } from "../../db.js"
-import tokenWrapper from "../../utils/tokenWrapper.js"
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { runInTransaction } from '../../db.js'
+import tokenWrapper from '../../utils/tokenWrapper.js'
 
 export default async function listPutHandler(req: FastifyRequest, res: FastifyReply) {
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
-        return res.status(400).send({ error: "Unauthorized" })
+        return res.status(400).send({ error: 'Unauthorized' })
     }
 
     const { list } = req.params as { list: string }
@@ -13,7 +13,7 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
     if (!name || !comment || !author) {
         return res
             .status(400)
-            .send({ error: "Missing name, comment or author." })
+            .send({ error: 'Missing name, comment or author.' })
     }
 
     try {
@@ -97,9 +97,9 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
         return res.send({ message: `${list}list entry updated successfully.` })
     } catch (error: any) {
         console.error(`Database error: ${JSON.stringify(error)}`)
-        if (error.message.includes("not found")) {
+        if (error.message.includes('not found')) {
             return res.status(404).send({ error: error.message })
         }
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

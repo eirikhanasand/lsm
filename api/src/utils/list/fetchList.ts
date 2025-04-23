@@ -1,7 +1,7 @@
-import { FastifyReply } from "fastify"
-import run from "../../db.js"
-import { loadSQL } from "../loadSQL.js"
-import config from "../../constants.js"
+import { FastifyReply } from 'fastify'
+import run from '../../db.js'
+import { loadSQL } from '../loadSQL.js'
+import config from '../../constants.js'
 
 const { DEFAULT_RESULTS_PER_PAGE } = config
 
@@ -38,7 +38,7 @@ export default async function fetchList({
         ${DEFAULT_RESULTS_PER_PAGE})`}`
     )
 
-    const query = (await loadSQL("getList.sql")).replaceAll('{list}', list)
+    const query = (await loadSQL('getList.sql')).replaceAll('{list}', list)
     const result = await run(query, [
         name || null,
         ecosystem || null,

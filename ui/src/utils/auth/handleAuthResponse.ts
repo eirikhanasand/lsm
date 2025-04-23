@@ -1,9 +1,9 @@
-import { setCookie } from "../cookies"
+import { setCookie } from '../cookies'
 
 export default async function handleAuthResponse() {
     const url = window.location.href
     const query = new URLSearchParams(new URL(url).search)
-    const encodedUserinfo = query.get("token")
+    const encodedUserinfo = query.get('token')
     if (!encodedUserinfo) {
         return
     }

@@ -4,11 +4,11 @@ import { repositories, dependantRepositories, } from '../data/repositories.js'
 dotenv.config({ path: '../.env' })
 
 if (!('JFROG_TOKEN' in process.env) || !process.env.JFROG_TOKEN?.length) {
-    throw new Error("Missing JFROG_TOKEN in env.")
+    throw new Error('Missing JFROG_TOKEN in env.')
 }
 
 if (!('JFROG_ID' in process.env) || !process.env.JFROG_ID?.length) {
-    throw new Error("Missing JFROG_ID in env.")
+    throw new Error('Missing JFROG_ID in env.')
 }
 
 const token = process.env.JFROG_TOKEN
@@ -24,7 +24,7 @@ if (createRepositoriesResponse.status === 200) {
 
 async function createRepositories() {
     try {
-        console.log("Creating repositories...")
+        console.log('Creating repositories...')
 
         const response = await fetch(`https://${id}.jfrog.io/artifactory/api/v2/repositories/batch`, {
             method: 'PUT',
@@ -46,9 +46,9 @@ async function createRepositories() {
         const parsedError = JSON.parse((error as any).message)
         const errorMessage = parsedError?.errors?.[0]?.message
 
-        if (errorMessage.includes("repository key already exists")) {
-            console.error("Repositories already exist.")
-            return { status: 409, error: "Repositories already exist." }
+        if (errorMessage.includes('repository key already exists')) {
+            console.error('Repositories already exist.')
+            return { status: 409, error: 'Repositories already exist.' }
         } else {
             console.error(error)
             return { status: 500, error }
@@ -58,7 +58,7 @@ async function createRepositories() {
 
 async function createDependantRepositories() {
     try {
-        console.log("Creating dependant repositories...")
+        console.log('Creating dependant repositories...')
 
         const response = await fetch(`https://${id}.jfrog.io/artifactory/api/v2/repositories/batch`, {
             method: 'PUT',
@@ -80,8 +80,8 @@ async function createDependantRepositories() {
         const parsedError = JSON.parse((error as any).message)
         const errorMessage = parsedError?.errors?.[0]?.message
 
-        if (errorMessage.includes("dependant repository key already exists")) {
-            console.error("Dependant repositories already exist.")
+        if (errorMessage.includes('dependant repository key already exists')) {
+            console.error('Dependant repositories already exist.')
         } else {
             console.error(error)
         }

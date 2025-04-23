@@ -1,5 +1,5 @@
-import { ReadonlyURLSearchParams, useRouter } from "next/navigation"
-import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react"
+import { ReadonlyURLSearchParams, useRouter } from 'next/navigation'
+import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
 
 type PagingProps = {
     page: number
@@ -31,9 +31,9 @@ export default function Paging({
     searchParams,
     customStyle
 }: PagingProps) {
-    const unClickableButtonStyle = "bg-light rounded-md p-1 px-3 hover:bg-extralight h-[2rem] min-w-[2rem]"
-    const buttonStyle = "bg-light rounded-md p-1 px-3 hover:bg-extralight grid place-items-center cursor-pointer"
-    const activeButtonStyle = "bg-blue-600 hover:bg-blue-500 rounded-md p-1 px-3 grid place-items-center h-[2rem] text-white"
+    const unClickableButtonStyle = 'bg-light rounded-md p-1 px-3 hover:bg-extralight h-[2rem] min-w-[2rem]'
+    const buttonStyle = 'bg-light rounded-md p-1 px-3 hover:bg-extralight grid place-items-center cursor-pointer'
+    const activeButtonStyle = 'bg-blue-600 hover:bg-blue-500 rounded-md p-1 px-3 grid place-items-center h-[2rem] text-white'
     const containerRef = useRef(null)
     const [width, setWidth] = useState(0)
     const start = (page - 1) * resultsPerPage + 1
@@ -54,7 +54,7 @@ export default function Paging({
     }, [page])
 
     return (
-        <div className="h-full">
+        <div className='h-full'>
             <InputButtons
                 setPage={setPage}
                 page={page}
@@ -66,11 +66,11 @@ export default function Paging({
                 setWidth={setWidth}
             />
             <div className={`flex w-full justify-between items-center max-h-[50px] overflow-hidden py-[0.55rem] ${customStyle}`}>
-                <div style={{ width }} className="flex justify-between w-[18vw] min-w-[15.35vw]">
-                    <h1 className={`${unClickableButtonStyle} min-w-[8rem] ${items.length >= 100 ? "text-sm" : ""} flex items-center`}>
+                <div style={{ width }} className='flex justify-between w-[18vw] min-w-[15.35vw]'>
+                    <h1 className={`${unClickableButtonStyle} min-w-[8rem] ${items.length >= 100 ? 'text-sm' : ''} flex items-center`}>
                         Showing {start} - {end} / {items.length}
                     </h1>
-                    <div className="flex gap-2">
+                    <div className='flex gap-2'>
                         <h1 onClick={() => setResultsPerPage(25)} className={resultsPerPage === 25 ? activeButtonStyle : buttonStyle}>25</h1>
                         <h1 onClick={() => setResultsPerPage(50)} className={resultsPerPage === 50 ? activeButtonStyle : buttonStyle}>50</h1>
                         {items.length >= 100 ? <h1 onClick={() => setResultsPerPage(50)} className={resultsPerPage === 100 ? activeButtonStyle : buttonStyle}>100</h1> : <></>}
@@ -107,25 +107,25 @@ function InputButtons({ page, setPage, lastPage, buttonStyle, activeButtonStyle,
     }, []);
 
     return (
-        <div ref={containerRef} className="flex gap-2">
-            {previous >= 1 ? <h1 onClick={() => setPage(previous)} className={buttonStyle}>{"<"}</h1> : <h1 className={unClickableButtonStyle} />}
+        <div ref={containerRef} className='flex gap-2'>
+            {previous >= 1 ? <h1 onClick={() => setPage(previous)} className={buttonStyle}>{'<'}</h1> : <h1 className={unClickableButtonStyle} />}
             {twoBack > 1 ? <h1 onClick={() => setPage(twoBack)} className={buttonStyle}>{twoBack}</h1> : <h1 className={unClickableButtonStyle} />}
             {previous >= 1 ? <h1 onClick={() => setPage(previous)} className={buttonStyle}>{previous}</h1> : <h1 className={unClickableButtonStyle} />}
             <h1 className={activeButtonStyle}>{page}</h1>
             {lastPage > 1 ? <div onMouseEnter={() => { setDisplayCustom(true) }} onMouseLeave={() => setDisplayCustom(false)}>
                 {displayCustom ? <input
-                    type="number"
+                    type='number'
                     min={1}
                     max={lastPage}
                     className={buttonStyle}
-                    placeholder="..."
+                    placeholder='...'
                     value={customPage}
                     onChange={(event) => { setCustomPage(Number(event.target.value)); setPage(Number(event.target.value)) }}
                 /> : <h1 className={buttonStyle}>...</h1>}
             </div> : <></>}
             {next < lastPage ? <h1 onClick={() => setPage(next)} className={buttonStyle}>{next}</h1> : <h1 className={unClickableButtonStyle} />}
             {lastPage > twoForward ? <h1 className={buttonStyle}>{lastPage}</h1> : <h1 className={unClickableButtonStyle} />}
-            {next <= lastPage ? <h1 onClick={() => setPage(next)} className={buttonStyle}>{">"}</h1> : <h1 className={unClickableButtonStyle} />}
+            {next <= lastPage ? <h1 onClick={() => setPage(next)} className={buttonStyle}>{'>'}</h1> : <h1 className={unClickableButtonStyle} />}
         </div>
     )
 }

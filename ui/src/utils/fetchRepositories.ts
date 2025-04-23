@@ -1,4 +1,4 @@
-import { JFROG_ID, JFROG_TOKEN } from "@constants"
+import { JFROG_ID, JFROG_TOKEN } from '@constants'
 
 export default async function fetchRepositories(): Promise<Repository[]> {
     try {

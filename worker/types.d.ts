@@ -21,7 +21,7 @@ type Vulnerability = {
 }
 
 type VulnerabilityDatabaseSpecific = { 
-    "malicious-packages-origins": Package[] 
+    'malicious-packages-origins': Package[] 
     severity: Severity
     cwe_ids: string[]
 }

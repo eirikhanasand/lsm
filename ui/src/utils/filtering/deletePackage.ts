@@ -1,4 +1,4 @@
-import { API, DISABLE_AUTH } from "@constants"
+import { API, DISABLE_AUTH } from '@constants'
 
 type DeleteListProps = {
     list: 'white' | 'black'

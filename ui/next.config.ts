@@ -1,5 +1,5 @@
-import type { NextConfig } from "next"
-import { IMAGE_URL_SHORT } from "./constants"
+import type { NextConfig } from 'next'
+import { IMAGE_URL_SHORT } from './constants'
 
 const nextConfig: NextConfig = {
     images: {

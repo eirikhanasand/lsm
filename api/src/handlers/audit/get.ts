@@ -1,7 +1,7 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import run from "../../db.js"
-import { loadSQL } from "../../utils/loadSQL.js"
-import config from "../../constants.js"
+import { FastifyReply, FastifyRequest } from 'fastify'
+import run from '../../db.js'
+import { loadSQL } from '../../utils/loadSQL.js'
+import config from '../../constants.js'
 
 const { DEFAULT_RESULTS_PER_PAGE } = config
 
@@ -30,7 +30,7 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
             endDate=${endDate}, name=${name}, ecosystem=${ecosystem}, 
             version=${version}, list=${list}`
         )
-        const query = await loadSQL("fetchAuditLog.sql")
+        const query = await loadSQL('fetchAuditLog.sql')
         const result = await run(query, [
             author || null,
             startDate || null,
@@ -76,7 +76,7 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
         })
     } catch (error) {
         console.error(`Database error: ${JSON.stringify(error)}`)
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }
 

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import config from '../constants'
+import config from '../constants.js'
 
 const { DISABLE_AUTH, SELF_URL } = config
 

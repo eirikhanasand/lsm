@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction } from "react"
-import Package from "./package"
+import { Dispatch, SetStateAction } from 'react'
+import Package from './package'
 
 type PackagesProps = {
     groupedPackages: Record<string, Package[]>
-    list: "white" | "black"
+    list: 'white' | 'black'
     setPackages: Dispatch<SetStateAction<Package[]>>
     packages: Package[]
     author: Author
@@ -14,10 +14,10 @@ export default function Packages({ groupedPackages, list, setPackages, packages,
     return Object.keys(groupedPackages)
         .sort()
         .map((ecosystem) => (
-            <div key={ecosystem} className="w-full">
-                <h2 className="text-xl font-bold text-blue-500">{ecosystem}</h2>
+            <div key={ecosystem} className='w-full'>
+                <h2 className='text-xl font-bold text-blue-500'>{ecosystem}</h2>
                 <ul
-                    className="grid gap-4 w-full"
+                    className='grid gap-4 w-full'
                 >
                     {groupedPackages[ecosystem].map((pkg) => (
                         <Package

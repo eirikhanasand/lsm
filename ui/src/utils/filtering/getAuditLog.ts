@@ -1,4 +1,4 @@
-import { SERVER_API } from "@constants"
+import { SERVER_API } from '@constants'
 
 // Fetches the audit log from lsm API
 export default async function getAuditLog() {

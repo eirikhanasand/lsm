@@ -34,7 +34,7 @@ type Package = {
 type Repository = {
     key: string
     description: string
-    type: "LOCAL" | "REMOTE" | "VIRTUAL"
+    type: 'LOCAL' | 'REMOTE' | 'VIRTUAL'
     url: string
     packageType: string
 }
@@ -144,44 +144,44 @@ type Author = {
 }
 
 type Ecosystem = 
-    "ansible" |
-    "alpine" |
-    "bower" | 
-    "cargo" |
-    "chef" |
-    "cocoapods" |
-    "composer" |
-    "conan" |
-    "cran" |
-    "debian" |
-    "docker" |
-    "gems" |
-    "gitlfs" |
-    "go" |
-    "gradle" |
-    "helm" |
-    "ivy" |
-    "maven" |
-    "npm" |
-    "nuget" |
-    "oci" |
-    "opkg" |
-    "p2" |
-    "pub" |
-    "puppet" |
-    "pypi" |
-    "rpm" |
-    "sbt" |
-    "swift" |
-    "terraform" |
-    "vagrant" |
-    "yum" |
-    "generic"
+    'ansible' |
+    'alpine' |
+    'bower' | 
+    'cargo' |
+    'chef' |
+    'cocoapods' |
+    'composer' |
+    'conan' |
+    'cran' |
+    'debian' |
+    'docker' |
+    'gems' |
+    'gitlfs' |
+    'go' |
+    'gradle' |
+    'helm' |
+    'ivy' |
+    'maven' |
+    'npm' |
+    'nuget' |
+    'oci' |
+    'opkg' |
+    'p2' |
+    'pub' |
+    'puppet' |
+    'pypi' |
+    'rpm' |
+    'sbt' |
+    'swift' |
+    'terraform' |
+    'vagrant' |
+    'yum' |
+    'generic'
 
 type Repository = {
     key: string
     description: string
-    type: "LOCAL" | "REMOTE" | "VIRTUAL"
+    type: 'LOCAL' | 'REMOTE' | 'VIRTUAL'
     url: string
     packageType: string
 }

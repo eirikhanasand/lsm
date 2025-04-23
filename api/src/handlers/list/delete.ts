@@ -1,16 +1,16 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import { runInTransaction } from "../../db.js"
-import tokenWrapper from "../../utils/tokenWrapper.js"
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { runInTransaction } from '../../db.js'
+import tokenWrapper from '../../utils/tokenWrapper.js'
 
 export default async function listDeleteHandler(req: FastifyRequest, res: FastifyReply) {
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
-        return res.status(400).send({ error: "Unauthorized" })
+        return res.status(400).send({ error: 'Unauthorized' })
     }
 
     const { name, list } = req.params as { name: string, list: string }
     if (!name) {
-        return res.status(400).send({ error: "Missing name parameter." })
+        return res.status(400).send({ error: 'Missing name parameter.' })
     }
 
     try {
@@ -34,11 +34,11 @@ export default async function listDeleteHandler(req: FastifyRequest, res: Fastif
             message: `All ${list}list entries for '${name}' deleted successfully.`,
         })
     } catch (error: any) {
-        if (error.message.includes("No entry found for name")) {
+        if (error.message.includes('No entry found for name')) {
             return res.status(404).send({ error: error.message })
         }
 
         console.error(`Database error: ${JSON.stringify(error)}`)
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

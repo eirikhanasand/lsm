@@ -1,4 +1,4 @@
-import { API } from "@constants"
+import { API } from '@constants'
 
 export async function getStatistics({
     startTime, endTime

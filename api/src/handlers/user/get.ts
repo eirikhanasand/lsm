@@ -1,10 +1,10 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import run from "../../db.js"
+import { FastifyReply, FastifyRequest } from 'fastify'
+import run from '../../db.js'
 
 export default async function userHandler(req: FastifyRequest, res: FastifyReply) {
     const { id } = req.params as { id: string }
     if (!id) {
-        return res.status(400).send({ error: "Missing id." })
+        return res.status(400).send({ error: 'Missing id.' })
     }
 
     try {
@@ -19,6 +19,6 @@ export default async function userHandler(req: FastifyRequest, res: FastifyReply
         return res.send(user)
     } catch (error) {
         console.error(`Database error: ${JSON.stringify(error)}`)
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

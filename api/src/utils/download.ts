@@ -1,6 +1,6 @@
 import pkg from 'ae-cvss-calculator'
-import run from "../db.js"
-import config from "../constants.js"
+import run from '../db.js'
+import config from '../constants.js'
 import { DownloadStatus } from '../interfaces.js'
 const { DEFAULT_MAL_SEVERITY, DEFAULT_CVE_SEVERITY, DEFAULT_SEVERITY } = config
 const { Cvss4P0, Cvss3P1 } = pkg
@@ -46,10 +46,10 @@ export async function processVulnerabilities({
             let severity = -1
             if ('severity' in vuln && vuln.severity != null) {
                 const cvss_v4 = vuln.severity.find(
-                    (elem: { type: string }) => elem.type === "CVSS_V4"
+                    (elem: { type: string }) => elem.type === 'CVSS_V4'
                 )
                 const cvss_v3 = vuln.severity.find(
-                    (elem: { type: string }) => elem.type === "CVSS_V3"
+                    (elem: { type: string }) => elem.type === 'CVSS_V3'
                 )
                 if (cvss_v4 != null) {
                     const cvss4 = new Cvss4P0(cvss_v4.score)
@@ -61,7 +61,7 @@ export async function processVulnerabilities({
                     severity = Number(DEFAULT_CVE_SEVERITY) || 6.0
                 }
             } else {
-                if (vulnName.startsWith("MAL")) {
+                if (vulnName.startsWith('MAL')) {
                     severity = Number(DEFAULT_MAL_SEVERITY) || 8.0
                 } else {
                     severity = Number(DEFAULT_SEVERITY) || 5.0

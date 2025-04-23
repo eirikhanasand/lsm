@@ -19,14 +19,14 @@ export default function Dropdown({
                 {items.length ? items.join(', ') : `Select ${item}`}
             </div>
 
-            <div className="absolute left-0 top-full hidden group-hover:block bg-light border border-dark rounded-lg z-10">
+            <div className='absolute left-0 top-full hidden group-hover:block bg-light border border-dark rounded-lg z-10'>
                 <select
                     multiple={true}
                     value={items}
                     onChange={(e) => setItems(Array.from(e.target.selectedOptions, (option) => option.value))}
-                    className="p-1 text-sm text-foreground rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 h-40"
+                    className='p-1 text-sm text-foreground rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 h-40'
                 >
-                    <option value="">All {item}</option>
+                    <option value=''>All {item}</option>
                     {allItems.map((item) => (
                         <option key={item} value={item}>
                             {item}

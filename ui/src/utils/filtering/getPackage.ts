@@ -1,4 +1,4 @@
-import { API, SERVER_API } from "@constants"
+import { API, SERVER_API } from '@constants'
 
 type GetListProps = {
     list: 'white' | 'black'

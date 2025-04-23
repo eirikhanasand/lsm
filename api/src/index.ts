@@ -12,7 +12,7 @@ fastify.register(cors, {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']
 })
 
-fastify.register(apiRoutes, { prefix: "/api" })
+fastify.register(apiRoutes, { prefix: '/api' })
 fastify.get('/', IndexHandler)
 
 async function start() {

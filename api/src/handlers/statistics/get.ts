@@ -1,5 +1,5 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import run from "../../db.js"
+import { FastifyReply, FastifyRequest } from 'fastify'
+import run from '../../db.js'
 
 type StatisticHandlerParams = {
     startTime: string
@@ -18,7 +18,7 @@ type StatisticResponse = {
 export default async function packageStatisticsHandler(req: FastifyRequest, res: FastifyReply) {
     const { startTime, endTime } = req.query as StatisticHandlerParams
     if (!startTime || !endTime) {
-        return res.status(400).send({ error: "Missing start or end time." })
+        return res.status(400).send({ error: 'Missing start or end time.' })
     }
 
     const queryParams = [startTime, endTime]
@@ -68,6 +68,6 @@ export default async function packageStatisticsHandler(req: FastifyRequest, res:
         return res.send(response)
     } catch (error) {
         console.error(`Database error: ${JSON.stringify(error)}`)
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

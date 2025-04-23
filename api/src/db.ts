@@ -13,9 +13,9 @@ const {
 } = config
 const { Pool } = pg
 const pool = new Pool({
-    user: DB_USER || "osvuser",
-    host: DB_HOST || "lsm_database",
-    database: DB || "osvdb",
+    user: DB_USER || 'osvuser',
+    host: DB_HOST || 'lsm_database',
+    database: DB || 'osvdb',
     password: DB_PASSWORD,
     port: Number(DB_PORT) || 5432,
     max: Number(DB_MAX_CONN) || 20,
@@ -39,12 +39,12 @@ export async function runInTransaction<T>(
 ): Promise<T> {
     const client = await pool.connect()
     try {
-        await client.query("BEGIN")
+        await client.query('BEGIN')
         const result = await callback(client)
-        await client.query("COMMIT")
+        await client.query('COMMIT')
         return result
     } catch (error) {
-        await client.query("ROLLBACK")
+        await client.query('ROLLBACK')
         throw error
     } finally {
         client.release()
