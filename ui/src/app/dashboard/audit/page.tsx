@@ -1,5 +1,6 @@
 import getAuditLog from "@/utils/filtering/getAuditLog"
 import Image from "next/image"
+import { IMAGE_URL } from "@parent/constants"
 
 type LogProps = {
     log: AuditResult
@@ -24,10 +25,10 @@ function Log({log}: LogProps) {
         <div className="flex w-full bg-dark rounded-lg px-4 min-h-[40px]">
             <div className="flex gap-2 w-[15vw]">
                 <div className='relative w-[3.5vh] h-[3.5vh] self-center cursor-pointer rounded-full overflow-hidden'>
-                    <Image 
-                        src={`https://cdn.discordapp.com/avatars/${log.author.id}/${log.author.avatar}.png?size=64`} 
-                        alt="logo" 
-                        fill={true} 
+                    <Image
+                        src={IMAGE_URL ? `${IMAGE_URL}/${log.author.id}/${log.author.avatar}.png?size=64` : '/profile.svg'}
+                        alt="logo"
+                        fill={true}
                     />
                 </div>
                 <h1 className="grid place-items-center text-white">{log.author.name}</h1>

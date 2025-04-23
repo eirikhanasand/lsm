@@ -1,19 +1,20 @@
 import type { NextConfig } from "next"
+import { IMAGE_URL_SHORT } from "./constants"
 
 const nextConfig: NextConfig = {
     images: {
-        remotePatterns: [
+        remotePatterns: IMAGE_URL_SHORT ? [
             {
                 protocol: 'https',
-                hostname: 'cdn.discordapp.com',
+                hostname: IMAGE_URL_SHORT,
                 pathname: '/avatars/**',
             },
             {
                 protocol: 'https',
-                hostname: 'cdn.discordapp.com',
+                hostname: IMAGE_URL_SHORT,
                 pathname: '/embed/avatars/**',
             }
-        ]
+        ] : []
     }
 }
 

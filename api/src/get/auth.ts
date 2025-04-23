@@ -1,13 +1,25 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import config from "../constants.js"
-const { API, CLIENT_ID, CLIENT_SECRET, FRONTEND_URL, OAUTH_TOKEN_URL, SELF_URL } = config
+const { 
+    API, 
+    CLIENT_ID, 
+    CLIENT_SECRET, 
+    FRONTEND_URL, 
+    OAUTH_TOKEN_URL, 
+    SELF_URL, 
+    OAUTH_BASE_URL, 
+    OAUTH_AUTH_URL
+} = config
 import run from "../db.js"
 
 export function loginHandler(_: FastifyRequest, res: FastifyReply) {
     const redirectUri = encodeURIComponent(`${API}/oauth2/callback`)
     const scope = encodeURIComponent("identify email guilds openid")
-    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`
-    res.redirect(discordAuthUrl)
+    const authUrl = `${OAUTH_AUTH_URL || `${OAUTH_BASE_URL}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`}`
+    .replace('{CLIENT_ID}', CLIENT_ID)
+    .replace('{redirectUri}', redirectUri)
+    .replace('{scope}', scope)
+    res.redirect(authUrl)
 }
 
 export function logoutHandler(_: FastifyRequest, res: FastifyReply) {

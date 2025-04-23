@@ -8,6 +8,11 @@ const {
     API: ENV_API, 
     SERVER_API: ENV_SERVER_API,
     DEFAULT_RESULTS_PER_PAGE: ENV_DEFAULT_RESULTS_PER_PAGE,
+    IMAGE_URL: ENV_IMAGE_URL,
+    IMAGE_URL_SHORT: ENV_IMAGE_URL_SHORT,
+    SELF_URL: ENV_SELF_URL,
+    DISABLE_TOKEN_CHECK: ENV_DISABLE_TOKEN_CHECK,
+    DISABLE_AUTH: ENV_DISABLE_AUTH
 } = process.env
 
 export { JFROG_ID, JFROG_TOKEN }
@@ -16,7 +21,12 @@ export const API = ENV_API || 'http://129.241.150.86:8080/api'
 // export const SERVER_API = ENV_SERVER_API || 'http:/localhost:8081/api'
 export const SERVER_API = ENV_SERVER_API || 'http://172.17.0.1:8080/api'
 export const DEFAULT_RESULTS_PER_PAGE = ENV_DEFAULT_RESULTS_PER_PAGE || 50
-export const ECOSYSTEMS = [  
+export const IMAGE_URL = ENV_IMAGE_URL
+export const IMAGE_URL_SHORT = ENV_IMAGE_URL_SHORT
+export const SELF_URL = ENV_SELF_URL || ""
+export const DISABLE_TOKEN_CHECK = ENV_DISABLE_TOKEN_CHECK || false
+export const DISABLE_AUTH = ENV_DISABLE_AUTH === 'true'
+export const ECOSYSTEMS = [
     'ansible',
     'alpine',
     'bower',

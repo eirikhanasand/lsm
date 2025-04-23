@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-const SELF_URL = 'https://discord.com/api/v10/users/@me'
+import { DISABLE_TOKEN_CHECK, SELF_URL } from '@parent/constants'
+import { DISABLE_AUTH } from '@parent/constants'
 
 export async function middleware(req: NextRequest) {
     const tokenCookie = req.cookies.get('token')
-    if (!pathIsAllowedWhileUnauthenticated(req.nextUrl.pathname)) {
+    if (!pathIsAllowedWhileUnauthenticated(req.nextUrl.pathname) && DISABLE_AUTH) {
         if (!tokenCookie) {
-            return NextResponse.redirect(new URL('/', req.url))   
+            return NextResponse.redirect(new URL('/', req.url))
         }
         const token = tokenCookie.value
         const validToken = await tokenIsValid(req, token as unknown as string)
@@ -37,16 +37,20 @@ function pathIsAllowedWhileUnauthenticated(path: string) {
 }
 
 async function tokenIsValid(req: NextRequest, token: string): Promise<boolean> {
-    const discordResponse = await fetch(SELF_URL, {
+    if (DISABLE_TOKEN_CHECK === 'true') {
+        return true
+    }
+
+    const tokenResponse = await fetch(SELF_URL, {
         headers: { Authorization: `Bearer ${token}` }
     })
 
-    if (!discordResponse.ok) {
+    if (!tokenResponse.ok) {
         NextResponse.redirect(new URL('/logout', req.url))
         return false
     }
 
-    const userData = await discordResponse.json()
+    const userData = await tokenResponse.json()
     const match = valuesMatch(req, {token, ...userData})
     if (!match) {
         return false

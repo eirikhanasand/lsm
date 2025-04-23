@@ -21,6 +21,9 @@ type ENV = {
     DEFAULT_RESULTS_PER_PAGE: string
     OAUTH_TOKEN_URL: string
     SELF_URL: string
+    OAUTH_BASE_URL: string
+    OAUTH_AUTH_URL: string
+    DISABLE_AUTH: string
 }
 
 dotenv.config({path: '../.env'})
@@ -45,7 +48,10 @@ const {
     DB_TIMEOUT_MS,
     DEFAULT_RESULTS_PER_PAGE,
     SELF_URL,
-    OAUTH_TOKEN_URL
+    OAUTH_TOKEN_URL,
+    OAUTH_BASE_URL,
+    DISABLE_AUTH,
+    OAUTH_AUTH_URL
 } = process.env as ENV
 if (!API 
     || !CLIENT_ID 
@@ -57,6 +63,10 @@ if (!API
     || !OAUTH_TOKEN_URL
 ) {
     throw new Error("Missing one or more environment variables.")
+}
+
+if (!OAUTH_BASE_URL && DISABLE_AUTH === 'false') {
+    throw new Error("Either oauth base url or disable auth must be set.")
 }
 
 const config = {
@@ -79,7 +89,10 @@ const config = {
     DB_TIMEOUT_MS,
     DEFAULT_RESULTS_PER_PAGE,
     SELF_URL,
-    OAUTH_TOKEN_URL
+    OAUTH_TOKEN_URL,
+    OAUTH_BASE_URL,
+    OAUTH_AUTH_URL,
+    DISABLE_AUTH
 }
 
 export default config
