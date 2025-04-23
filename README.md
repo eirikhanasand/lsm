@@ -197,7 +197,7 @@ IMAGE_URL=https://cdn.discordapp.com/avatars
 # User avatar url without protocol or suffix
 IMAGE_URL_SHORT=cdn.discordapp.com
 # Whether to disable token check while keeping auth enabled (should never be used in production, but can be useful for debugging the auth implementation)
-DISABLE_TOKEN_CHECK=false
+NEXT_PUBLIC_DISABLE_TOKEN_CHECK=false
 # OAuth provider base url (authorize endpoint)
 OAUTH_BASE_URL=https://discord.com/oauth2/authorize
 # OAuth provider requested details
