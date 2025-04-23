@@ -18,10 +18,14 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
 
     try {
         console.log(
-            `Replacing ${list}list version: name=${name}, 
-            versions=${versions}, ecosystems=${ecosystems}, 
-            repositories=${repositories}, author=${author}, 
-            references=${references}, comment=${comment}`
+            `Replacing ${list}list version:` +
+            ` name=${name},` +
+            ` versions=${versions},` +
+            ` ecosystems=${ecosystems},` +
+            ` repositories=${repositories},` +
+            ` author=${author},` +
+            ` references=${references},` +
+            ` comment=${comment}`
         )
 
         await runInTransaction(async (client) => {

@@ -26,9 +26,14 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
     const resultsPerPage = (clientResultsPerPage || Number(DEFAULT_RESULTS_PER_PAGE) || 50)
     try {
         console.log(
-            `Fetching audit log with author=${author}, startDate=${startDate}, 
-            endDate=${endDate}, name=${name}, ecosystem=${ecosystem}, 
-            version=${version}, list=${list}`
+            `Fetching audit log with` +
+            ` author=${author},` +
+            ` startDate=${startDate},` +
+            ` endDate=${endDate},` +
+            ` name=${name},` +
+            ` ecosystem=${ecosystem},` +
+            ` version=${version},` +
+            ` list=${list}`
         )
         const query = await loadSQL('fetchAuditLog.sql')
         const result = await run(query, [

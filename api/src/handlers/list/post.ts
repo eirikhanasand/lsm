@@ -15,11 +15,22 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
     }
 
     try {
+        const result = await run(`SELECT name from ${list}list where name = $1`, [name])
+        if (result.rows.length) {
+            return res.status(409).send({
+                error: `${name} is already ${list}listed. Update the existing one instead.`
+            })
+        }
+
         console.log(
-            `Adding to ${list}list: name=${name}, versions=${versions}, 
-            ecosystems=${ecosystems}, repositories=${repositories}, 
-            comment=${comment}, references=${references}, 
-            author=${author}`
+            `Adding to ${list}list:` +
+            ` name=${name},` +
+            ` versions=${versions},` +
+            ` ecosystems=${ecosystems},` +
+            ` repositories=${repositories},` +
+            ` comment=${comment},` +
+            ` references=${references},` +
+            ` author=${author}`
         )
 
         await run(

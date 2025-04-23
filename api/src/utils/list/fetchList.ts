@@ -31,11 +31,18 @@ export default async function fetchList({
     res,
 }: FetchListProps) {
     console.log(
-        `Fetching ${list}list entry: ecosystem=${ecosystem}, name=${name}, 
-        version=${version}, repository=${repository}, startDate=${startDate}, 
-        endDate=${endDate}, page=${page ? page : 'undefined (Fallback: 1)'}, 
-        resultsPerPage=${resultsPerPage ? resultsPerPage : `undefined (Fallback: 
-        ${DEFAULT_RESULTS_PER_PAGE})`}`
+        `Fetching ${list}list entry:` +
+        ` ecosystem=${ecosystem},` +
+        ` name=${name},` +
+        ` version=${version},` +
+        ` repository=${repository},` +
+        ` startDate=${startDate},` +
+        ` endDate=${endDate},` +
+        ` page=${page ? page : 'undefined (Fallback: 1)'},` +
+        ` resultsPerPage=${resultsPerPage 
+            ? resultsPerPage 
+            : `undefined (Fallback: ${DEFAULT_RESULTS_PER_PAGE})`}
+        `
     )
 
     const query = (await loadSQL('getList.sql')).replaceAll('{list}', list)

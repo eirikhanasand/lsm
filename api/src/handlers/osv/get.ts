@@ -12,8 +12,10 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
 
     try {
         console.log(
-            `Fetching vulnerabilities: name=${Name}, version=${Version}, 
-            ecosystem=${ecosystem}`
+            `Fetching vulnerabilities:` +
+            ` name=${Name},` +
+            ` version=${Version},` +
+            ` ecosystem=${ecosystem}`
         )
 
         const osv = await fetchOSV({
