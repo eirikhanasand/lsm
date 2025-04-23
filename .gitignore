@@ -3,7 +3,7 @@ node_modules
 workers-sample
 .vscode
 .jfrog
-.env
+.env*
 target
 credentials.toml
 pip.conf
