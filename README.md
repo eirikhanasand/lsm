@@ -1,9 +1,40 @@
 # lsm
 Library Safety Manager Open Source Plugin For Artifactory
+Whitelist and blacklist packages for JFrog Artifactory to prevent download of malicious or vulnerable code.
 
-## How to setup quickly if first time or creating new JFrog instance
+## Quick setup frontend / api
+NB: This is the quick guide for rapid testing without auth. It should only be used for testing purposes. 
+1. Create a `.env` file in the root of the repository with the following properties:
+```yaml
+# JFrog Artifactory token (used for listing available repositories)
+JFROG_TOKEN=<your_jfrog_token>
+# JFrog Artifactory id (used for listing available repositories)
+JFROG_ID=<your_jfrog_id>
+# The publicly reachable IP of the frontend (user interface)
+NEXT_PUBLIC_API=http://localhost:8080/api
+# The internal IP of the API (127.17.0.1 is correct if using the premade docker compose file)
+SERVER_API=http://172.17.0.1:8080/api
+# The publicly reachable IP of the frontend without the '/api' suffix
+FRONTEND_URL=http://localhost:3000
+# Whether to use a local database for OSV (should be false for quicker setup and lower resource consumption)
+LOCAL_OSV=false
+# Open Source Vulnerability database uri
+OSV_URL=https://api.osv.dev/v1/query
+# Database password (database is used for storing whitelisted and blacklisted packages)
+DB_PASSWORD=osvpassword
+# Disables authorization checks
+NEXT_PUBLIC_DISABLE_AUTH=true
+```
+2. Run `docker compose up` to build the application
+3. The UI is now available on port 3000 and the API on port 8080
+4. You can now whitelist and blacklist packages in the UI or via API
+5. Follow the "Quick setup worker / JFrog" to setup the worker
+
+You can now verify in your IDE that packages are being blocked as intended and according to the policies you have defined in the user interface or via API.
+
+## Quick setup worker / JFrog
 1. Deploy the worker, see "How to deploy the worker"
-2. Deploy test repositories by going to the `support` folder and running `npm run repositories`
+2. [OPTIONAL] Deploy test repositories by going to the `support` folder and running `npm run repositories`
 
 ## How to deploy the worker
 1. Go to the `worker` directory
@@ -113,10 +144,8 @@ provider_installation {
 4. To store the credential in `~/.gem/credentials` use `curl -u <email>%40<email_domain>:<token> https://<id>.jfrog.io/artifactory/api/gems/ruby/api/v1/api_key.yaml > ~/.gem/credentials`
 5. `gem install <PACKAGE>` or explicitly `gem install <PACKAGE> --source https://trial9apndc.jfrog.io/artifactory/api/gems/ruby`
 
-#### Install Packages using Artifactory
-
 ### go
-For Go you need to have a virtual repo and a remote repo with these settings:  
+Go requires a virtual and a remote repository with the following settings:  
 Remote repo:  
 - Allow Artifact Content Browsing
 - Store Artifacts Locally
@@ -129,3 +158,50 @@ Virtual repo:
 - Need to add the remote repo to the virtual repo  
 1. Have a working repo with `go.mod` and `main.go`
 2. `"test-go": "dotenv -e test.env -- bash -c \"export GOPROXY=https://$JFROG_USERNAME:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/go/go-test; go get github.com/gin-gonic/gin@v1.10.0\""` Or run `npm run go-test`
+
+### Good to know
+Examples on how to use the worker in practice for other technologies may be found in the `.github/registry.yml` file.
+
+All environment variables available:
+```yaml
+# JFrog Artifactory token (used for listing available repositories)
+JFROG_TOKEN=<your_jfrog_token>
+# JFrog Artifactory id (used for listing available repositories)
+JFROG_ID=<your_jfrog_id>
+# The publicly reachable IP of the frontend (user interface)
+NEXT_PUBLIC_API=http://localhost:8080/api
+# The internal IP of the API (127.17.0.1 is correct if using the premade docker compose file)
+SERVER_API=http://172.17.0.1:8080/api
+# The publicly reachable IP of the frontend without the '/api' suffix
+FRONTEND_URL=http://localhost:3000
+# Whether to use a local database for OSV (should be false for quicker setup and lower resource consumption)
+LOCAL_OSV=false
+# Open Source Vulnerability database uri
+OSV_URL=https://api.osv.dev/v1/query
+# Database password (database is used for storing whitelisted and blacklisted packages)
+DB_PASSWORD=<strong_password>
+# Disables authorization checks
+NEXT_PUBLIC_DISABLE_AUTH=true
+# JFrog service account email (used by the registry pipeline)
+JFROG_EMAIL=<your_jfrog_service_account_email>
+# OAuth provider client ID
+CLIENT_ID=<your_oauth_client_id>
+# OAuth provider client secret
+CLIENT_SECRET=<your_oauth_client_secret>
+# OAuth provider userinfo url
+SELF_URL=https://discord.com/api/users/@me
+# OAuth token url
+OAUTH_TOKEN_URL=https://discord.com/api/oauth2/token
+# User avatar url
+IMAGE_URL=https://cdn.discordapp.com/avatars
+# User avatar url without protocol or suffix
+IMAGE_URL_SHORT=cdn.discordapp.com
+# Whether to disable token check while keeping auth enabled (should never be used in production, but can be useful for debugging the auth implementation)
+DISABLE_TOKEN_CHECK=false
+# OAuth provider base url (authorize endpoint)
+OAUTH_BASE_URL=https://discord.com/oauth2/authorize
+# OAuth provider requested details
+OAUTH_AUTH_URL=?client_id={CLIENT_ID}&response_type=code&redirect_uri={redirectUri}&scope={scope}
+# Whether to disables authorization checks completely (do not use in production)
+NEXT_PUBLIC_DISABLE_AUTH=true
+```
