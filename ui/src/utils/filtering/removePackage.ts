@@ -1,32 +1,25 @@
-import { SetStateAction } from "react"
-import deletePackage from "./deletePackage"
-import { useRouter } from "next/navigation"
-import { getCookie } from "../cookies"
+import { SetStateAction } from 'react'
+import deletePackage from './deletePackage'
 
 type RemovePackageProps = {
     name: string
     setPackages: (value: SetStateAction<Package[]>) => void
     packages: Package[]
     list: 'white' | 'black'
+    token: string
 }
 
 export default async function removePackage({
     name,
     setPackages,
     packages,
-    list
+    list,
+    token
 }: RemovePackageProps) {
-    const router = useRouter()
-    const token = getCookie('token')
-    if (!token) {
-        alert("Missing token, redirecting to login.")
-        return router.push('/logout')
-    }
-
     const response = await deletePackage({ list, name, token })
 
     if (response === 500) {
-        alert("Failed to delete package. API error.")
+        alert('Failed to delete package. API error.')
         return
     }
 

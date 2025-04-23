@@ -1,7 +1,5 @@
-import { SetStateAction } from "react"
-import putPackage from "./putPackage"
-import { getCookie } from "../cookies"
-import { useRouter } from "next/navigation"
+import { SetStateAction } from 'react'
+import putPackage from './putPackage'
 
 type RemovePackageProps = {
     pkg: Package
@@ -9,6 +7,7 @@ type RemovePackageProps = {
     packages: Package[]
     list: 'white' | 'black'
     author: Author
+    token: string
 }
 
 export default async function editPackage({
@@ -17,14 +16,8 @@ export default async function editPackage({
     packages,
     list,
     author,
+    token
 }: RemovePackageProps) {
-    const router = useRouter()
-    const token = getCookie('token')
-    if (!token) {
-        alert("Missing token, redirecting to login.")
-        return router.push('/logout')
-    }
-
     const response = await putPackage({
         list, 
         pkg: {
@@ -40,7 +33,7 @@ export default async function editPackage({
     })
 
     if (response === 500) {
-        alert("Failed to edit package. API error.")
+        alert('Failed to edit package. API error.')
         return
     }
 

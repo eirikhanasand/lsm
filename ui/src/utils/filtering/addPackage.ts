@@ -1,7 +1,6 @@
-import { Dispatch, SetStateAction } from "react"
-import postPackage from "./postPackage"
-import { getCookie } from "../cookies"
-import { useRouter } from "next/navigation"
+import { Dispatch, SetStateAction } from 'react'
+import postPackage from './postPackage'
+import { getCookie } from '../cookies'
 
 type AddPackageProps = {
     newPackage: AddPackage
@@ -11,6 +10,7 @@ type AddPackageProps = {
     packages: Package[]
     list: 'white' | 'black'
     author: Author
+    token: string
 }
 
 export default async function addPackage({
@@ -19,29 +19,24 @@ export default async function addPackage({
     setShowForm,
     setNewPackage,
     packages,
-    list
+    list,
+    token
 }: AddPackageProps) {
     if (!newPackage.name || !newPackage.comment) {
-        alert("Please fill in all fields.")
+        alert('Please fill in all fields.')
         return
     }
 
     if (!newPackage.author) {
-        alert("Please log in.")
+        alert('Please log in.')
         // Potentially redirect back after logging in and save the state
         return window.location.href = '/logout'
     }
 
-    const router = useRouter()
-    const token = getCookie('token')
-    if (!token) {
-        alert("Missing token, redirecting to login.")
-        return router.push('/logout')
-    }
     const response = await postPackage({ list, newPackage, token })
 
     if (response === 500) {
-        alert("Failed to add package. API error.")
+        alert('Failed to add package. API error.')
         return
     }
 
@@ -74,8 +69,8 @@ export default async function addPackage({
     }])
     setShowForm(false)
     setNewPackage({
-        name: "",
-        comment: "",
+        name: '',
+        comment: '',
         versions: [],
         ecosystems: [],
         references: [],
