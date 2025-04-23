@@ -10,7 +10,7 @@ sub vcl_recv {
         set req.http.X-Theme = regsub(req.http.Cookie, ".*theme=([^;]+);?.*", "\1");
     }
 
-    if (req.url ~ "^/dashboard/(whitelist|blacklist|repositories/config.*)") {
+    if (req.url ~ "^/dashboard/(whitelist|blacklist|repositories/config)") {
         return (pass);
     }
 
@@ -23,6 +23,7 @@ sub vcl_hash {
 }
 
 sub vcl_backend_response {
+    set beresp.http.Cache-Control = "lsm-cache, max-age=52w";
     set beresp.ttl = 52w;
     return (deliver);
 }

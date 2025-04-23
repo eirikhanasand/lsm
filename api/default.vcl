@@ -10,7 +10,7 @@ sub vcl_recv {
         return (pass);
     }
 
-    if (req.url ~ "^/api/(whitelist|blacklist|statistics.*)$") {
+    if (req.url ~ "^/api/(list|statistics)(/.*)$") {
         return (pass);
     }
 
@@ -31,7 +31,8 @@ sub vcl_hash {
 
 sub vcl_backend_response {
     # Caches for 1 hour
-    # set beresp.ttl = 1h;
+    set beresp.http.Cache-Control = "lsm-cache, max-age=3600";
+    set beresp.ttl = 1h;
     return (deliver);
 }
 
