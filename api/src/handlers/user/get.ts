@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import run from "../db.js"
+import run from "../../db.js"
 
 export default async function userHandler(req: FastifyRequest, res: FastifyReply) {
     const { id } = req.params as { id: string }

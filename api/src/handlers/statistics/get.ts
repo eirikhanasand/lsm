@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import run from "../db.js"
+import run from "../../db.js"
 
 type StatisticHandlerParams = {
     startTime: string
@@ -15,7 +15,7 @@ type StatisticResponse = {
     vulnerabilitiesOverTime: Vulnerability[]
 }
 
-export default async function packageStatsHandler(req: FastifyRequest, res: FastifyReply) {
+export default async function packageStatisticsHandler(req: FastifyRequest, res: FastifyReply) {
     const { startTime, endTime } = req.query as StatisticHandlerParams
     if (!startTime || !endTime) {
         return res.status(400).send({ error: "Missing start or end time." })

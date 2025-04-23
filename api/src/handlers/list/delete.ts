@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { runInTransaction } from "../db.js"
+import { runInTransaction } from "../../db.js"
 
 export default async function listDeleteHandler(req: FastifyRequest, res: FastifyReply) {
     const { name, list } = req.params as { name: string, list: string }

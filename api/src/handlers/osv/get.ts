@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import fetchOSV from "../utils/fetchOSV.js"
+import fetchOSV from "../../utils/fetchOSV.js"
 
 export default async function osvHandler(req: FastifyRequest, res: FastifyReply) {
     const { name, version, ecosystem } = req.params as OSVHandlerParams

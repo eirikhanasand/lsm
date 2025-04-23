@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import fetchList from "../utils/list/fetchList.js"
+import fetchList from "../../utils/list/fetchList.js"
 
 export default async function listHandler(req: FastifyRequest, res: FastifyReply) {
     const { list } = req.params as {list: 'white' | 'black'}

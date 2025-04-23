@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { runInTransaction } from "../db.js"
+import { runInTransaction } from "../../db.js"
 
 export default async function listPutHandler(req: FastifyRequest, res: FastifyReply) {
     const { list } = req.params as { list: string }

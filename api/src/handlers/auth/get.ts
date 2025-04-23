@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import config from "../constants.js"
+import config from "../../constants.js"
 const { 
     API, 
     CLIENT_ID, 
@@ -10,7 +10,7 @@ const {
     OAUTH_BASE_URL, 
     OAUTH_AUTH_URL
 } = config
-import run from "../db.js"
+import run from "../../db.js"
 
 export function loginHandler(_: FastifyRequest, res: FastifyReply) {
     const redirectUri = encodeURIComponent(`${API}/oauth2/callback`)
