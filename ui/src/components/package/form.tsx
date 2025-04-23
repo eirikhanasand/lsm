@@ -1,9 +1,11 @@
 import { Dispatch, SetStateAction } from 'react'
-import Dropdown from '../dropdown'
-import { ECOSYSTEMS } from '@parent/constants'
+import Dropdown from '../global/dropdown'
 import addPackage from '@/utils/filtering/addPackage'
 import { useRouter } from 'next/navigation'
 import { getCookie } from '@/utils/cookies'
+import config from '@parent/constants'
+
+const { ECOSYSTEMS } = config 
 
 type FormProps = {
     showForm: boolean
@@ -33,7 +35,11 @@ export default function Form({
     const router = useRouter()
     function handleAdd() {
         const token = getCookie('token')
-        if (!token && process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true') {
+        if (
+            !token 
+            && (process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true' 
+            && process.env.NEXT_PUBLIC_DISABLE_AUTH !== 'true')
+        ) {
             alert('Missing token, redirecting to login.')
             return router.push('/logout')
         }

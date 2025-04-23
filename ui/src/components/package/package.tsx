@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import Edit from '../edit'
+import Edit from './edit'
 import Pencil from '../svg/pencil'
 import Link from 'next/link'
 import removePackage from '@/utils/filtering/removePackage'
@@ -24,7 +24,11 @@ export default function Package({ pkg, setPackages, packages, list, author, repo
 
     function handleDelete() {
         const token = getCookie('token')
-        if (!token && process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true') {
+        if (
+            !token 
+            && (process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true' 
+            && process.env.NEXT_PUBLIC_DISABLE_AUTH !== 'true')
+        ) {
             alert('Missing token, redirecting to login.')
             return router.push('/logout')
         }

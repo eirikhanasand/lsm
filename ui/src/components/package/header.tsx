@@ -1,8 +1,10 @@
 import { setCookie } from '@/utils/cookies'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import Paging from '../paging'
+import Paging from '../global/paging'
 import { useSearchParams } from 'next/navigation'
-import { DEFAULT_RESULTS_PER_PAGE } from '@parent/constants'
+import config from '@parent/constants'
+
+const { DEFAULT_RESULTS_PER_PAGE } = config
 
 type HeaderProps = {
     list: 'white' | 'black'

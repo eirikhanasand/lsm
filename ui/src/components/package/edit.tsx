@@ -1,10 +1,16 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import editPackage from '@/utils/filtering/editPackage'
 import Image from 'next/image'
-import Dropdown from './dropdown'
-import { ECOSYSTEMS, IMAGE_URL } from '@parent/constants'
+import Dropdown from '../global/dropdown'
+import config from '@parent/constants'
 import { getCookie } from '@/utils/cookies'
 import { useRouter } from 'next/navigation'
+import ProfileIcon from '../svg/profileIcon'
+
+const {
+    ECOSYSTEMS,
+    IMAGE_URL
+} = config
 
 type EditProps = {
     pkg: Package
@@ -44,7 +50,11 @@ export default function Edit({
     function handleSave() {
         if (isEdited()) {
             const token = getCookie('token')
-            if (!token && process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true') {
+            if (
+                !token 
+                && (process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true' 
+                && process.env.NEXT_PUBLIC_DISABLE_AUTH !== 'true')
+            ) {
                 alert('Missing token, redirecting to login.')
                 return router.push('/logout')
             }
@@ -174,15 +184,16 @@ export default function Edit({
 }
 
 function Change({ change }: { change: ChangeLog }) {
+    const imageExists = IMAGE_URL && IMAGE_URL !== 'null'
     return (
         <div className='flex items-center gap-2 p-1 px-2 bg-light rounded-lg'>
             <h1 className='min-w-[14px] max-w-[14px]'>{change.id}</h1>
             <div className='relative min-w-[35px] max-w-[35px] h-[35px] self-center cursor-pointer rounded-full overflow-hidden'>
-                <Image
-                    src={IMAGE_URL ? `${IMAGE_URL}/${change.author.id}/${change.author.avatar}.png?size=64` : '/profile.svg'}
+                {imageExists ? <Image
+                    src={`${IMAGE_URL}/${change.author.id}/${change.author.avatar}.png?size=64`}
                     alt='logo'
                     fill={true}
-                />
+                /> : <ProfileIcon />}
             </div>
             <h1 className='min-w-[6vw] max-w-[6vw]'>{change.author.name}</h1>
             <h1 className='text-pretty'>{change.event}</h1>
