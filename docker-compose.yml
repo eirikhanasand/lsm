@@ -9,6 +9,18 @@ services:
         condition: service_healthy
     ports:
       - "3000:3000"
+    environment:
+      JFROG_ID: ${JFROG_ID}
+      JFROG_TOKEN: ${JFROG_TOKEN}
+      SERVER_API: ${SERVER_API}
+      DEFAULT_RESULTS_PER_PAGE: ${DEFAULT_RESULTS_PER_PAGE}
+      IMAGE_URL: ${IMAGE_URL}
+      IMAGE_URL_SHORT: ${IMAGE_URL_SHORT}
+      SELF_URL: ${SELF_URL}
+      NEXT_PUBLIC_DISABLE_AUTH: ${NEXT_PUBLIC_DISABLE_AUTH}
+      NEXT_PUBLIC_API: ${NEXT_PUBLIC_API}
+      NEXT_PUBLIC_DISABLE_TOKEN_CHECK: ${NEXT_PUBLIC_DISABLE_TOKEN_CHECK}
+      NEXT_PUBLIC_SELF_URL: ${NEXT_PUBLIC_SELF_URL}
 
   postgres:
     image: postgres:15
@@ -41,6 +53,14 @@ services:
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       LOCAL_OSV: ${LOCAL_OSV}
+      FRONTEND_URL: ${FRONTEND_URL}
+      OSV_URL: ${OSV_URL}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      SELF_URL: ${SELF_URL}
+      OAUTH_TOKEN_URL: ${OAUTH_TOKEN_URL}
+      OAUTH_BASE_URL: ${OAUTH_BASE_URL}
+      OAUTH_AUTH_URL: ${OAUTH_AUTH_URL}
     healthcheck:
       test: ["CMD-SHELL", "[ \"$(cat /tmp/health_status 2>/dev/null)\" = \"healthy\" ] && wget -qO- http://localhost:8080/api || [ \"$(cat /tmp/health_status 2>/dev/null)\" = \"starting\" ]"]
       interval: 5s
