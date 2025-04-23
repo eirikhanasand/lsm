@@ -4,8 +4,9 @@ import { getCookie } from "@/utils/cookies"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { IMAGE_URL } from "@parent/constants"
 
-export default function MenuProfile({token}: {token: string | undefined}) {
+export default function MenuProfile({ token }: { token: string | undefined }) {
     const [open, setOpen] = useState(false)
     const [id, setId] = useState<string | null>(null)
     const [avatar, setAvatar] = useState<string | null>(null)
@@ -33,7 +34,7 @@ export default function MenuProfile({token}: {token: string | undefined}) {
     return (
         <div className="self-center">
             <div className='relative w-[3.5vh] h-[3.5vh] self-center cursor-pointer rounded-full overflow-hidden' onClick={() => setOpen((open) => !open)}>
-                <Image src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.png?size=64`} alt="logo" fill={true} />
+                <Image src={IMAGE_URL ? `${IMAGE_URL}/${id}/${avatar}.png?size=64` : '/profile.svg'} alt="logo" fill={true} />
             </div>
             {open && <Content />}
         </div>
@@ -46,7 +47,7 @@ function Content() {
             <Link href="/logout" className="flex justify-between items-center">
                 <h1>Log out</h1>
                 <div
-                    className='relative w-[2.5vh] h-[2.5vh]' 
+                    className='relative w-[2.5vh] h-[2.5vh]'
                 >
                     <Image src="/logout.svg" alt="logo" fill={true} />
                 </div>
