@@ -200,15 +200,28 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
 
     const { response, osvLength } = osv
     if (osvLength) {
-        const log = []
+        const log = ['OSV data was not empty:', JSON.stringify(response.vulnerabilties)]
+
         // Title section
-        log.push(`DOWNLOAD STOPPED: Vulnerable or malicious, name: ${name}, version: ${version}, ecosystem: ${ecosystem}\n`)
         if ('vulnerabilties' in response) {
             log.push('-----------------------------')
             for (const vulnerability of response.vulnerabilties) {
                 log.push(...logDetails(vulnerability))
             }
         }
+
+        // Checking whitelist
+        if ('whitelist' in response) {
+            log.push('DOWNLOAD CONTINUED: Vulnerable or malicious but whitelisted', `Name: ${name}`, `Version: ${version}`, `Ecosystem: ${ecosystem}`)
+            return res.send({
+                status: DownloadStatus.DOWNLOAD_PROCEED,
+                message: `DOWNLOAD CONTINUED: Vulnerable or malicious but whitelisted.`,
+                log,
+                headers: {}
+            })
+        }
+        
+        log.push(`DOWNLOAD STOPPED: Vulnerable or malicious, name: ${name}, version: ${version}, ecosystem: ${ecosystem}\n`)
         return res.send({
             status: DownloadStatus.DOWNLOAD_STOP,
             message: `DOWNLOAD STOPPED: Vulnerable or malicious package detected.`,
@@ -217,32 +230,12 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
         })
     }
 
-    if ('vulnerabilties' in response && response.vulnerabilties.length) {
-        log.push('OSV data was not empty:')
-        log.push(JSON.stringify(response.vulnerabilties))
-
-        // Checking blacklist
-        if ('blacklist' in response) {
-            log.push(`DOWNLOAD STOPPED: BLACKLISTED, Name: ${name}, Version: ${version}, Ecosystem: ${ecosystem}`)
-            return res.send({
-                status: DownloadStatus.DOWNLOAD_STOP,
-                message: `DOWNLOAD STOPPED: Blacklisted.`,
-                log,
-                headers: {}
-            })
-        }
-
-        // Checking whitelist
-        if ('vulnerabilties' in response) {
-            log.push('-----------------------------')
-            for (const vulnerability of response.vulnerabilties) {
-                logDetails(vulnerability)
-            }
-        }
-        log.push('DOWNLOAD CONTINUED: Vulnerable or malicious but whitelisted', `Name: ${name}`, `Version: ${version}`, `Ecosystem: ${ecosystem}`)
+    // Checking blacklist
+    if ('blacklist' in response) {
+        log.push(`DOWNLOAD STOPPED: BLACKLISTED, Name: ${name}, Version: ${version}, Ecosystem: ${ecosystem}`)
         return res.send({
-            status: DownloadStatus.DOWNLOAD_PROCEED,
-            message: `DOWNLOAD CONTINUED: Vulnerable or malicious but whitelisted.`,
+            status: DownloadStatus.DOWNLOAD_STOP,
+            message: `DOWNLOAD STOPPED: Blacklisted.`,
             log,
             headers: {}
         })
