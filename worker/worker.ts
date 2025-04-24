@@ -11,7 +11,7 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
         if (status !== 200) {
             throw new Error(JSON.stringify(data))
         }
-        console.log(`Status: ${status}, Data: ${data}`)
+        console.log(`Status: ${status}, Data: ${JSON.stringify(data)}`)
         log(...data.log)
         return {
             status: data.status,
