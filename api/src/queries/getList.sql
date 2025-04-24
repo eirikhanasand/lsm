@@ -81,14 +81,14 @@ LEFT JOIN (
 -- name filter
 WHERE ($1::TEXT IS NULL OR (SELECT l.name = $1))
 -- ecosystem filter
-AND ($2::TEXT IS NULL OR (SELECT $2 = ANY(le.ecosystems)))
+AND ($2::TEXT IS NULL OR le.ecosystems IS NULL OR (SELECT $2 = ANY(le.ecosystems)))
 -- version filter
-AND ($3::TEXT IS NULL OR (SELECT $3 = ANY(lv.versions)))
+AND ($3::TEXT IS NULL OR lv.versions IS NULL OR $3 = ANY(lv.versions))
 -- repository filter (checks for unique word since the repository is often 
 -- '[REMOTE] npm', but could also be '[LOCAL] npm-other'), which should not be
 -- included since 'npm-other' !== 'npm' and 'other-npm' !== 'npm'
 AND (
-    $4::TEXT IS NULL OR EXISTS (
+    $4::TEXT IS NULL OR lr.repositories IS NULL OR EXISTS (
         SELECT 1 FROM unnest(lr.repositories) AS repo
         WHERE repo ~* ('\y' || $4 || '\y')
     )
