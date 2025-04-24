@@ -17,14 +17,17 @@ type StatisticResponse = {
 
 export default async function packageStatisticsHandler(req: FastifyRequest, res: FastifyReply) {
     const { startTime, endTime } = req.query as StatisticHandlerParams
-    if (!startTime || !endTime) {
-        return res.status(400).send({ error: 'Missing start or end time.' })
+    const start = startTime || new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString()
+    const end = endTime || new Date().toISOString()
+
+    if (!isValidDate(start) || !isValidDate(end)) {
+        return res.status(400).send({ error: "startTime or endTime is not a valid date" })
     }
 
-    const queryParams = [startTime, endTime]
+    const queryParams = [start, end]
 
     try {
-        console.log(`Fetching package stats: start=${startTime}, end=${endTime}`)
+        console.log(`Fetching package stats: start=${start}, end=${end}`)
 
         // Fetching overall summary stats
         const summaryResult = await run(`
@@ -70,4 +73,8 @@ export default async function packageStatisticsHandler(req: FastifyRequest, res:
         console.error(`Database error: ${JSON.stringify(error)}`)
         return res.status(500).send({ error: 'Internal Server Error' })
     }
+}
+
+function isValidDate(date: string) {
+    return !isNaN(new Date(date).getTime())
 }

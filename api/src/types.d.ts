@@ -67,7 +67,7 @@ type OSVResponse = {
     blacklist?: any[]
 }
 
-type wOSVResponseVulnerability = {
+type OSVResponseVulnerability = {
     id?: string
     details?: string
     name: string

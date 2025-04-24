@@ -39,46 +39,58 @@ export async function processVulnerabilities({
     clientAddress
 }: ProcessVulnerabiltiesProps) {
     try {
-        const { vulnerabilties } = response
-        for (const vuln of vulnerabilties) {
-            const status: number = await checkPackage({ response })
-            const vulnName = vuln.name || vuln.id || ''
-            let severity = -1
-            if ('severity' in vuln && vuln.severity != null) {
-                const cvss_v4 = vuln.severity.find(
-                    (elem: { type: string }) => elem.type === 'CVSS_V4'
-                )
-                const cvss_v3 = vuln.severity.find(
-                    (elem: { type: string }) => elem.type === 'CVSS_V3'
-                )
-                if (cvss_v4 != null) {
-                    const cvss4 = new Cvss4P0(cvss_v4.score)
-                    severity = cvss4.calculateScores().overall
-                } else if (cvss_v3 != null) {
-                    const cvss3 = new Cvss3P1(cvss_v3.score)
-                    severity = cvss3.calculateScores().overall
+        if ('vulnerabilties' in response && response.vulnerabilties.length) {
+            const { vulnerabilties } = response
+            for (const vuln of vulnerabilties) {
+                const status: number = await checkPackage({ response })
+                const vulnName = vuln.name || vuln.id || ''
+                let severity = -1
+                if ('severity' in vuln && vuln.severity != null) {
+                    const cvss_v4 = vuln.severity.find(
+                        (elem: { type: string }) => elem.type === 'CVSS_V4'
+                    )
+                    const cvss_v3 = vuln.severity.find(
+                        (elem: { type: string }) => elem.type === 'CVSS_V3'
+                    )
+                    if (cvss_v4 != null) {
+                        const cvss4 = new Cvss4P0(cvss_v4.score)
+                        severity = cvss4.calculateScores().overall
+                    } else if (cvss_v3 != null) {
+                        const cvss3 = new Cvss3P1(cvss_v3.score)
+                        severity = cvss3.calculateScores().overall
+                    } else {
+                        severity = Number(DEFAULT_CVE_SEVERITY) || 6.0
+                    }
                 } else {
-                    severity = Number(DEFAULT_CVE_SEVERITY) || 6.0
+                    if (vulnName.startsWith('MAL')) {
+                        severity = Number(DEFAULT_MAL_SEVERITY) || 8.0
+                    } else {
+                        severity = Number(DEFAULT_SEVERITY) || 5.0
+                    }
                 }
-            } else {
-                if (vulnName.startsWith('MAL')) {
-                    severity = Number(DEFAULT_MAL_SEVERITY) || 8.0
-                } else {
-                    severity = Number(DEFAULT_SEVERITY) || 5.0
-                }
+                const event = {
+                    package_name: name,
+                    package_version: version,
+                    ecosystem,
+                    client_address: clientAddress,
+                    status,
+                    reason: vuln?.details,
+                    severity: severity.toString()
+                } as DownloadEvent
+
+                await insertDownloadEvent(event)
             }
+        } else {
             const event = {
                 package_name: name,
                 package_version: version,
                 ecosystem,
                 client_address: clientAddress,
-                status,
-                reason: vuln?.details,
-                severity: severity.toString()
+                status: DownloadStatus.DOWNLOAD_PROCEED,
+                reason: "Legitimate",
+                severity: "0"
             } as DownloadEvent
-
             await insertDownloadEvent(event)
-            console.log(`Inserted event for ${event.package_name} ${event.package_version}`)
         }
     } catch (error) {
         console.error(error)

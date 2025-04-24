@@ -6,7 +6,7 @@ import config from '../constants.js'
 const { LOCAL_OSV, OSV_URL } = config
 
 export default async function fetchOSV({ name, version, ecosystem, clientAddress }: FetchOSVProps): Promise<FetchOSVResponse | { error: string }> {
-    let response = {} as { vulnerabilties: any[], whitelist?: any[], blacklist?: any[] }
+    let response = {} as { vulnerabilties: OSVResponseVulnerability[], whitelist?: any[], blacklist?: any[] }
     let osvLength = 0
     if (LOCAL_OSV === 'true') {
         const result = await run(`
@@ -47,11 +47,12 @@ export default async function fetchOSV({ name, version, ecosystem, clientAddress
             })
 
             if (!res.ok) {
-                throw new Error(JSON.stringify(res))
+                throw new Error(JSON.stringify(await res.text()))
             }
             const data = await res.json()
-            response = { vulnerabilties: data.vulns }
-            osvLength = data.vulns.length
+            const vulnerable = 'vulns' in data
+            response = { vulnerabilties: vulnerable ? data.vulns : [] }
+            osvLength = vulnerable ? data.vulns.length : 0
         } catch (error) {
             console.error(`Unable to fetch OSV ${JSON.stringify(error)}`)
             return {

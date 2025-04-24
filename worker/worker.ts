@@ -27,10 +27,11 @@ export default async function runWorker(context: PlatformContext, data: BeforeDo
     }
 }
 
-async function fetchOSV(context: PlatformContext, metadata: DownloadMetadata): Promise<{status: 200, data: GoogleStatus}> {
+async function fetchOSV(context: PlatformContext, metadata: DownloadMetadata): Promise<{status: number, data: GoogleStatus}> {
     try {
-        const response: GoogleStatus = await context.clients.axios.post(`${OSV_URL}/worker`, metadata)
-        return { status: 200, data: response }
+        const response: { status: number, data: GoogleStatus} = await context
+            .clients.axios.post(`${OSV_URL}/worker`, metadata)
+        return response
     } catch (error) {
         throw new Error(error)
     }
