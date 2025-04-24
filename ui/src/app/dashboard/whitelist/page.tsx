@@ -1,11 +1,12 @@
 import getPackages from '@/utils/filtering/getPackage'
 import fetchRepositories from '@/utils/fetchRepositories'
-import AddPackage from '@/components/addPackage/addPackage'
+import AddPackage from '@/components/package/addPackage'
 import { cookies } from 'next/headers'
 
 export default async function page() {
     const list = 'white'
-    const packages = await getPackages({ list, side: 'server' })
+    const serverPackages = await getPackages({ list, side: 'server' })
+    const packages = Array.isArray(serverPackages) ? serverPackages : []
     const repositories = await fetchRepositories()
     const Cookies = await cookies()
     const showGlobalOnly = Cookies.get('showGlobalOnly')?.value || 'false'

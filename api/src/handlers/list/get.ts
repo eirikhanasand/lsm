@@ -3,6 +3,10 @@ import fetchList from '../../utils/list/fetchList.js'
 
 export default async function listHandler(req: FastifyRequest, res: FastifyReply) {
     const { list } = req.params as { list: 'white' | 'black' }
+    if (list !== 'white' && list !== 'black') {
+        return res.status(400).send({ error: "List must be either white or black." })
+    }
+
     const {
         ecosystem,
         name,

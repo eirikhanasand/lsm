@@ -3,16 +3,18 @@ import { repositories, dependantRepositories, } from '../data/repositories.js'
 
 dotenv.config({ path: '../.env' })
 
-if (!('JFROG_TOKEN' in process.env) || !process.env.JFROG_TOKEN?.length) {
+const {
+    JFROG_TOKEN,
+    JFROG_ID
+} = process.env
+
+if (!JFROG_TOKEN || !JFROG_TOKEN.length) {
     throw new Error('Missing JFROG_TOKEN in env.')
 }
 
-if (!('JFROG_ID' in process.env) || !process.env.JFROG_ID?.length) {
+if (!JFROG_ID || !JFROG_ID.length) {
     throw new Error('Missing JFROG_ID in env.')
 }
-
-const token = process.env.JFROG_TOKEN
-const id = process.env.JFROG_ID
 
 const createRepositoriesResponse = await createRepositories()
 
@@ -26,11 +28,11 @@ async function createRepositories() {
     try {
         console.log('Creating repositories...')
 
-        const response = await fetch(`https://${id}.jfrog.io/artifactory/api/v2/repositories/batch`, {
+        const response = await fetch(`https://${JFROG_ID}.jfrog.io/artifactory/api/v2/repositories/batch`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${JFROG_TOKEN}`
             },
             body: JSON.stringify(repositories)
         })
@@ -60,11 +62,11 @@ async function createDependantRepositories() {
     try {
         console.log('Creating dependant repositories...')
 
-        const response = await fetch(`https://${id}.jfrog.io/artifactory/api/v2/repositories/batch`, {
+        const response = await fetch(`https://${JFROG_ID}.jfrog.io/artifactory/api/v2/repositories/batch`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${JFROG_TOKEN}`
             },
             body: JSON.stringify(dependantRepositories)
         })

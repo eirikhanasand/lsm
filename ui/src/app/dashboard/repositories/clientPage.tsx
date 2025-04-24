@@ -1,10 +1,12 @@
 'use client'
 
-import Paging from '@/components/paging'
-import Repository from '@/components/repository'
-import { DEFAULT_RESULTS_PER_PAGE } from '@parent/constants'
+import Paging from '@/components/global/paging'
+import Repository from '@/components/repository/repository'
+import config from '@parent/constants'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
+
+const { DEFAULT_RESULTS_PER_PAGE } = config
 
 type PageProps = {
     repositories: Repository[]

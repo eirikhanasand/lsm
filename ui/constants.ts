@@ -4,25 +4,15 @@ dotenv.config({path: '../.env'})
 
 const { 
     JFROG_ID, 
-    JFROG_TOKEN, 
-    API: ENV_API, 
-    SERVER_API: ENV_SERVER_API,
+    JFROG_TOKEN,
+    SERVER_API,
     DEFAULT_RESULTS_PER_PAGE: ENV_DEFAULT_RESULTS_PER_PAGE,
-    IMAGE_URL: ENV_IMAGE_URL,
-    IMAGE_URL_SHORT: ENV_IMAGE_URL_SHORT,
-    SELF_URL: ENV_SELF_URL,
+    IMAGE_URL,
+    IMAGE_URL_SHORT,
+    SELF_URL,
 } = process.env
 
-export { JFROG_ID, JFROG_TOKEN }
-// export const API = ENV_API || 'http://localhost:8081/api'
-export const API = ENV_API || 'http://129.241.150.86:8080/api'
-// export const SERVER_API = ENV_SERVER_API || 'http:/localhost:8081/api'
-export const SERVER_API = ENV_SERVER_API || 'http://172.17.0.1:8080/api'
-export const DEFAULT_RESULTS_PER_PAGE = ENV_DEFAULT_RESULTS_PER_PAGE || 50
-export const IMAGE_URL = ENV_IMAGE_URL
-export const IMAGE_URL_SHORT = ENV_IMAGE_URL_SHORT
-export const SELF_URL = ENV_SELF_URL || ''
-export const ECOSYSTEMS = [
+const ECOSYSTEMS = [
     'ansible',
     'alpine',
     'bower',
@@ -57,3 +47,16 @@ export const ECOSYSTEMS = [
     'yum',
     'generic'
 ]
+
+const config = {
+    JFROG_ID,
+    JFROG_TOKEN,
+    DEFAULT_RESULTS_PER_PAGE: ENV_DEFAULT_RESULTS_PER_PAGE || 50,
+    IMAGE_URL,
+    SERVER_API,
+    IMAGE_URL_SHORT,
+    SELF_URL,
+    ECOSYSTEMS
+}
+
+export default config

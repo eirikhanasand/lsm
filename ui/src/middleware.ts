@@ -40,7 +40,7 @@ async function tokenIsValid(req: NextRequest, token: string): Promise<boolean> {
     }
 
     if (!process.env.NEXT_PUBLIC_SELF_URL) {
-        console.error(`Missing process.env.NEXT_PUBLIC_SELF_URL`)
+        console.error(`Missing NEXT_PUBLIC_SELF_URL environment variable.`)
         return false
     }
 

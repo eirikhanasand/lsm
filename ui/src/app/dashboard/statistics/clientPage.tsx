@@ -201,7 +201,7 @@ export default function Page({
                 </div>
             </div>
 
-            <div className='flex justify-between mt-6 min-h-[41vh]'>
+            <div className='flex justify-between mt-6 min-h-[41vh] gap-6'>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl'>
                     <StatCard
                         title='Total Dependencies Scanned'

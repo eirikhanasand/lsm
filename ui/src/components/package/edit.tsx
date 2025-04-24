@@ -160,10 +160,7 @@ export default function Edit({
                         .map((change) => <Change key={change.id} change={change} />)
                     }
                 </div>
-                <div>
-                    <h1 className='text-xs text-shallow-dark p-1 pl-2 w-full rounded-lg h-[2vh] outline-none mt-2'>
-                        Authored by {pkg.authors.map((author) => author.name).join(', ')}.
-                    </h1>
+                <div className='grid gap-[2px]'>
                     <h1 className='text-xs text-shallow-dark p-1 pl-2 w-full rounded-lg h-[2vh] outline-none'>
                         Updated {new Date(pkg.updated.time).toLocaleString()} by {pkg.updated.name}.
                     </h1>

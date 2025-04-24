@@ -1,6 +1,8 @@
 import getAuditLog from '@/utils/filtering/getAuditLog'
 import Image from 'next/image'
-import { IMAGE_URL } from '@parent/constants'
+import config from '@parent/constants'
+
+const { IMAGE_URL } = config
 
 type LogProps = {
     log: AuditResult
@@ -23,12 +25,13 @@ export default async function page() {
 
 function Log({ log }: LogProps) {
     const date = new Date(log.timestamp).toLocaleString('en-GB').replaceAll('/', '.')
+    const imageExists = IMAGE_URL && IMAGE_URL !== 'null'
     return (
         <div className='flex w-full bg-dark rounded-lg px-4 min-h-[40px]'>
             <div className='flex gap-2 w-[15vw]'>
                 <div className='relative w-[3.5vh] h-[3.5vh] self-center cursor-pointer rounded-full overflow-hidden'>
                     <Image
-                        src={IMAGE_URL ? `${IMAGE_URL}/${log.author.id}/${log.author.avatar}.png?size=64` : '/profile.svg'}
+                        src={imageExists ? `${IMAGE_URL}/${log.author.id}/${log.author.avatar}.png?size=64` : '/profile.svg'}
                         alt='logo'
                         fill={true}
                     />
