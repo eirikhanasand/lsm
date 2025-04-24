@@ -1,0 +1,17 @@
+{
+    "repoPath": {
+      "key": "npm",
+      "path": "@types/react/-/react-17.0.0.tgz",
+      "id": "npm:@types/react/-/react-17.0.0.tgz"
+    },
+    "originalRepoPath": {
+      "key": "npm",
+      "path": "@types/react/-/react-17.0.0.tgz",
+      "id": "npm:@types/react/-/react-17.0.0.tgz"
+    },
+    "name": "react-17.0.0.tgz",
+    "servletContextUrl": "https://<id>.jfrog.io/artifactory",
+    "uri": "/artifactory/npm/@types/react/-/react-17.0.0.tgz",
+    "clientAddress": "18.214.241.149",
+    "repoType": 2
+}
