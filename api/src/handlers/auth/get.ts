@@ -19,7 +19,6 @@ export function loginHandler(_: FastifyRequest, res: FastifyReply) {
         .replace('{CLIENT_ID}', CLIENT_ID)
         .replace('{redirectUri}', redirectUri)
         .replace('{scope}', scope)
-    console.log("login is redirecting to", authUrl)
     res.redirect(authUrl)
 }
 
