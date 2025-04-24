@@ -9,7 +9,6 @@ const {
     DEFAULT_RESULTS_PER_PAGE: ENV_DEFAULT_RESULTS_PER_PAGE,
     IMAGE_URL,
     IMAGE_URL_SHORT,
-    SELF_URL,
 } = process.env
 
 const ECOSYSTEMS = [
@@ -55,7 +54,6 @@ const config = {
     IMAGE_URL,
     SERVER_API,
     IMAGE_URL_SHORT,
-    SELF_URL,
     ECOSYSTEMS
 }
 

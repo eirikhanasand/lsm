@@ -30,7 +30,7 @@ export default function MenuProfile({ token }: { token: string | undefined }) {
         return (
             <div className='self-center'>
                 <div className='relative w-[3vh] h-[3vh] self-center cursor-pointer' onClick={() => setOpen((open) => !open)}>
-                    <Image src='/profile.svg' alt='logo' fill={true} />
+                    <ProfileIcon />
                 </div>
                 {open && <Content />}
             </div>

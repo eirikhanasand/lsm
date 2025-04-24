@@ -13,40 +13,48 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      JFROG_ID: ${{ secrets.JFROG_ID }}
-      JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }}
-      JFROG_EMAIL: ${{ secrets.JFROG_EMAIL }}
-      JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
-      API: ${{ secrets.API }}
-      SERVER_API: ${{ secrets.SERVER_API }}
       CLIENT_ID: ${{ secrets.CLIENT_ID }}
       CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-      FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
-      LOCAL_OSV: false
-      OSV_URL: ${{ secrets.OSV_URL }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      SELF_URL: ${{ secrets.SELF_URL }}
+      FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+      JFROG_EMAIL: ${{ secrets.JFROG_EMAIL }}
+      JFROG_ID: ${{ secrets.JFROG_ID }}
+      JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
       OAUTH_TOKEN_URL: ${{ secrets.OAUTH_TOKEN_URL }}
+      OSV_URL: ${{ secrets.OSV_URL }}
+      SERVER_API: ${{ secrets.SERVER_API }}
+      LOCAL_OSV: ${{ secrets.LOCAL_OSV }}
+      NEXT_PUBLIC_DISABLE_AUTH: ${{ secrets.NEXT_PUBLIC_DISABLE_AUTH }}
+      NEXT_PUBLIC_SELF_URL: ${{ secrets.NEXT_PUBLIC_SELF_URL }}
+      NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
+      IMAGE_URL: ${{ secrets.IMAGE_URL }}
+      IMAGE_URL_SHORT: ${{ secrets.IMAGE_URL_SHORT }}
+      OAUTH_BASE_URL: ${{ secrets.OAUTH_BASE_URL }}
+      OAUTH_AUTH_URL: ${{ secrets.OAUTH_AUTH_URL }}
 
     steps:
     - uses: actions/checkout@v1
 
     - name: Create .env file
       run: |
-        echo "JFROG_ID=${{ secrets.JFROG_ID }}" > .env
-        echo "JFROG_USERNAME=${{ secrets.JFROG_USERNAME }}" >> .env
-        echo "JFROG_EMAIL=${{ secrets.JFROG_EMAIL }}" >> .env
-        echo "JFROG_TOKEN=${{ secrets.JFROG_TOKEN }}" >> .env
-        echo "API=${{ secrets.API }}" >> .env
-        echo "SERVER_API=${{ secrets.SERVER_API }}" >> .env
-        echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
-        echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
-        echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
-        echo "LOCAL_OSV=false" >> .env
-        echo "OSV_URL=${{ secrets.OSV_URL }}" >> .env
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-        echo "SELF_URL=${{ secrets.SELF_URL }}" >> .env
-        echo "OAUTH_TOKEN_URL=${{ secrets.OAUTH_TOKEN_URL }}" >> .env
+        echo "CLIENT_ID=$CLIENT_ID" >> .env
+        echo "CLIENT_SECRET=$CLIENT_SECRET" >> .env
+        echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+        echo "FRONTEND_URL=$FRONTEND_URL" >> .env
+        echo "JFROG_EMAIL=$JFROG_EMAIL" >> .env
+        echo "JFROG_ID=$JFROG_ID" > .env
+        echo "JFROG_TOKEN=$JFROG_TOKEN" >> .env
+        echo "OAUTH_TOKEN_URL=$OAUTH_TOKEN_URL" >> .env
+        echo "OSV_URL=$OSV_URL" >> .env
+        echo "SERVER_API=$SERVER_API" >> .env
+        echo "LOCAL_OSV=$LOCAL_OSV" >> .env
+        echo "NEXT_PUBLIC_DISABLE_AUTH=$NEXT_PUBLIC_DISABLE_AUTH" >> .env
+        echo "NEXT_PUBLIC_SELF_URL=$NEXT_PUBLIC_SELF_URL" >> .env
+        echo "NEXT_PUBLIC_API=$NEXT_PUBLIC_API" >> .env
+        echo "IMAGE_URL=$IMAGE_URL" >> .env
+        echo "IMAGE_URL_SHORT=$IMAGE_URL_SHORT" >> .env
+        echo "OAUTH_BASE_URL=$OAUTH_BASE_URL" >> .env
+        echo "OAUTH_AUTH_URL=$OAUTH_AUTH_URL" >> .env
 
     - name: test_docker_compose_up
       run: |

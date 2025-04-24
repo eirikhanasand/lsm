@@ -15,10 +15,11 @@ import run from '../../db.js'
 export function loginHandler(_: FastifyRequest, res: FastifyReply) {
     const redirectUri = encodeURIComponent(`${API}/oauth2/callback`)
     const scope = encodeURIComponent('identify email guilds openid')
-    const authUrl = `${OAUTH_AUTH_URL || `${OAUTH_BASE_URL}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`}`
+    const authUrl = `${OAUTH_BASE_URL}${OAUTH_AUTH_URL || `?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`}`
         .replace('{CLIENT_ID}', CLIENT_ID)
         .replace('{redirectUri}', redirectUri)
         .replace('{scope}', scope)
+    console.log("login is redirecting to", authUrl)
     res.redirect(authUrl)
 }
 

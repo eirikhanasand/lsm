@@ -189,7 +189,7 @@ CLIENT_ID=<your_oauth_client_id>
 # OAuth provider client secret
 CLIENT_SECRET=<your_oauth_client_secret>
 # OAuth provider userinfo url
-SELF_URL=https://discord.com/api/users/@me
+NEXT_PUBLIC_SELF_URL=https://discord.com/api/users/@me
 # OAuth token url
 OAUTH_TOKEN_URL=https://discord.com/api/oauth2/token
 # User avatar url
