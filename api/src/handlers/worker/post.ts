@@ -189,7 +189,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
 
     const osv = await fetchOSV({ name, version, ecosystem, clientAddress: data.clientAddress })
     if ('error' in osv) {
-        log.push(`Error while fetching OSV ${osv.error}`)
+        log.push(osv.error)
         return res.send({
             status: DownloadStatus.DOWNLOAD_STOP,
             message: `DOWNLOAD STOPPED: Unable to fetch OSV.`,
