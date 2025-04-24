@@ -3,8 +3,8 @@ Library Safety Manager Open Source Plugin For Artifactory
 Whitelist and blacklist packages for JFrog Artifactory to prevent download of malicious or vulnerable code.
 
 ## Quick setup frontend / api
-NB: This is the quick guide for rapid testing without auth. It should only be used for testing purposes. 
-1. Create a `.env` file in the root of the repository with the following properties:
+NB: This is the quick guide for rapid testing without auth. It should only be used for testing purposes. To deploy with auth, please see the "Deploying with auth" section.
+1. Create a `.env` file in the root of the repository with the following variables:
 ```yaml
 # JFrog Artifactory token (used for listing available repositories)
 JFROG_TOKEN=<your_jfrog_token>
@@ -30,7 +30,7 @@ NEXT_PUBLIC_DISABLE_AUTH=true
 4. You can now whitelist and blacklist packages in the UI or via API
 5. Follow the "Quick setup worker / JFrog" to setup the worker
 
-You can now verify in your IDE that packages are being blocked as intended and according to the policies you have defined in the user interface or via API.
+You can now verify in your IDE that packages are being blocked as intended and according to the policies you have defined in the user interface or via API. To set up with auth scroll all
 
 ## Quick setup worker / JFrog
 1. Deploy the worker, see "How to deploy the worker"
@@ -91,6 +91,45 @@ JFROG_ID=<your_jfrog_id>
 ## Debugging the worker
 1. Ensure the worker is active and that the events are up to date (check the metadata)
 2. You have to use a new package, previous packages are cached and will not be refetched even if you update the worker.
+
+## Deploying with auth
+This is similar to the quick start except for the environment variables. Instead use these (replace Discord with your auth provider):
+```yaml
+# JFrog Artifactory token (used for listing available repositories)
+JFROG_TOKEN=<your_jfrog_token>
+# JFrog Artifactory id (used for listing available repositories)
+JFROG_ID=<your_jfrog_id>
+# The publicly reachable IP of the frontend (user interface)
+NEXT_PUBLIC_API=http://localhost:8080/api
+# The internal IP of the API (127.17.0.1 is correct if using the premade docker compose file)
+SERVER_API=http://172.17.0.1:8080/api
+# The publicly reachable IP of the frontend without the '/api' suffix
+FRONTEND_URL=http://localhost:3000
+# Whether to use a local database for OSV (should be false for quicker setup and lower resource consumption)
+LOCAL_OSV=false
+# Open Source Vulnerability database uri
+OSV_URL=https://api.osv.dev/v1/query
+# Database password (database is used for storing whitelisted and blacklisted packages)
+DB_PASSWORD=<strong_password>
+# JFrog service account email (used by the registry pipeline, can be skipped for testing)
+JFROG_EMAIL=<your_jfrog_service_account_email>
+# OAuth provider client ID
+CLIENT_ID=<your_oauth_client_id>
+# OAuth provider client secret
+CLIENT_SECRET=<your_oauth_client_secret>
+# OAuth provider userinfo url
+NEXT_PUBLIC_SELF_URL=https://discord.com/api/users/@me
+# OAuth token url
+OAUTH_TOKEN_URL=https://discord.com/api/oauth2/token
+# User avatar url
+IMAGE_URL=https://cdn.discordapp.com/avatars
+# User avatar url without protocol or suffix
+IMAGE_URL_SHORT=cdn.discordapp.com
+# OAuth provider base url (authorize endpoint)
+OAUTH_BASE_URL=https://discord.com/oauth2/authorize
+# OAuth provider requested details
+OAUTH_AUTH_URL=?client_id={CLIENT_ID}&response_type=code&redirect_uri={redirectUri}&scope={scope}
+```
 
 ## How to use Artifactory
 The worker functions with the following package managers / technologies:
