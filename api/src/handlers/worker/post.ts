@@ -15,7 +15,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
 
     switch (ecosystem) {
         case 'npm':
-            const npmRegex = /([a-zA-Z+_.]+)-([\d.]+)\.tgz/
+            const npmRegex = /([a-zA-Z+_.-]+)-([\d.]+)\.tgz/
             const npmDetails = data.name.match(npmRegex)
             if (Array.isArray(npmDetails)) {
                 name = npmDetails[1]
