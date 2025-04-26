@@ -210,12 +210,12 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
             }
         }
 
-        // Checking whitelist
-        if ('whitelist' in response) {
-            log.push('DOWNLOAD CONTINUED: Vulnerable or malicious but whitelisted', `Name: ${name}`, `Version: ${version}`, `Ecosystem: ${ecosystem}`)
+        // Checking allowed packages
+        if ('allow' in response) {
+            log.push('DOWNLOAD CONTINUED: Vulnerable or malicious but allowed', `Name: ${name}`, `Version: ${version}`, `Ecosystem: ${ecosystem}`)
             return res.send({
                 status: DownloadStatus.DOWNLOAD_PROCEED,
-                message: `DOWNLOAD CONTINUED: Vulnerable or malicious but whitelisted.`,
+                message: `DOWNLOAD CONTINUED: Vulnerable or malicious but allowed.`,
                 log,
                 headers: {}
             })
@@ -230,12 +230,12 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
         })
     }
 
-    // Checking blacklist
-    if ('blacklist' in response) {
-        log.push(`DOWNLOAD STOPPED: BLACKLISTED, Name: ${name}, Version: ${version}, Ecosystem: ${ecosystem}`)
+    // Checking blocked packages
+    if ('block' in response) {
+        log.push(`DOWNLOAD STOPPED: BLOCKED, Name: ${name}, Version: ${version}, Ecosystem: ${ecosystem}`)
         return res.send({
             status: DownloadStatus.DOWNLOAD_STOP,
-            message: `DOWNLOAD STOPPED: Blacklisted.`,
+            message: `DOWNLOAD STOPPED: Blocked.`,
             log,
             headers: {}
         })

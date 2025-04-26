@@ -1,8 +1,8 @@
 SELECT l.name, l.comment,
-COALESCE((SELECT array_agg(version) FROM {list}list_versions WHERE name = l.name), '{}'::TEXT[]) AS versions, 
-COALESCE((SELECT array_agg(ecosystem) FROM {list}list_ecosystems WHERE name = l.name), '{}'::TEXT[]) AS ecosystems, 
-COALESCE((SELECT array_agg(repository) FROM {list}list_repositories WHERE name = l.name), '{}'::TEXT[]) AS repositories,
-COALESCE((SELECT array_agg(reference) FROM {list}list_references WHERE name = l.name), '{}'::TEXT[]) AS "references",
+COALESCE((SELECT array_agg(version) FROM {list}_versions WHERE name = l.name), '{}'::TEXT[]) AS versions, 
+COALESCE((SELECT array_agg(ecosystem) FROM {list}_ecosystems WHERE name = l.name), '{}'::TEXT[]) AS ecosystems, 
+COALESCE((SELECT array_agg(repository) FROM {list}_repositories WHERE name = l.name), '{}'::TEXT[]) AS repositories,
+COALESCE((SELECT array_agg(reference) FROM {list}_references WHERE name = l.name), '{}'::TEXT[]) AS "references",
 COALESCE((
     SELECT jsonb_agg(
         jsonb_build_object(
@@ -11,7 +11,7 @@ COALESCE((
             'avatar', u.avatar
         )
     )
-    FROM {list}list_authors la
+    FROM {list}_authors la
     JOIN users u ON la.author = u.id
     WHERE la.name = l.name
 ), '[]'::jsonb) AS authors,
@@ -22,7 +22,7 @@ COALESCE((
         'avatar', u.avatar,
         'time', lc.timestamp
     )
-    FROM {list}list_created lc
+    FROM {list}_created lc
     JOIN users u ON lc.id = u.id
     WHERE lc.name = l.name
     LIMIT 1
@@ -34,7 +34,7 @@ COALESCE((
         'avatar', u.avatar,
         'time', lu.timestamp
     )
-    FROM {list}list_updated lu
+    FROM {list}_updated lu
     JOIN users u ON lu.id = u.id
     WHERE lu.name = l.name
     LIMIT 1
@@ -53,29 +53,29 @@ COALESCE((
             'timestamp', cl.timestamp
         )
     )
-    FROM {list}list_changelog cl
+    FROM {list}_changelog cl
     JOIN users u ON cl.author = u.id
     WHERE cl.name = l.name
 ), '[]'::jsonb) AS "changeLog"
-FROM {list}list l
+FROM {list} l
 LEFT JOIN (
     SELECT name, array_agg(version) AS versions
-    FROM {list}list_versions
+    FROM {list}_versions
     GROUP BY name
 ) lv ON lv.name = l.name
 LEFT JOIN (
     SELECT name, array_agg(ecosystem) AS ecosystems
-    FROM {list}list_ecosystems
+    FROM {list}_ecosystems
     GROUP BY name
 ) le ON le.name = l.name
 LEFT JOIN (
     SELECT name, array_agg(repository) AS repositories
-    FROM {list}list_repositories
+    FROM {list}_repositories
     GROUP BY name
 ) lr ON lr.name = l.name
 LEFT JOIN (
     SELECT name, array_agg(reference) AS references
-    FROM {list}list_references
+    FROM {list}_references
     GROUP BY name
 ) lrf ON lrf.name = l.name
 -- name filter
@@ -96,14 +96,14 @@ AND (
 -- startDate filter
 AND ($5::TIMESTAMP IS NULL OR (
     SELECT lc.timestamp
-    FROM {list}list_created lc
+    FROM {list}_created lc
     WHERE lc.name = l.name
     LIMIT 1
 ) >= $5::TIMESTAMP)
 -- endDate filter
 AND ($6::TIMESTAMP IS NULL OR (
     SELECT lc.timestamp
-    FROM {list}list_created lc
+    FROM {list}_created lc
     WHERE lc.name = l.name
     LIMIT 1
 ) <= $6::TIMESTAMP)

@@ -8,9 +8,9 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
         return res.status(400).send({ error: 'Unauthorized' })
     }
 
-    const { list } = req.params as { list: 'white' | 'black' }
-    if (list !== 'white' && list !== 'black') {
-        return res.status(400).send({ error: "List must be either white or black." })
+    const { list } = req.params as { list: 'allow' | 'block' }
+    if (list !== 'allow' && list !== 'block') {
+        return res.status(400).send({ error: "List must be either 'allow' or 'block'." })
     }
 
     const { ecosystems, name, versions, repositories, comment, references, author } = req.body as PostBody || {}
@@ -19,10 +19,10 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
     }
 
     try {
-        const result = await run(`SELECT name from ${list}list where name = $1`, [name])
+        const result = await run(`SELECT name from ${list} where name = $1`, [name])
         if (result.rows.length) {
             return res.status(409).send({
-                error: `${name} is already ${list}listed. Update the existing one instead.`
+                error: `${name} is already ${list}ed. Update the existing one instead.`
             })
         }
 
@@ -38,18 +38,18 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
         )
 
         await run(
-            `INSERT INTO ${list}list (name, comment) 
+            `INSERT INTO ${list} (name, comment) 
              SELECT $1, $2
-             WHERE NOT EXISTS (SELECT 1 FROM ${list}list WHERE name = $1);`,
+             WHERE NOT EXISTS (SELECT 1 FROM ${list} WHERE name = $1);`,
             [name, comment]
         )
 
         if (Array.isArray(versions) && versions.length) {
             for (const version of versions) {
                 await run(
-                    `INSERT INTO ${list}list_versions (name, version) 
+                    `INSERT INTO ${list}_versions (name, version) 
                      SELECT $1, $2 
-                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_versions WHERE name = $1 AND version = $2);`,
+                     WHERE NOT EXISTS (SELECT 1 FROM ${list}_versions WHERE name = $1 AND version = $2);`,
                     [name, version]
                 )
             }
@@ -58,9 +58,9 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
         if (Array.isArray(ecosystems) && ecosystems.length) {
             for (const ecosystem of ecosystems) {
                 await run(
-                    `INSERT INTO ${list}list_ecosystems (name, ecosystem) 
+                    `INSERT INTO ${list}_ecosystems (name, ecosystem) 
                      SELECT $1, $2 
-                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_ecosystems WHERE name = $1 AND ecosystem = $2);`,
+                     WHERE NOT EXISTS (SELECT 1 FROM ${list}_ecosystems WHERE name = $1 AND ecosystem = $2);`,
                     [name, ecosystem]
                 )
             }
@@ -69,9 +69,9 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
         if (Array.isArray(repositories) && repositories.length) {
             for (const repository of repositories) {
                 await run(
-                    `INSERT INTO ${list}list_repositories (name, repository) 
+                    `INSERT INTO ${list}_repositories (name, repository) 
                      SELECT $1, $2 
-                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_repositories WHERE name = $1 AND repository = $2);`,
+                     WHERE NOT EXISTS (SELECT 1 FROM ${list}_repositories WHERE name = $1 AND repository = $2);`,
                     [name, repository]
                 )
             }
@@ -80,28 +80,28 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
         if (Array.isArray(references) && references.length) {
             for (const reference of references) {
                 await run(
-                    `INSERT INTO ${list}list_references (name, reference) 
+                    `INSERT INTO ${list}_references (name, reference) 
                      SELECT $1, $2 
-                     WHERE NOT EXISTS (SELECT 1 FROM ${list}list_references WHERE name = $1 AND reference = $2);`,
+                     WHERE NOT EXISTS (SELECT 1 FROM ${list}_references WHERE name = $1 AND reference = $2);`,
                     [name, reference]
                 )
             }
         }
 
         await run(
-            `INSERT INTO ${list}list_authors (name, author) 
+            `INSERT INTO ${list}_authors (name, author) 
              SELECT $1, $2 
-             WHERE NOT EXISTS (SELECT 1 FROM ${list}list_authors WHERE name = $1 AND author = $2);`,
+             WHERE NOT EXISTS (SELECT 1 FROM ${list}_authors WHERE name = $1 AND author = $2);`,
             [name, author.id]
         )
 
-        await run(`INSERT INTO ${list}list_created (name, id) VALUES ($1, $2);`, [name, author.id])
-        await run(`INSERT INTO ${list}list_updated (name, id) VALUES ($1, $2);`, [name, author.id])
+        await run(`INSERT INTO ${list}_created (name, id) VALUES ($1, $2);`, [name, author.id])
+        await run(`INSERT INTO ${list}_updated (name, id) VALUES ($1, $2);`, [name, author.id])
         const audit = `Added ${name} ${Array.isArray(versions) && versions.length ? `versions ${versions.join(', ')}` : 'for all versions'} ${Array.isArray(ecosystems) && ecosystems.length ? `${Array.isArray(versions) && versions.length ? 'with' : 'for'} ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the ${list}list for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references}` : ''}.`
-        await run(`INSERT INTO ${list}list_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
+        await run(`INSERT INTO ${list}_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
         await run(`INSERT INTO audit_log (event, author) VALUES ($1, $2);`, [audit, author.id])
 
-        return res.send({ message: `Added to ${list}list successfully.` })
+        return res.send({ message: `Added to ${list} successfully.` })
     } catch (error) {
         console.error(`Database error: ${JSON.stringify(error)}`)
         return res.status(500).send({ error: 'Internal Server Error' })

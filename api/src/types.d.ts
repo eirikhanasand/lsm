@@ -63,8 +63,8 @@ type PostBody = {
 
 type OSVResponse = {
     vulnerabilties: OSVResponseVulnerability[]
-    whitelist?: any[]
-    blacklist?: any[]
+    allow?: any[]
+    block?: any[]
 }
 
 type OSVResponseVulnerability = {
@@ -208,8 +208,8 @@ type FetchOSVProps = {
 
 type FetchOSVResponse = {
     response: OSVResponse
-    whitelist?: any[]
-    blacklist?: any[]
+    allow?: any[]
+    block?: any[]
     osvLength: number
 }
 
@@ -233,5 +233,5 @@ type AuditLogQueryProps = {
     page?: string
     resultsPerPage?: number
     version?: string
-    list?: 'white' | 'black'
+    list?: 'allow' | 'block'
 }

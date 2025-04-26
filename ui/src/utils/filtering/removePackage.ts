@@ -5,7 +5,7 @@ type RemovePackageProps = {
     name: string
     setPackages: (value: SetStateAction<Package[]>) => void
     packages: Package[]
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     token: string
 }
 

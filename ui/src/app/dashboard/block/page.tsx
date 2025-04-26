@@ -4,7 +4,7 @@ import AddPackage from '@/components/package/addPackage'
 import { cookies } from 'next/headers'
 
 export default async function page() {
-    const list = 'black'
+    const list = 'block'
     const serverPackages = await getPackages({ list, side: 'server' })
     const packages = Array.isArray(serverPackages) ? serverPackages : []
     const repositories = await fetchRepositories()

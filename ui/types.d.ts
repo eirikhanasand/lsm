@@ -45,13 +45,13 @@ type Cookie = {
 }
 
 type ClientPageProps = {
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     packages: APIPackage[]
     repositories: Repository[]
     serverShowGlobalOnly: boolean
 }
 
-type RepoWhitelistItem = {
+type RepoAllowItem = {
     name: string
     versions: string[]       
     ecosystems: string[]  
@@ -60,7 +60,7 @@ type RepoWhitelistItem = {
     isGlobal?: boolean 
 }
 
-type RepoBlacklistItem = {
+type RepoBlockItem = {
     name: string
     versions: string[]      
     ecosystems: string[]    
@@ -70,8 +70,8 @@ type RepoBlacklistItem = {
 }
 
 type RepoConfig = {
-    whitelist: RepoWhitelistItem[]
-    blacklist: RepoBlacklistItem[]
+    allow: RepoAllowItem[]
+    block: RepoBlockItem[]
 }
 
 type User = {
@@ -201,6 +201,6 @@ type RepoListItem = {
 }
 
 type RepoConfig = {
-    whitelist: RepoListItem[]
-    blacklist: RepoListItem[]
+    allow: RepoListItem[]
+    block: RepoListItem[]
 }

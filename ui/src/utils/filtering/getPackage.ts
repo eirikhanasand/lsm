@@ -3,7 +3,7 @@ import config from '@constants'
 const { SERVER_API } = config
 
 type GetListProps = {
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     side: 'server' | 'client'
 }
 

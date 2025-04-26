@@ -19,148 +19,148 @@ BEGIN
     END IF;
 END $$;
 
--- Whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist (
+-- Allowed dependencies
+CREATE TABLE IF NOT EXISTS allow (
     name TEXT PRIMARY KEY,
     comment TEXT NOT NULL
 );
 
--- Blacklisted dependencies
-CREATE TABLE IF NOT EXISTS blacklist (
+-- Blocked dependencies
+CREATE TABLE IF NOT EXISTS block (
     name TEXT PRIMARY KEY,
     comment TEXT NOT NULL
 );
 
--- Version specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_versions (
+-- Version specific allowed dependencies
+CREATE TABLE IF NOT EXISTS allow_versions (
     name TEXT NOT NULL,
     version TEXT,
-    FOREIGN KEY (name) REFERENCES whitelist(name),
+    FOREIGN KEY (name) REFERENCES allow(name),
     PRIMARY KEY (name, version)
 );
 
--- Ecosystem specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_ecosystems (
+-- Ecosystem specific allowed dependencies
+CREATE TABLE IF NOT EXISTS allow_ecosystems (
     name TEXT NOT NULL,
     ecosystem TEXT,
-    FOREIGN KEY (name) REFERENCES whitelist(name),
+    FOREIGN KEY (name) REFERENCES allow(name),
     PRIMARY KEY (name, ecosystem)
 );
 
--- Repository specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_repositories (
+-- Repository specific allowed dependencies
+CREATE TABLE IF NOT EXISTS allow_repositories (
     name TEXT NOT NULL,
     repository TEXT,
-    FOREIGN KEY (name) REFERENCES whitelist(name),
+    FOREIGN KEY (name) REFERENCES allow(name),
     PRIMARY KEY (name, repository)
 );
 
--- References for specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_references (
+-- References for specific allowed dependencies
+CREATE TABLE IF NOT EXISTS allow_references (
     name TEXT NOT NULL,
     reference TEXT NOT NULL,
-    FOREIGN KEY (name) REFERENCES whitelist(name),
+    FOREIGN KEY (name) REFERENCES allow(name),
     PRIMARY KEY (name, reference)
 );
 
--- Authors for specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_authors (
+-- Authors for specific allowed dependencies
+CREATE TABLE IF NOT EXISTS allow_authors (
     name TEXT NOT NULL,
     author TEXT NOT NULL,
-    FOREIGN KEY (name) REFERENCES whitelist(name),
+    FOREIGN KEY (name) REFERENCES allow(name),
     PRIMARY KEY (name, author)
 );
 
--- Created info for specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_created (
+-- Created info for specific allowed dependencies
+CREATE TABLE IF NOT EXISTS allow_created (
     name TEXT PRIMARY KEY,
     id TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES whitelist(name)
+    FOREIGN KEY (name) REFERENCES allow(name)
 );
 
--- Updated info for specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_updated (
+-- Updated info for specific allowed dependencies
+CREATE TABLE IF NOT EXISTS allow_updated (
     name TEXT PRIMARY KEY,
     id TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES whitelist(name)
+    FOREIGN KEY (name) REFERENCES allow(name)
 );
 
--- Changelog for specific whitelisted dependencies
-CREATE TABLE IF NOT EXISTS whitelist_changelog (
+-- Changelog for specific allowed dependencies
+CREATE TABLE IF NOT EXISTS allow_changelog (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     event TEXT NOT NULL,
     author TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES whitelist(name)
+    FOREIGN KEY (name) REFERENCES allow(name)
 );
 
--- Version specific blacklisted versions
-CREATE TABLE IF NOT EXISTS blacklist_versions (
+-- Version specific blocked versions
+CREATE TABLE IF NOT EXISTS block_versions (
     name TEXT NOT NULL,
     version TEXT,
-    FOREIGN KEY (name) REFERENCES blacklist(name),
+    FOREIGN KEY (name) REFERENCES block(name),
     PRIMARY KEY (name, version)
 );
 
--- Ecosystem specific blacklisted ecosystems
-CREATE TABLE IF NOT EXISTS blacklist_ecosystems (
+-- Ecosystem specific blocked ecosystems
+CREATE TABLE IF NOT EXISTS block_ecosystems (
     name TEXT NOT NULL,
     ecosystem TEXT,
-    FOREIGN KEY (name) REFERENCES blacklist(name),
+    FOREIGN KEY (name) REFERENCES block(name),
     PRIMARY KEY (name, ecosystem)
 );
 
--- Repository specific blacklisted repositories
-CREATE TABLE IF NOT EXISTS blacklist_repositories (
+-- Repository specific blocked repositories
+CREATE TABLE IF NOT EXISTS block_repositories (
     name TEXT NOT NULL,
     repository TEXT,
-    FOREIGN KEY (name) REFERENCES blacklist(name),
+    FOREIGN KEY (name) REFERENCES block(name),
     PRIMARY KEY (name, repository)
 );
 
--- References for specific blacklisted dependencies
-CREATE TABLE IF NOT EXISTS blacklist_references (
+-- References for specific blocked dependencies
+CREATE TABLE IF NOT EXISTS block_references (
     name TEXT NOT NULL,
     reference TEXT NOT NULL,
-    FOREIGN KEY (name) REFERENCES blacklist(name),
+    FOREIGN KEY (name) REFERENCES block(name),
     PRIMARY KEY (name, reference)
 );
 
--- Authors for specific blacklisted dependencies
-CREATE TABLE IF NOT EXISTS blacklist_authors (
+-- Authors for specific blocked dependencies
+CREATE TABLE IF NOT EXISTS block_authors (
     name TEXT NOT NULL,
     author TEXT NOT NULL,
-    FOREIGN KEY (name) REFERENCES blacklist(name),
+    FOREIGN KEY (name) REFERENCES block(name),
     PRIMARY KEY (name, author)
 );
 
--- Created info for specific blacklisted dependencies
-CREATE TABLE IF NOT EXISTS blacklist_created (
+-- Created info for specific blocked dependencies
+CREATE TABLE IF NOT EXISTS block_created (
     name TEXT PRIMARY KEY,
     id TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES blacklist(name)
+    FOREIGN KEY (name) REFERENCES block(name)
 );
 
--- Updated info for specific blacklisted dependencies
-CREATE TABLE IF NOT EXISTS blacklist_updated (
+-- Updated info for specific blocked dependencies
+CREATE TABLE IF NOT EXISTS block_updated (
     name TEXT PRIMARY KEY,
     id TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES blacklist(name)
+    FOREIGN KEY (name) REFERENCES block(name)
 );
 
--- Changelog for specific blacklisted dependencies
-CREATE TABLE IF NOT EXISTS blacklist_changelog (
+-- Changelog for specific blocked dependencies
+CREATE TABLE IF NOT EXISTS block_changelog (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     event TEXT NOT NULL,
     author TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (name) REFERENCES blacklist(name)
+    FOREIGN KEY (name) REFERENCES block(name)
 );
 
 -- Vulnerabilities table
@@ -225,28 +225,28 @@ ON vulnerabilities (name, package_name);
 CREATE INDEX IF NOT EXISTS idx_vuln_name 
 ON vulnerabilities (name);
 
--- Indexes for Whitelist
-CREATE INDEX IF NOT EXISTS idx_whitelist_versions_name
-ON whitelist_versions (name);
+-- Indexes for allowed packages
+CREATE INDEX IF NOT EXISTS idx_allow_versions_name
+ON allow_versions (name);
 
-CREATE INDEX IF NOT EXISTS idx_whitelist_ecosystems_name
-ON whitelist_ecosystems (name);
+CREATE INDEX IF NOT EXISTS idx_allow_ecosystems_name
+ON allow_ecosystems (name);
 
-CREATE INDEX IF NOT EXISTS idx_whitelist_repositories_name
-ON whitelist_repositories (name);
+CREATE INDEX IF NOT EXISTS idx_allow_repositories_name
+ON allow_repositories (name);
 
-CREATE INDEX IF NOT EXISTS idx_whitelist_authors_name
-ON whitelist_authors (name);
+CREATE INDEX IF NOT EXISTS idx_allow_authors_name
+ON allow_authors (name);
 
--- Indexes for Blacklist
-CREATE INDEX IF NOT EXISTS idx_blacklist_versions_name
-ON blacklist_versions (name);
+-- Indexes for blocked packages
+CREATE INDEX IF NOT EXISTS idx_block_versions_name
+ON block_versions (name);
 
-CREATE INDEX IF NOT EXISTS idx_blacklist_ecosystems_name
-ON blacklist_ecosystems (name);
+CREATE INDEX IF NOT EXISTS idx_block_ecosystems_name
+ON block_ecosystems (name);
 
-CREATE INDEX IF NOT EXISTS idx_blacklist_repositories_name
-ON blacklist_repositories (name);
+CREATE INDEX IF NOT EXISTS idx_block_repositories_name
+ON block_repositories (name);
 
-CREATE INDEX IF NOT EXISTS idx_blacklist_authors_name
-ON blacklist_authors (name);
+CREATE INDEX IF NOT EXISTS idx_block_authors_name
+ON block_authors (name);

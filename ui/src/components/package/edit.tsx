@@ -15,7 +15,7 @@ const {
 type EditProps = {
     pkg: Package
     setEditing: Dispatch<SetStateAction<boolean>>
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     packages: Package[]
     setPackages: Dispatch<SetStateAction<Package[]>>
     author: Author
@@ -188,7 +188,7 @@ function Change({ change }: { change: ChangeLog }) {
             <div className='relative min-w-[35px] max-w-[35px] h-[35px] self-center cursor-pointer rounded-full overflow-hidden'>
                 {imageExists ? <Image
                     src={`${IMAGE_URL}/${change.author.id}/${change.author.avatar}.png?size=64`}
-                    alt='logo'
+                    alt='Profile Icon'
                     fill={true}
                 /> : <ProfileIcon />}
             </div>

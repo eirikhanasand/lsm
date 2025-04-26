@@ -1,5 +1,5 @@
 type DeleteListProps = {
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     name: string
     token: string
 }

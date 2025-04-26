@@ -1,6 +1,6 @@
 # lsm
 Library Safety Manager Open Source Plugin For Artifactory
-Whitelist and blacklist packages for JFrog Artifactory to prevent download of malicious or vulnerable code.
+Allow and block packages for JFrog Artifactory to prevent download of malicious or vulnerable code.
 
 ## Quick setup frontend / api
 NB: This is the quick guide for rapid testing without auth. It should only be used for testing purposes. To deploy with auth, please see the "Deploying with auth" section.
@@ -20,14 +20,14 @@ FRONTEND_URL=http://localhost:3000
 LOCAL_OSV=false
 # Open Source Vulnerability database uri
 OSV_URL=https://api.osv.dev/v1/query
-# Database password (database is used for storing whitelisted and blacklisted packages)
+# Database password (database is used for storing allowed and blocked packages)
 DB_PASSWORD=osvpassword
 # Disables authorization checks
 NEXT_PUBLIC_DISABLE_AUTH=true
 ```
 2. Run `docker compose up` to build the application
 3. The UI is now available on port 3000 and the API on port 8080
-4. You can now whitelist and blacklist packages in the UI or via API
+4. You can now allow and block packages in the UI or via API
 5. Follow the "Quick setup worker / JFrog" to setup the worker
 6. Set the `const OSV_URL = 'http://129.241.150.86:8080/api'` variable in `worker/worker.ts` / (the worker you define in Artifactory) to point to your own backend (must be reachable via http / https from the Artifactory instance)
 
@@ -110,7 +110,7 @@ FRONTEND_URL=http://localhost:3000
 LOCAL_OSV=false
 # Open Source Vulnerability database uri
 OSV_URL=https://api.osv.dev/v1/query
-# Database password (database is used for storing whitelisted and blacklisted packages)
+# Database password (database is used for storing allowed and blocked packages)
 DB_PASSWORD=<strong_password>
 # JFrog service account email (used by the registry pipeline, can be skipped for testing)
 JFROG_EMAIL=<your_jfrog_service_account_email>
@@ -218,7 +218,7 @@ FRONTEND_URL=http://localhost:3000
 LOCAL_OSV=false
 # Open Source Vulnerability database uri
 OSV_URL=https://api.osv.dev/v1/query
-# Database password (database is used for storing whitelisted and blacklisted packages)
+# Database password (database is used for storing allowed and blocked packages)
 DB_PASSWORD=<strong_password>
 # Disables authorization checks
 NEXT_PUBLIC_DISABLE_AUTH=true

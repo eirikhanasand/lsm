@@ -1,5 +1,5 @@
 type PutListProps = {
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     pkg: PutPackage
     token: string
 }

@@ -20,6 +20,6 @@ AND ($6::TEXT IS NULL OR (
 )
 -- list filter
 AND ($7::TEXT IS NULL OR (
-    SELECT regexp_matches(a.event, '^(blacklist|whitelist) (for) (\S+)', 'i'))[1] = $7::TEXT
+    SELECT regexp_matches(a.event, '^(allow|block) (for) (\S+)', 'i'))[1] = $7::TEXT
 )
 LIMIT $8 OFFSET ($9 - 1) * $8;

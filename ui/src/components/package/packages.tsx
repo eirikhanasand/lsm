@@ -3,7 +3,7 @@ import Package from './package'
 
 type PackagesProps = {
     groupedPackages: Record<string, Package[]>
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     setPackages: Dispatch<SetStateAction<Package[]>>
     packages: Package[]
     author: Author

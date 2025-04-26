@@ -5,38 +5,38 @@ const { SERVER_API } = config
 export default async function fetchRepoConfig(repository: string): Promise<RepoConfig> {
     const params = new URLSearchParams({ repository: encodeURIComponent(repository) })
     try {
-        const [whitelistRes, blacklistRes] = await Promise.all([
-            fetch(`${SERVER_API}/list/white?${params}`),
-            fetch(`${SERVER_API}/list/black?${params}`)
+        const [allowRes, blockRes] = await Promise.all([
+            fetch(`${SERVER_API}/list/allow?${params}`),
+            fetch(`${SERVER_API}/list/block?${params}`)
         ])
 
-        if (!whitelistRes.ok) {
-            const whitelistErrorText = await whitelistRes.text()
-            throw new Error(`Error fetching whitelist: ${whitelistErrorText}`)
+        if (!allowRes.ok) {
+            const allowErrorText = await allowRes.text()
+            throw new Error(`Error fetching allowed packages: ${allowErrorText}`)
         }
-        if (!blacklistRes.ok) {
-            const blacklistErrorText = await blacklistRes.text()
-            throw new Error(`Error fetching blacklist: ${blacklistErrorText}`)
+        if (!blockRes.ok) {
+            const blockErrorText = await blockRes.text()
+            throw new Error(`Error fetching blocked packages: ${blockErrorText}`)
         }
 
-        const [whitelistRaw, blacklistRaw] = await Promise.all([
-            whitelistRes.json(),
-            blacklistRes.json()
+        const [allowRaw, blockRaw] = await Promise.all([
+            allowRes.json(),
+            blockRes.json()
         ])
 
-        const whitelist = whitelistRaw.map((item: RepoWhitelistItem) => ({
+        const allow = allowRaw.map((item: RepoAllowItem) => ({
             ...item,
             isGlobal: item.repositories.length === 0
         }))
 
-        const blacklist = blacklistRaw.map((item: RepoBlacklistItem) => ({
+        const block = blockRaw.map((item: RepoBlockItem) => ({
             ...item,
             isGlobal: item.repositories.length === 0
         }))
 
-        return { whitelist, blacklist }
+        return { allow, block }
     } catch (error) {
         console.error(`Error fetching repository config: ${error}`)
-        return { whitelist: [], blacklist: [] }
+        return { allow: [], block: [] }
     }
 }

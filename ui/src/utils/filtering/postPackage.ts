@@ -1,5 +1,5 @@
 type PostListProps = {
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     newPackage: AddPackage
     token: string
 }

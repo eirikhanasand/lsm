@@ -8,9 +8,9 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
         return res.status(400).send({ error: 'Unauthorized' })
     }
 
-    const { list } = req.params as { list: 'white' | 'black' }
-    if (list !== 'white' && list !== 'black') {
-        return res.status(400).send({ error: "List must be either white or black." })
+    const { list } = req.params as { list: 'allow' | 'block' }
+    if (list !== 'allow' && list !== 'block') {
+        return res.status(400).send({ error: "List must be either 'allow' or 'block'." })
     }
 
     const { ecosystems, name, versions, comment, repositories, author, references } = req.body as UpdateBody || {}
@@ -22,7 +22,7 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
 
     try {
         console.log(
-            `Replacing ${list}list version:` +
+            `Replacing ${list} version:` +
             ` name=${name},` +
             ` versions=${versions},` +
             ` ecosystems=${ecosystems},` +
@@ -33,21 +33,21 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
         )
 
         await runInTransaction(async (client) => {
-            const checkExists = await client.query(`SELECT name FROM ${list}list WHERE name = $1;`, [name])
+            const checkExists = await client.query(`SELECT name FROM ${list} WHERE name = $1;`, [name])
             if (checkExists.rowCount === 0) {
-                throw new Error(`${list}list entry not found.`)
+                throw new Error(`${list} entry not found.`)
             }
 
-            await client.query(`UPDATE ${list}list SET comment = $2 WHERE name = $1;`, [name, comment])
+            await client.query(`UPDATE ${list} SET comment = $2 WHERE name = $1;`, [name, comment])
 
             if (Array.isArray(versions)) {
-                await client.query(`DELETE FROM ${list}list_versions WHERE name = $1;`, [name])
+                await client.query(`DELETE FROM ${list}_versions WHERE name = $1;`, [name])
                 for (const version of versions) {
                     await client.query(
                         `
-                            INSERT INTO ${list}list_versions (name, version)
+                            INSERT INTO ${list}_versions (name, version)
                             SELECT $1, $2 
-                            WHERE NOT EXISTS (SELECT 1 FROM ${list}list_versions WHERE name = $1 AND version = $2);
+                            WHERE NOT EXISTS (SELECT 1 FROM ${list}_versions WHERE name = $1 AND version = $2);
                         `,
                         [name, version]
                     )
@@ -55,13 +55,13 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
             }
 
             if (Array.isArray(ecosystems)) {
-                await client.query(`DELETE FROM ${list}list_ecosystems WHERE name = $1;`, [name])
+                await client.query(`DELETE FROM ${list}_ecosystems WHERE name = $1;`, [name])
                 for (const ecosystem of ecosystems) {
                     await client.query(
                         `
-                            INSERT INTO ${list}list_ecosystems (name, ecosystem)
+                            INSERT INTO ${list}_ecosystems (name, ecosystem)
                             SELECT $1, $2 
-                            WHERE NOT EXISTS (SELECT 1 FROM ${list}list_ecosystems WHERE name = $1 AND ecosystem = $2);
+                            WHERE NOT EXISTS (SELECT 1 FROM ${list}_ecosystems WHERE name = $1 AND ecosystem = $2);
                         `,
                         [name, ecosystem]
                     )
@@ -69,13 +69,13 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
             }
 
             if (Array.isArray(references)) {
-                await client.query(`DELETE FROM ${list}list_references WHERE name = $1;`, [name])
+                await client.query(`DELETE FROM ${list}_references WHERE name = $1;`, [name])
                 for (const reference of references) {
                     await client.query(
                         `
-                            INSERT INTO ${list}list_references (name, reference)
+                            INSERT INTO ${list}_references (name, reference)
                             SELECT $1, $2 
-                            WHERE NOT EXISTS (SELECT 1 FROM ${list}list_references WHERE name = $1 AND reference = $2);
+                            WHERE NOT EXISTS (SELECT 1 FROM ${list}_references WHERE name = $1 AND reference = $2);
                         `,
                         [name, reference]
                     )
@@ -83,26 +83,26 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
             }
 
             if (Array.isArray(repositories)) {
-                await client.query(`DELETE FROM ${list}list_repositories WHERE name = $1;`, [name])
+                await client.query(`DELETE FROM ${list}_repositories WHERE name = $1;`, [name])
                 for (const repository of repositories) {
                     await client.query(
                         `
-                            INSERT INTO ${list}list_repositories (name, repository)
+                            INSERT INTO ${list}_repositories (name, repository)
                             SELECT $1, $2 
-                            WHERE NOT EXISTS (SELECT 1 FROM ${list}list_repositories WHERE name = $1 AND repository = $2);
+                            WHERE NOT EXISTS (SELECT 1 FROM ${list}_repositories WHERE name = $1 AND repository = $2);
                         `,
                         [name, repository]
                     )
                 }
             }
 
-            await client.query(`UPDATE ${list}list_updated SET id = $1, timestamp = $2 WHERE name = $3;`, [author.id, new Date().toISOString(), name])
+            await client.query(`UPDATE ${list}_updated SET id = $1, timestamp = $2 WHERE name = $3;`, [author.id, new Date().toISOString(), name])
             const audit = `Updated ${name} with versions ${versions.join(', ')} ${Array.isArray(ecosystems) && ecosystems.length ? `with ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the ${list}list for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references.join(', ')}` : ''}.`
-            await client.query(`INSERT INTO ${list}list_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
+            await client.query(`INSERT INTO ${list}_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
             await client.query(`INSERT INTO audit_log (event, author) VALUES ($1, $2);`, [audit, author.id])
         })
 
-        return res.send({ message: `${list}list entry updated successfully.` })
+        return res.send({ message: `${list} entry updated successfully.` })
     } catch (error: any) {
         console.error(`Database error: ${JSON.stringify(error)}`)
         if (error.message.includes('not found')) {

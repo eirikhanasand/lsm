@@ -56,10 +56,24 @@ services:
       OSV_URL: ${OSV_URL}
       CLIENT_ID: ${CLIENT_ID}
       CLIENT_SECRET: ${CLIENT_SECRET}
-      SELF_URL: ${NEXT_PUBLIC_SELF_URL}
+      NEXT_PUBLIC_SELF_URL: ${NEXT_PUBLIC_SELF_URL}
       OAUTH_TOKEN_URL: ${OAUTH_TOKEN_URL}
       OAUTH_BASE_URL: ${OAUTH_BASE_URL}
       OAUTH_AUTH_URL: ${OAUTH_AUTH_URL}
+      DEFAULT_MAL_SEVERITY: ${DEFAULT_MAL_SEVERITY}
+      DEFAULT_CVE_SEVERITY: ${DEFAULT_CVE_SEVERITY}
+      DEFAULT_SEVERITY: ${DEFAULT_SEVERITY}
+      DB: ${DB}
+      DB_USER: ${DB_USER}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_MAX_CONN: ${DB_MAX_CONN}
+      DB_IDLE_TIMEOUT_MS: ${DB_IDLE_TIMEOUT_MS}
+      DB_TIMEOUT_MS: ${DB_TIMEOUT_MS}
+      DEFAULT_RESULTS_PER_PAGE: ${DEFAULT_RESULTS_PER_PAGE}
+      NEXT_PUBLIC_DISABLE_AUTH: ${NEXT_PUBLIC_DISABLE_AUTH}
+      NEXT_PUBLIC_API: ${NEXT_PUBLIC_API}
+
     healthcheck:
       test: ["CMD-SHELL", "[ \"$(cat /tmp/health_status 2>/dev/null)\" = \"healthy\" ] && wget -qO- http://localhost:8080/api || [ \"$(cat /tmp/health_status 2>/dev/null)\" = \"starting\" ]"]
       interval: 5s

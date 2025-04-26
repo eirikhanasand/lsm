@@ -29,7 +29,7 @@ export default async function osvHandler(req: FastifyRequest, res: FastifyReply)
         }
 
         const { response, osvLength } = osv
-        if (!osvLength && (!('whitelist' in response) && !('blacklist' in response))) {
+        if (!osvLength && (!('allow' in response) && !('block' in response))) {
             return res.send({})
         }
         return res.send(response)

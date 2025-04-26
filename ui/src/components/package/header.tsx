@@ -7,7 +7,7 @@ import config from '@parent/constants'
 const { DEFAULT_RESULTS_PER_PAGE } = config
 
 type HeaderProps = {
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     selectedEcosystem: string
     setSelectedEcosystem: Dispatch<SetStateAction<string>>
     groupedPackages: Record<string, Package[]>
@@ -51,10 +51,9 @@ export default function Header({
         <>
             <div className='flex px-6 pt-6 gap-2'>
                 <div className='w-1/2'>
-                    <h1 className='text-3xl font-bold text-blue-600'>{`${list === 'white' ? 'Whitelisted' : 'Blacklisted'} Packages`}</h1>
+                    <h1 className='text-3xl font-bold text-blue-600'>{`${list[0].toUpperCase()}${list.slice(1)}ed Packages`}</h1>
                     <p className='text-foreground'>
-                        Manage the list of{' '}
-                        {list === 'white' ? 'safe' : 'dangerous'} packages.
+                        Manage the list of {list}ed packages.
                     </p>
                 </div>
 

@@ -109,7 +109,7 @@ export default function AddPackage({
             <div className='w-full px-6'>
                 {Object.keys(groupedPackages).length === 0 ? (
                     <p className='text-foreground text-center'>
-                        No {list}listed packages yet.
+                        No {list}ed packages yet.
                     </p>
                 ) : (
                     <div>

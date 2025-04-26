@@ -13,7 +13,7 @@ type FormProps = {
     newPackage: AddPackage
     setNewPackage: Dispatch<SetStateAction<AddPackage>>
     setPackages: Dispatch<SetStateAction<Package[]>>
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     author: Author
     formStyle: string
     repositories: Repository[]

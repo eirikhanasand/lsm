@@ -99,13 +99,13 @@ export async function processVulnerabilities({
 
 async function checkPackage({ response }: { response: OSVResponse }): Promise<number> {
     if (!response || response.vulnerabilties?.length) {
-        if ('whitelist' in response) {
+        if ('allow' in response) {
             return DownloadStatus.DOWNLOAD_PROCEED
         }
         return DownloadStatus.DOWNLOAD_STOP
     }
     if (JSON.stringify(response) !== '{}') {
-        if ('blacklist' in response) {
+        if ('block' in response) {
             return DownloadStatus.DOWNLOAD_STOP
         }
     }

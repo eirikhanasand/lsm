@@ -15,23 +15,23 @@ export default async function listDeleteHandler(req: FastifyRequest, res: Fastif
 
     try {
         await runInTransaction(async (client) => {
-            await client.query(`DELETE FROM ${list}list_versions WHERE name = $1;`, [name])
-            await client.query(`DELETE FROM ${list}list_ecosystems WHERE name = $1;`, [name])
-            await client.query(`DELETE FROM ${list}list_repositories WHERE name = $1;`, [name])
-            await client.query(`DELETE FROM ${list}list_references WHERE name = $1;`, [name])
-            await client.query(`DELETE FROM ${list}list_authors WHERE name = $1;`, [name])
-            await client.query(`DELETE FROM ${list}list_created WHERE name = $1;`, [name])
-            await client.query(`DELETE FROM ${list}list_updated WHERE name = $1;`, [name])
-            await client.query(`DELETE FROM ${list}list_changelog WHERE name = $1;`, [name])
+            await client.query(`DELETE FROM ${list}_versions WHERE name = $1;`, [name])
+            await client.query(`DELETE FROM ${list}_ecosystems WHERE name = $1;`, [name])
+            await client.query(`DELETE FROM ${list}_repositories WHERE name = $1;`, [name])
+            await client.query(`DELETE FROM ${list}_references WHERE name = $1;`, [name])
+            await client.query(`DELETE FROM ${list}_authors WHERE name = $1;`, [name])
+            await client.query(`DELETE FROM ${list}_created WHERE name = $1;`, [name])
+            await client.query(`DELETE FROM ${list}_updated WHERE name = $1;`, [name])
+            await client.query(`DELETE FROM ${list}_changelog WHERE name = $1;`, [name])
 
-            const mainDeleteResult = await client.query(`DELETE FROM ${list}list WHERE name = $1 RETURNING *;`, [name])
+            const mainDeleteResult = await client.query(`DELETE FROM ${list} WHERE name = $1 RETURNING *;`, [name])
             if (mainDeleteResult.rowCount === 0) {
-                throw new Error(`No ${list}list entry found for name='${name}'.`)
+                throw new Error(`No ${list} entry found for name='${name}'.`)
             }
             return
         })
         return res.send({
-            message: `All ${list}list entries for '${name}' deleted successfully.`,
+            message: `All ${list} entries for '${name}' deleted successfully.`,
         })
     } catch (error: any) {
         if (error.message.includes('No entry found for name')) {

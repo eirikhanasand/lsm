@@ -8,7 +8,7 @@ type AddPackageProps = {
     setShowForm: Dispatch<SetStateAction<boolean>>
     setNewPackage: Dispatch<SetStateAction<AddPackage>>
     packages: Package[]
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     author: Author
     token: string
 }

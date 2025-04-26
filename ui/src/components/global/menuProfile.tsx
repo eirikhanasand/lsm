@@ -45,7 +45,7 @@ export default function MenuProfile({ token }: { token: string | undefined }) {
             >
                 {imageExists ? <Image
                     src={`${IMAGE_URL}/${id}/${avatar}.png?size=64`}
-                    alt='logo'
+                    alt='Profile Icon'
                     fill={true}
                 /> : <ProfileIcon />}
             </div>

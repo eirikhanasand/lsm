@@ -10,7 +10,7 @@ type FetchListProps = {
     name?: string
     version?: string
     ecosystem?: string
-    list: 'white' | 'black'
+    list: 'allow' | 'block'
     res?: FastifyReply
     page?: number
     resultsPerPage?: number
@@ -31,7 +31,7 @@ export default async function fetchList({
     res,
 }: FetchListProps) {
     console.log(
-        `Fetching ${list}list entry:` +
+        `Fetching ${list} entry:` +
         ` ecosystem=${ecosystem},` +
         ` name=${name},` +
         ` version=${version},` +
