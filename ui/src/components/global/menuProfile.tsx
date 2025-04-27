@@ -4,16 +4,13 @@ import { getCookie } from '@/utils/cookies'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import config from '@parent/constants'
 import ProfileIcon from '../svg/profileIcon'
 
-const { IMAGE_URL } = config
-
-export default function MenuProfile({ token }: { token: string | undefined }) {
+export default function MenuProfile({ token, url }: { token: string | undefined, url?: string }) {
     const [open, setOpen] = useState(false)
     const [id, setId] = useState<string | null>(null)
     const [avatar, setAvatar] = useState<string | null>(null)
-    const imageExists = IMAGE_URL && IMAGE_URL !== 'null'
+    const imageExists = url && avatar !== 'null' && avatar !== null
 
     useEffect(() => {
         const tempId = getCookie('id')
@@ -44,7 +41,7 @@ export default function MenuProfile({ token }: { token: string | undefined }) {
                 onClick={() => setOpen((open) => !open)}
             >
                 {imageExists ? <Image
-                    src={`${IMAGE_URL}/${id}/${avatar}.png?size=64`}
+                    src={`${url}/${id}/${avatar}.png?size=64`}
                     alt='Profile Icon'
                     fill={true}
                 /> : <ProfileIcon />}

@@ -181,7 +181,7 @@ export default function Edit({
 }
 
 function Change({ change }: { change: ChangeLog }) {
-    const imageExists = IMAGE_URL && IMAGE_URL !== 'null'
+    const imageExists = IMAGE_URL && change.author.avatar !== 'null'
     return (
         <div className='flex items-center gap-2 p-1 px-2 bg-light rounded-lg'>
             <h1 className='min-w-[14px] max-w-[14px]'>{change.id}</h1>

@@ -4,10 +4,14 @@ import Link from 'next/link'
 import ThemeSwitch from '@/components/theme/themeSwitch'
 import { cookies } from 'next/headers'
 import MenuProfile from '@/components/global/menuProfile'
+import config from '@parent/constants'
+
 export const metadata: Metadata = {
     title: 'Library Safety Manager',
     description: 'A plugin to manage library packages'
 }
+
+const { IMAGE_URL } = config
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const Cookies = await cookies()
@@ -24,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     </Link>
                     <nav className='flex justify-end pr-2'>
                         <ThemeSwitch />
-                        <MenuProfile token={token} />
+                        <MenuProfile token={token} url={IMAGE_URL} />
                     </nav>
                 </header>
                 <main className='h-[93.5vh] max-h-[93.5vh] overflow-auto w-full'>

@@ -26,7 +26,7 @@ export default async function page() {
 
 function Log({ log }: LogProps) {
     const date = new Date(log.timestamp).toLocaleString('en-GB').replaceAll('/', '.')
-    const imageExists = IMAGE_URL && IMAGE_URL !== 'null'
+    const imageExists = IMAGE_URL && log.author.avatar !== 'null'
     return (
         <div className='flex w-full bg-dark rounded-lg px-4 min-h-[40px]'>
             <div className='flex gap-2 w-[15vw]'>
