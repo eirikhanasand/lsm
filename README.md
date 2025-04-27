@@ -24,6 +24,10 @@ OSV_URL=https://api.osv.dev/v1/query
 DB_PASSWORD=osvpassword
 # Disables authorization checks
 NEXT_PUBLIC_DISABLE_AUTH=true
+# The frontend, api and database ports may be set using the following variables
+# FRONTEND_PORT=8400
+# API_PORT=8401
+# DB_PORT=8402
 ```
 2. Run `docker compose up` to build the application
 3. The UI is now available on port 3000 and the API on port 8080
