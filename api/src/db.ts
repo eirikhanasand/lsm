@@ -6,7 +6,6 @@ const {
     DB_USER,
     DB_HOST,
     DB_PASSWORD,
-    DB_PORT,
     DB_MAX_CONN,
     DB_IDLE_TIMEOUT_MS,
     DB_TIMEOUT_MS
@@ -17,7 +16,7 @@ const pool = new Pool({
     host: DB_HOST || 'lsm_database',
     database: DB || 'osvdb',
     password: DB_PASSWORD,
-    port: Number(DB_PORT) || 5432,
+    port: 5432,
     max: Number(DB_MAX_CONN) || 20,
     idleTimeoutMillis: Number(DB_IDLE_TIMEOUT_MS) || 5000,
     connectionTimeoutMillis: Number(DB_TIMEOUT_MS) || 3000
