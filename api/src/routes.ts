@@ -11,23 +11,30 @@ import { loginHandler, logoutHandler, loginCallbackHandler } from './handlers/au
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
-    // GET handlers
+    // Index handler
     fastify.get('/', indexHandler)
-    fastify.get('/osv/:ecosystem/:name/:version', osvHandler)
-    fastify.get('/list/:list', listHandler)
-    fastify.get('/oauth2/login', loginHandler)
-    fastify.get('/oauth2/callback', loginCallbackHandler)
-    fastify.get('/oauth2/logout', logoutHandler)
-    fastify.get('/statistics', packageStatisticsHandler)
-    fastify.get('/audit', auditHandler)
 
-    // POST handlers
+    // OSV handler
+    fastify.get('/osv/:ecosystem/:name/:version', osvHandler)
+
+    // List handlers
+    fastify.get('/list/:list', listHandler)
+
     fastify.post('/list/:list', listPostHandler)
     fastify.post('/worker', workerPostHandler)
 
-    // PUT handlers 
     fastify.put('/list/:list', listPutHandler)
 
-    // DELETE handlers
     fastify.delete('/list/:list/:name', listDeleteHandler)
+
+    // Login handlers
+    fastify.get('/oauth2/login', loginHandler)
+    fastify.get('/oauth2/callback', loginCallbackHandler)
+    fastify.get('/oauth2/logout', logoutHandler)
+
+    // Statistics handler
+    fastify.get('/statistics', packageStatisticsHandler)
+
+    // Log handler
+    fastify.get('/audit', auditHandler)
 }
