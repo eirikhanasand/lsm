@@ -7,7 +7,7 @@ import listPostHandler from './handlers/list/post.js'
 import listPutHandler from './handlers/list/put.js'
 import listHandler from './handlers/list/get.js'
 import listDeleteHandler from './handlers/list/delete.js'
-import { loginHandler, logoutHandler, loginCallbackHandler } from './handlers/auth/get.js'
+import { loginHandler, loginCallbackHandler } from './handlers/auth/get.js'
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
@@ -30,7 +30,6 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     // Login handlers
     fastify.get('/oauth2/login', loginHandler)
     fastify.get('/oauth2/callback', loginCallbackHandler)
-    fastify.get('/oauth2/logout', logoutHandler)
 
     // Statistics handler
     fastify.get('/statistics', packageStatisticsHandler)

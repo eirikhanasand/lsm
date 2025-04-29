@@ -22,10 +22,6 @@ export function loginHandler(_: FastifyRequest, res: FastifyReply) {
     res.redirect(authUrl)
 }
 
-export function logoutHandler(_: FastifyRequest, res: FastifyReply) {
-    res.send({ 'result': 'user tried to logout' })
-}
-
 export async function loginCallbackHandler(req: FastifyRequest, res: FastifyReply) {
     const { code } = req.query as { code?: string }
     if (!code) {
