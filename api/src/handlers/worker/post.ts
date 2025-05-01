@@ -200,12 +200,12 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
 
     const { response, osvLength } = osv
     if (osvLength) {
-        const log = ['OSV data was not empty:', JSON.stringify(response.vulnerabilties)]
+        const log = ['OSV data was not empty:', JSON.stringify(response.vulnerabilities)]
 
         // Title section
-        if ('vulnerabilties' in response) {
+        if ('vulnerabilities' in response) {
             log.push('-----------------------------')
-            for (const vulnerability of response.vulnerabilties) {
+            for (const vulnerability of response.vulnerabilities) {
                 log.push(...logDetails(vulnerability))
             }
         }

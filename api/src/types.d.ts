@@ -62,7 +62,7 @@ type PostBody = {
 }
 
 type OSVResponse = {
-    vulnerabilties: OSVResponseVulnerability[]
+    vulnerabilities: OSVResponseVulnerability[]
     allow?: any[]
     block?: any[]
 }
@@ -181,7 +181,7 @@ type KeyPathID = {
     id: string
 }
 
-type ProcessVulnerabiltiesProps = {
+type ProcessVulnerabilitiesProps = {
     response: OSVResponse
     name: string
     version: string

@@ -37,11 +37,11 @@ export async function processVulnerabilities({
     version,
     ecosystem,
     clientAddress
-}: ProcessVulnerabiltiesProps) {
+}: ProcessVulnerabilitiesProps) {
     try {
-        if ('vulnerabilties' in response && response.vulnerabilties.length) {
-            const { vulnerabilties } = response
-            for (const vuln of vulnerabilties) {
+        if ('vulnerabilities' in response && response.vulnerabilities.length) {
+            const { vulnerabilities } = response
+            for (const vuln of vulnerabilities) {
                 const status: number = await checkPackage({ response })
                 const vulnName = vuln.name || vuln.id || ''
                 let severity = -1
@@ -98,7 +98,7 @@ export async function processVulnerabilities({
 }
 
 async function checkPackage({ response }: { response: OSVResponse }): Promise<number> {
-    if (!response || response.vulnerabilties?.length) {
+    if (!response || response.vulnerabilities?.length) {
         if ('allow' in response) {
             return DownloadStatus.DOWNLOAD_PROCEED
         }
