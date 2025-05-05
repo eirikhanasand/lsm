@@ -24,6 +24,8 @@ type ENV = {
     OAUTH_AUTH_URL: string
     NEXT_PUBLIC_DISABLE_AUTH: string
     NEXT_PUBLIC_API: string
+    JFROG_ID: string
+    JFROG_TOKEN: string
 }
 
 dotenv.config({ path: '../.env' })
@@ -51,12 +53,16 @@ const {
     OAUTH_BASE_URL,
     NEXT_PUBLIC_DISABLE_AUTH,
     OAUTH_AUTH_URL,
-    NEXT_PUBLIC_API
+    NEXT_PUBLIC_API,
+    JFROG_ID,
+    JFROG_TOKEN
 } = process.env as ENV
 if (!NEXT_PUBLIC_API 
     || !FRONTEND_URL
     || !LOCAL_OSV
     || !DB_PASSWORD
+    || !JFROG_ID
+    || !JFROG_TOKEN
 ) {
     throw new Error('Missing NEXT_PUBLIC_API, FRONTEND_URL, LOCAL_OSV or DB_PASSWORD.')
 }
@@ -91,7 +97,9 @@ const config = {
     OAUTH_TOKEN_URL,
     OAUTH_BASE_URL,
     OAUTH_AUTH_URL,
-    DISABLE_AUTH: NEXT_PUBLIC_DISABLE_AUTH
+    DISABLE_AUTH: NEXT_PUBLIC_DISABLE_AUTH,
+    JFROG_ID,
+    JFROG_TOKEN
 }
 
 export default config

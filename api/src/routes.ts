@@ -1,4 +1,5 @@
 import indexHandler from './handlers/index.js'
+import repositoryHandler from './handlers/repositories/get.js'
 import osvHandler from './handlers/osv/get.js'
 import auditHandler from './handlers/audit/get.js'
 import packageStatisticsHandler from './handlers/statistics/get.js'
@@ -13,6 +14,9 @@ import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // Index handler
     fastify.get('/', indexHandler)
+
+    // Repository handler
+    fastify.get('/repositories', repositoryHandler)
 
     // OSV handler
     fastify.get('/osv/:ecosystem/:name/:version', osvHandler)

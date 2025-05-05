@@ -2,9 +2,7 @@ import dotenv from 'dotenv'
 
 dotenv.config({path: '../.env'})
 
-const { 
-    JFROG_ID, 
-    JFROG_TOKEN,
+const {
     SERVER_API,
     DEFAULT_RESULTS_PER_PAGE: ENV_DEFAULT_RESULTS_PER_PAGE,
     IMAGE_URL,
@@ -48,8 +46,6 @@ const ECOSYSTEMS = [
 ]
 
 const config = {
-    JFROG_ID,
-    JFROG_TOKEN,
     DEFAULT_RESULTS_PER_PAGE: ENV_DEFAULT_RESULTS_PER_PAGE || 50,
     IMAGE_URL,
     SERVER_API,

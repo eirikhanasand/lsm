@@ -46,6 +46,7 @@ type Cookie = {
 
 type ClientPageProps = {
     list: 'allow' | 'block'
+    pages: number
     packages: APIPackage[]
     repositories: Repository[]
     serverShowGlobalOnly: boolean
@@ -114,6 +115,8 @@ type Vulnerability = {
 type GetStatisticProps = {
     startTime: string
     endTime: string
+    page?: string
+    resultsPerPage?: string
 }
 
 type AuditProps = {
@@ -177,14 +180,6 @@ type Ecosystem =
     'vagrant' |
     'yum' |
     'generic'
-
-type Repository = {
-    key: string
-    description: string
-    type: 'LOCAL' | 'REMOTE' | 'VIRTUAL'
-    url: string
-    packageType: string
-}
 
 type RepositoryProps = {
     repository: Repository

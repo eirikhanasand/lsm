@@ -222,6 +222,7 @@ type ListQueryProps = {
     repository?: string
     startDate?: string
     endDate?: string
+    search?: string
 }
 
 type AuditLogQueryProps = {
@@ -234,4 +235,13 @@ type AuditLogQueryProps = {
     resultsPerPage?: number
     version?: string
     list?: 'allow' | 'block'
+    search?: string
+}
+
+type Repository = {
+    key: string
+    description: string
+    type: 'LOCAL' | 'REMOTE' | 'VIRTUAL'
+    url: string
+    packageType: string
 }

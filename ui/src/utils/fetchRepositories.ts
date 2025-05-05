@@ -1,14 +1,32 @@
-import config from '@constants'
+import config from "@parent/constants"
 
-const { JFROG_ID, JFROG_TOKEN } = config
+const { DEFAULT_RESULTS_PER_PAGE } = config
 
-export default async function fetchRepositories(): Promise<Repository[]> {
+type RepositoriesProps = {
+    search?: string
+    page?: string
+    resultsPerPage?: string
+}
+
+type RepositoriesResProps = {
+    result: Repository[]
+    page: number
+    pages: number
+    resultsPerPage: number
+    error?: string
+}
+
+export default async function fetchRepositories({ search, page, resultsPerPage }: RepositoriesProps): Promise<RepositoriesResProps> {
     try {
-        const response = await fetch(`https://${JFROG_ID}.jfrog.io/artifactory/api/repositories`, {
+        const params = new URLSearchParams({ 
+            search: search || '', 
+            page: page || '1', 
+            resultsPerPage: resultsPerPage || String(DEFAULT_RESULTS_PER_PAGE || 50),
+        })
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/repositories?${params}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${JFROG_TOKEN}`
+                'Content-Type': 'application/json'
             },
         })
 
@@ -20,6 +38,12 @@ export default async function fetchRepositories(): Promise<Repository[]> {
         return data
     } catch (error) {
         console.error(error)
-        return []
+        return {
+            page: 1,
+            pages: 1,
+            result: [],
+            resultsPerPage: Number(DEFAULT_RESULTS_PER_PAGE) || 50,
+            error: `Failed to fetch repositories: ${error}`
+        }
     }
 }
