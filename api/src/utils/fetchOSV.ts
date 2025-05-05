@@ -5,7 +5,12 @@ import config from '../constants.js'
 
 const { LOCAL_OSV, OSV_URL } = config
 
-export default async function fetchOSV({ name, version, ecosystem, clientAddress }: FetchOSVProps): Promise<FetchOSVResponse | { error: string }> {
+export default async function fetchOSV({ 
+    name,
+    version, 
+    ecosystem, 
+    clientAddress
+}: FetchOSVProps): Promise<FetchOSVResponse | { error: string }> {
     let response = {} as { vulnerabilities: OSVResponseVulnerability[], allow?: any[], block?: any[] }
     let osvLength = 0
     if (LOCAL_OSV === 'true') {
@@ -62,11 +67,11 @@ export default async function fetchOSV({ name, version, ecosystem, clientAddress
     }
     const allow = await fetchList({ name, ecosystem, version, list: 'allow' })
     const block = await fetchList({ name, ecosystem, version, list: 'block' })
-    if (allow.length) {
-        response['allow'] = allow
+    if (allow.result.length) {
+        response['allow'] = allow.result
     }
-    if (block.length) {
-        response['block'] = block
+    if (block.result.length) {
+        response['block'] = block.result
     }
     processVulnerabilities({ response, name, version, ecosystem, clientAddress })
     return { response, osvLength }
