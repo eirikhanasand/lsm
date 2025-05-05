@@ -1,4 +1,4 @@
-SELECT id, event, author, timestamp
+SELECT COUNT(*)
 FROM audit_log a
 -- author filter
 WHERE ($1::TEXT IS NULL OR a.author = $1::TEXT)
@@ -22,4 +22,7 @@ AND ($6::TEXT IS NULL OR (
 AND ($7::TEXT IS NULL OR (
     SELECT regexp_matches(a.event, '^(allow|block) (for) (\S+)', 'i'))[1] = $7::TEXT
 )
-LIMIT $8 OFFSET ($9 - 1) * $8;
+-- search filter
+AND (
+    $8::TEXT IS NULL OR event ILIKE '%' || $8 || '%' 
+);

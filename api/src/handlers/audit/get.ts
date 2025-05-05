@@ -18,11 +18,13 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
         endDate,
         ecosystem,
         name,
-        page,
+        page: Page,
         resultsPerPage: clientResultsPerPage,
         version,
-        list
-    } = req.query as AuditLogQueryProps
+        list,
+        search
+    } = (req.query ?? {}) as Partial<AuditLogQueryProps>
+    const page = Number(Page) || 1
     const resultsPerPage = (clientResultsPerPage || Number(DEFAULT_RESULTS_PER_PAGE) || 50)
     try {
         console.log(
@@ -33,9 +35,13 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
             ` name=${name},` +
             ` ecosystem=${ecosystem},` +
             ` version=${version},` +
-            ` list=${list}`
+            ` list=${list},` +
+            ` page=${page},` +
+            ` resultsPerPage=${resultsPerPage},` +
+            ` search=${search}`
         )
-        const query = await loadSQL('fetchAuditLog.sql')
+        const query = await loadSQL('auditLog.sql')
+        const logCountQuery = await loadSQL('auditLogCount.sql')
         const result = await run(query, [
             author || null,
             startDate || null,
@@ -45,11 +51,21 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
             version || null,
             list || null,
             resultsPerPage,
-            Number(page) || 1
+            page,
+            search || null
         ])
-
-        const pages = Math.ceil((result.rowCount || 1) / resultsPerPage)
-        if ((Number(page) || 1) > pages) {
+        const count = await run(logCountQuery, [
+            author || null,
+            startDate || null,
+            endDate || null,
+            name || null,
+            ecosystem || null,
+            version || null,
+            list || null,
+            search || null
+        ])
+        const pages = Math.ceil((Number(count.rows[0].count) || 1) / resultsPerPage)
+        if (page > pages) {
             console.error(`Page does not exist (${page} / ${pages})`)
             return res.send({
                 page,
