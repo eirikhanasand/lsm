@@ -44,7 +44,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             [name, comment]
         )
 
-        if (Array.isArray(versions) && versions.length) {
+        if (Array.isArray(versions) && versions.length > 0) {
             for (const version of versions) {
                 await run(
                     `INSERT INTO ${list}_versions (name, version) 
@@ -55,7 +55,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             }
         }
 
-        if (Array.isArray(ecosystems) && ecosystems.length) {
+        if (Array.isArray(ecosystems) && ecosystems.length > 0) {
             for (const ecosystem of ecosystems) {
                 await run(
                     `INSERT INTO ${list}_ecosystems (name, ecosystem) 
@@ -66,7 +66,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             }
         }
 
-        if (Array.isArray(repositories) && repositories.length) {
+        if (Array.isArray(repositories) && repositories.length > 0) {
             for (const repository of repositories) {
                 await run(
                     `INSERT INTO ${list}_repositories (name, repository) 
@@ -77,7 +77,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             }
         }
 
-        if (Array.isArray(references) && references.length) {
+        if (Array.isArray(references) && references.length > 0) {
             for (const reference of references) {
                 await run(
                     `INSERT INTO ${list}_references (name, reference) 
