@@ -38,12 +38,7 @@ export default async function tokenWrapper(req: FastifyRequest, res: FastifyRepl
             }
         }
 
-        // const userInfo = await response.json()
-        // console.log(userInfo)
-
-        return {
-            valid: true
-        }
+        return { valid: true }
     } catch (err) {
         res.log.error(err)
         return res.status(500).send({
