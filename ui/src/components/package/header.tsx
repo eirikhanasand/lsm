@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Paging from '../global/paging'
 import { useSearchParams } from 'next/navigation'
 import config from '@parent/constants'
+import getPackages from '@/utils/filtering/getPackage'
 
 const { DEFAULT_RESULTS_PER_PAGE } = config
 
@@ -16,10 +17,12 @@ type HeaderProps = {
     allVersions: string[]
     showGlobalOnly: boolean
     setShowGlobalOnly: Dispatch<SetStateAction<boolean>>
-    searchTerm: string
-    setSearchTerm: Dispatch<SetStateAction<string>>
+    search: string
+    setSearch: Dispatch<SetStateAction<string>>
     showForm: boolean
     setShowForm: Dispatch<SetStateAction<boolean>>
+    setItems: Dispatch<SetStateAction<Package[]>>
+    pages: number
 }
 
 export default function Header({
@@ -32,20 +35,37 @@ export default function Header({
     allVersions,
     showGlobalOnly,
     setShowGlobalOnly,
-    searchTerm,
-    setSearchTerm,
+    search,
+    setSearch,
     showForm,
-    setShowForm
+    setShowForm,
+    setItems,
+    pages: serverPages
 }: HeaderProps) {
     const searchParams = useSearchParams()
     const initialPage = Number(searchParams.get('page')) || 1
     const [page, setPage] = useState(initialPage)
-    const [resultsPerPage, setResultsPerPage] = useState(Number(DEFAULT_RESULTS_PER_PAGE))
-    const items = Object.values(groupedPackages).flat()
+    const [pages, setPages] = useState(serverPages)
+    const [resultsPerPage, setResultsPerPage] = useState(Number(DEFAULT_RESULTS_PER_PAGE || 50))
 
     useEffect(() => {
         setCookie('showGlobalOnly', String(showGlobalOnly))
     }, [showGlobalOnly])
+
+    async function fetchFunction() {
+        const packages = await getPackages({ 
+            list, 
+            side: 'client', 
+            page: page ? String(page) : undefined, 
+            resultsPerPage: resultsPerPage ? String(resultsPerPage) : String(DEFAULT_RESULTS_PER_PAGE || 50),
+            search
+        })
+        
+        if (packages) {
+            setItems(packages.result)
+            setPages(packages.pages)
+        }
+    }
 
     return (
         <>
@@ -109,16 +129,18 @@ export default function Header({
                     <input
                         type='text'
                         placeholder='Search for a package...'
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                         className='h-full px-2 py-4 bg-light hover:bg-extralight rounded self-center'
                     />
                 </div>
                 <Paging
                     page={page}
+                    pages={pages}
                     setPage={setPage}
+                    search={search}
+                    fetchFunction={fetchFunction}
                     resultsPerPage={resultsPerPage}
-                    items={items}
                     setResultsPerPage={setResultsPerPage}
                     searchParams={searchParams}
                 />

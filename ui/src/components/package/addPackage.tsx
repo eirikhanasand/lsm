@@ -9,6 +9,7 @@ import './addPackage.css'
 
 export default function AddPackage({
     list,
+    pages,
     packages: serverPackages,
     repositories,
     serverShowGlobalOnly
@@ -16,7 +17,7 @@ export default function AddPackage({
     const [packages, setPackages] = useState<Package[]>([...serverPackages])
     const [selectedEcosystem, setSelectedEcosystem] = useState<string>('')
     const [showForm, setShowForm] = useState(false)
-    const [searchTerm, setSearchTerm] = useState<string>('')
+    const [search, setSearch] = useState<string>('')
     const [selectedVersion, setSelectedVersion] = useState<string>('')
     const [showGlobalOnly, setShowGlobalOnly] = useState<boolean>(serverShowGlobalOnly)
     const [author, setAuthor] = useState<Author>({ id: '0', name: 'Unknown User', avatar: 'null' })
@@ -53,10 +54,6 @@ export default function AddPackage({
     ).sort()
 
     const filtered = packages.filter((p) => {
-        const nameMatches = p.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-
         const versionMatches =
             !selectedVersion ||
             (Array.isArray(p.versions) && p.versions.includes(selectedVersion))
@@ -69,11 +66,11 @@ export default function AddPackage({
         const isLocal = !isGlobal
         const globalOrLocalMatch = showGlobalOnly ? isGlobal : isLocal
 
-        return nameMatches && versionMatches && ecosystemMatches && globalOrLocalMatch
+        return versionMatches && ecosystemMatches && globalOrLocalMatch
     })
 
     const groupedPackages = groupPackagesByEcosystem(filtered)
-    const formStyle = 'w-full mt-2 p-3 border border-dark rounded-md text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
+    const formStyle = 'w-full mt-2 p-3 border border-dark rounded-md text-sm text-foreground focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
 
     return (
         <main className='relative min-h-full'>
@@ -87,10 +84,12 @@ export default function AddPackage({
                 allVersions={allVersions}
                 showGlobalOnly={showGlobalOnly}
                 setShowGlobalOnly={setShowGlobalOnly}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
+                search={search}
+                setSearch={setSearch}
                 showForm={showForm}
                 setShowForm={setShowForm}
+                setItems={setPackages}
+                pages={pages}
             />
 
             <Form

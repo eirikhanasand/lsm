@@ -15,7 +15,8 @@ export default async function listHandler(req: FastifyRequest, res: FastifyReply
         version,
         startDate,
         repository,
-        endDate
+        endDate,
+        search
     } = (req.query ?? {}) as Partial<ListQueryProps>
     return fetchList({
         name: name ? decodeURIComponent(name) : undefined,
@@ -27,6 +28,7 @@ export default async function listHandler(req: FastifyRequest, res: FastifyReply
         startDate: startDate ? decodeURIComponent(startDate) : undefined,
         endDate: endDate ? decodeURIComponent(endDate) : undefined,
         page,
-        resultsPerPage
+        resultsPerPage,
+        search
     })
 }

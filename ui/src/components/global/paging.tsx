@@ -3,9 +3,11 @@ import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from
 
 type PagingProps = {
     page: number
+    pages: number
     setPage: Dispatch<SetStateAction<number>>
     resultsPerPage: number
-    items: unknown[]
+    search: string
+    fetchFunction: () => void
     setResultsPerPage: Dispatch<SetStateAction<number>>
     searchParams: ReadonlyURLSearchParams
     customStyle?: string
@@ -19,61 +21,55 @@ type InputButtonsProps = {
     activeButtonStyle: string
     unClickableButtonStyle: string
     containerRef: RefObject<null>
-    setWidth: Dispatch<SetStateAction<number>>
 }
 
 export default function Paging({
     page,
+    pages,
     setPage,
     resultsPerPage,
-    items,
+    search,
+    fetchFunction,
     setResultsPerPage,
     searchParams,
     customStyle
 }: PagingProps) {
-    const unClickableButtonStyle = 'bg-light rounded-md p-1 px-3 hover:bg-extralight h-[2rem] min-w-[2rem]'
+    const unClickableButtonStyle = 'bg-light rounded-md p-1 px-3 hover:bg-extralight h-[2rem] min-w-[2rem] w-fit'
     const buttonStyle = 'bg-light rounded-md p-1 px-3 hover:bg-extralight grid place-items-center cursor-pointer'
     const activeButtonStyle = 'bg-blue-600 hover:bg-blue-500 rounded-md p-1 px-3 grid place-items-center h-[2rem] text-white'
     const containerRef = useRef(null)
-    const [width, setWidth] = useState(0)
-    const start = (page - 1) * resultsPerPage + 1
-    const end = Math.min(page * resultsPerPage, items.length)
-    const lastPage = Math.ceil(items.length / resultsPerPage) || 1
     const router = useRouter()
 
     useEffect(() => {
         const params = new URLSearchParams(searchParams)
-        if (page <= lastPage) {
-            params.set('page', String(page))
-            router.replace(`?${params.toString()}`)
-        } else {
-            params.set('page', String(1))
-            router.replace(`?${params.toString()}`)
-            window.location.reload()
-        }
-    }, [page])
+        params.set('page', page <= pages ? String(page) : '1')
+        params.set('search', search)
+        router.replace(`?${params}`)
+    }, [page, search])
+
+    useEffect(() => {
+        fetchFunction()
+    }, [page, resultsPerPage, search])
 
     return (
-        <div className='h-full'>
+        <div className='h-full select-none min-w-fit grid gap-2'>
             <InputButtons
                 setPage={setPage}
                 page={page}
-                lastPage={lastPage}
+                lastPage={pages}
                 buttonStyle={buttonStyle}
                 activeButtonStyle={activeButtonStyle}
                 unClickableButtonStyle={unClickableButtonStyle}
                 containerRef={containerRef}
-                setWidth={setWidth}
             />
-            <div className={`flex w-full justify-between items-center max-h-[50px] overflow-hidden py-[0.55rem] ${customStyle}`}>
+            <div className={`flex min-w-fit justify-end items-center max-h-fit ${customStyle}`}>
                 <div
-                    style={{ width }}
-                    className='flex justify-between w-[18vw] min-w-[18vw]'
+                    className='flex justify-between min-w-fit gap-2 mb-2'
                 >
-                    <h1 className={`${unClickableButtonStyle} min-w-fit ${items.length >= 100 ? 'text-sm' : ''} flex items-center`}>
-                        Showing {start} - {end} / {items.length}
+                    <h1 className={`${unClickableButtonStyle} min-w-fit flex items-end`}>
+                        Page {page} / {pages}
                     </h1>
-                    <div className='flex gap-2'>
+                    <div className='flex gap-2 min-w-fit cursor-pointer'>
                         <h1
                             onClick={() => setResultsPerPage(25)}
                             className={resultsPerPage === 25 ? activeButtonStyle : buttonStyle}
@@ -87,9 +83,9 @@ export default function Paging({
                             50
                         </h1>
                         {
-                            items.length >= 100
+                            pages * resultsPerPage >= 100
                                 ? <h1
-                                    onClick={() => setResultsPerPage(50)}
+                                    onClick={() => setResultsPerPage(100)}
                                     className={resultsPerPage === 100 ? activeButtonStyle : buttonStyle}
                                 >100</h1> : <></>}
                     </div>
@@ -108,7 +104,6 @@ function InputButtons({
     activeButtonStyle,
     unClickableButtonStyle,
     containerRef,
-    setWidth
 }: InputButtonsProps) {
     const [customPage, setCustomPage] = useState(page)
     const [displayCustom, setDisplayCustom] = useState(false)
@@ -121,20 +116,8 @@ function InputButtons({
         setCustomPage(page)
     }, [page])
 
-    useEffect(() => {
-        if (containerRef.current) {
-            const resizeObserver = new ResizeObserver((entries) => {
-                for (const entry of entries) {
-                    setWidth(entry.contentRect.width)
-                }
-            });
-            resizeObserver.observe(containerRef.current)
-            return () => resizeObserver.disconnect()
-        }
-    }, []);
-
     return (
-        <div ref={containerRef} className='flex gap-2'>
+        <div ref={containerRef} className='flex justify-between gap-2 min-w-full'>
             {previous >= 1
                 ? <h1 onClick={() => setPage(previous)} className={buttonStyle}>{'<'}</h1>
                 : <h1 className={unClickableButtonStyle} />
