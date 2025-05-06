@@ -107,5 +107,31 @@ AND ($6::TIMESTAMP IS NULL OR (
     WHERE lc.name = l.name
     LIMIT 1
 ) <= $6::TIMESTAMP)
+-- search filter
+AND (
+    $9::TEXT IS NULL 
+    OR l.name ILIKE '%' || $9 || '%' 
+    OR l.comment ILIKE '%' || $9 || '%'
+    OR EXISTS (
+        SELECT 1
+        FROM unnest(lv.versions) AS version
+        WHERE version ILIKE '%' || $9 || '%'
+    )
+    OR EXISTS (
+        SELECT 1
+        FROM unnest(le.ecosystems) AS ecosystem
+        WHERE ecosystem ILIKE '%' || $9 || '%'
+    )
+    OR EXISTS (
+        SELECT 1
+        FROM unnest(lr.repositories) AS repository
+        WHERE repository ILIKE '%' || $9 || '%'
+    )
+    OR EXISTS (
+        SELECT 1
+        FROM unnest(lrf.references) AS reference
+        WHERE reference ILIKE '%' || $9 || '%'
+    )
+)
 LIMIT $8::INT OFFSET ($7::INT * $8::INT) - $8::INT;
 ;
