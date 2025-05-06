@@ -7,13 +7,14 @@ export default async function page() {
     const list = 'block'
     const serverPackages = await getPackages({ list, side: 'server' })
     const packages = Array.isArray(serverPackages) ? serverPackages : []
-    const repositories = await fetchRepositories()
+    const repositories = await fetchRepositories({})
     const Cookies = await cookies()
     const showGlobalOnly = Cookies.get('showGlobalOnly')?.value || 'false'
     return <AddPackage
         list={list}
+        pages={serverPackages.pages}
         packages={packages}
-        repositories={repositories}
+        repositories={repositories.result}
         serverShowGlobalOnly={showGlobalOnly === 'true'}
     />
 }
