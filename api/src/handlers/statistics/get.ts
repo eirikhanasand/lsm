@@ -1,9 +1,15 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import run from '../../db.js'
+import { loadSQL } from '../../utils/loadSQL.js'
+import config from '../../constants.js'
+
+const { DEFAULT_RESULTS_PER_PAGE } = config
 
 type StatisticHandlerParams = {
     startTime: string
     endTime: string
+    page: string
+    resultsPerPage: string
 }
 
 type StatisticResponse = {
@@ -13,59 +19,50 @@ type StatisticResponse = {
     safeApproved: number
     lastScan: string | null
     vulnerabilitiesOverTime: Vulnerability[]
+    page: number
+    pages: number
+    resultsPerPage: number
 }
 
 export default async function packageStatisticsHandler(req: FastifyRequest, res: FastifyReply) {
-    const { startTime, endTime } = req.query as StatisticHandlerParams
+    const { startTime, endTime, page: Page, resultsPerPage: ResultsPerPage } = req.query as StatisticHandlerParams
     const start = startTime || new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString()
     const end = endTime || new Date().toISOString()
+    const page = Number(Page) || 1
+    const resultsPerPage = Number(ResultsPerPage) || Number(DEFAULT_RESULTS_PER_PAGE) || 50
 
     if (!isValidDate(start) || !isValidDate(end)) {
         return res.status(400).send({ error: "startTime or endTime is not a valid date" })
     }
 
-    const queryParams = [start, end]
-
     try {
-        console.log(`Fetching package stats: start=${start}, end=${end}`)
+        console.log(`Fetching package stats: start=${start}, end=${end}, page=${page}, resultsPerPage=${resultsPerPage}`)
 
-        // Fetching overall summary stats
-        const summaryResult = await run(`
-            SELECT 
-                COUNT(*) AS total_scanned,
-                COUNT(*) FILTER (WHERE status = 1) AS safe_approved,
-                COUNT(*) FILTER (WHERE status = 2) AS vulnerabilities_found,
-                MAX(timestamp) AS last_scan
-            FROM download_events
-            WHERE timestamp BETWEEN $1 AND $2;
-        `, queryParams)
-
+        // Fetches overall summary stats
+        const summaryQuery = await loadSQL('statisticsSummary.sql')
+        const summaryResult = await run(summaryQuery, [start, end])
         const summary = summaryResult.rows[0]
 
         // Fetching vulnerability severity over time (vulnerabilities per timestamp)
-        const severityResult = await run(`
-            SELECT *
-            FROM download_events
-            WHERE timestamp BETWEEN $1 AND $2;
-        `, queryParams)
+        const severityQuery = await loadSQL('statistics.sql')
+        const severityResult = await run(severityQuery, [
+            start,
+            end,
+            page || 1,
+            resultsPerPage || Number(DEFAULT_RESULTS_PER_PAGE) || 50
+        ])
 
-        const vulnerabilitiesOverTime = severityResult.rows.map(row => ({
-            timestamp: row.timestamp,
-            package_name: row.package_name,
-            repository: row.repository,
-            ecosystem: row.ecosystem,
-            status: row.status,
-            reason: row.reason,
-            severity: row.severity,
-        }))
-
+        const pages = Math.ceil((Number(summary.total_scanned) || 1) / resultsPerPage)
         const response: StatisticResponse = {
             totalScanned: summary.total_scanned,
             vulnerabilitiesFound: summary.vulnerabilities_found,
             criticalBlocked: summary.vulnerabilities_found,
             safeApproved: summary.safe_approved,
             lastScan: summary.last_scan || null,
-            vulnerabilitiesOverTime
+            vulnerabilitiesOverTime: severityResult.rows,
+            page,
+            pages,
+            resultsPerPage
         }
 
         return res.send(response)
