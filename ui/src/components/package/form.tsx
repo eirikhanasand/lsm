@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import Dropdown from '../global/dropdown'
 import addPackage from '@/utils/filtering/addPackage'
 import { useRouter } from 'next/navigation'
@@ -33,6 +33,7 @@ export default function Form({
     author }: FormProps
 ) {
     const router = useRouter()
+    const [error, setError] = useState('')
     function handleAdd() {
         const token = getCookie('token')
         if (
@@ -48,6 +49,7 @@ export default function Form({
             setPackages,
             setShowForm,
             setNewPackage,
+            setError,
             packages,
             list,
             author,
@@ -71,6 +73,9 @@ export default function Form({
                 <h2 className='text-lg font-semibold text-foreground'>
                     Add New Package
                 </h2>
+                {error.length > 0 && <h2 className='text-sm text-foreground bg-red-500/50 rounded-lg p-2'>
+                    {error}
+                </h2>}
 
                 <input
                     type='text'
@@ -124,16 +129,16 @@ export default function Form({
 
                 <div className='mt-4 flex justify-between'>
                     <button
-                        onClick={handleAdd}
-                        className='bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600'
-                    >
-                        Add
-                    </button>
-                    <button
                         onClick={() => setShowForm(false)}
                         className='bg-red-500 px-4 py-2 rounded-md text-white hover:bg-red-600'
                     >
                         Cancel
+                    </button>
+                    <button
+                        onClick={handleAdd}
+                        className='bg-green-500 px-4 py-2 rounded-md text-white hover:bg-green-600'
+                    >
+                        Add
                     </button>
                 </div>
             </div>

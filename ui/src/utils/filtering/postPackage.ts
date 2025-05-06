@@ -4,7 +4,15 @@ type PostListProps = {
     token: string
 }
 
-export default async function postPackage({ list, newPackage, token }: PostListProps) {
+type PostPackageResponse = {
+    status: 200 | 409 | 500
+    data?: {
+        message: string
+    }
+    error?: string
+}
+
+export default async function postPackage({ list, newPackage, token }: PostListProps): Promise<PostPackageResponse> {
     try {
         const headers = {
             ...( !process.env.NEXT_PUBLIC_DISABLE_AUTH && { 'Authorization': `Bearer ${token}` } ),
@@ -17,14 +25,28 @@ export default async function postPackage({ list, newPackage, token }: PostListP
             body: JSON.stringify({ ...newPackage })
         })
 
+        if (response.status === 409) {
+            return {
+                status: 409,
+                error: `Package ${newPackage.name} already exists in the ${list}list. Editing the existing one instead.`
+            }
+        }
+
+
         if (!response.ok) {
             throw new Error(await response.text())
         }
 
         const data = await response.json()
-        return data
+        return {
+            status: 200,
+            data
+        }
     } catch (error) {
         console.error(error)
-        return 500
+        return {
+            status: 500,
+            error: error as string
+        }
     }
 }
