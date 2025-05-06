@@ -7,6 +7,7 @@ type AddPackageProps = {
     setPackages: Dispatch<SetStateAction<Package[]>>
     setShowForm: Dispatch<SetStateAction<boolean>>
     setNewPackage: Dispatch<SetStateAction<AddPackage>>
+    setError: Dispatch<SetStateAction<string>>
     packages: Package[]
     list: 'allow' | 'block'
     author: Author
@@ -18,18 +19,33 @@ export default async function addPackage({
     setPackages,
     setShowForm,
     setNewPackage,
+    setError,
     packages,
     list,
     token
 }: AddPackageProps) {
-    if (!newPackage.name || !newPackage.comment) {
-        alert('Please fill in all fields.')
+    if (!newPackage.name && !newPackage.comment) {
+        setError(`The package you are ${list}listing must have a name and comment.`)
         return
     }
 
-    const response = await postPackage({ list, newPackage, token })
-    if (response === 500) {
-        alert('Failed to add package. API error.')
+    if (!newPackage.name || !newPackage.comment) {
+        setError(`The package you are ${list}listing must have a ${newPackage.name ? 'comment' : 'name'}.`)
+        return
+    }
+
+    const completePackage = {...newPackage, 
+        ecosystems: JSON.stringify(newPackage.ecosystems) === '[""]' ? [] : newPackage.ecosystems,
+        repositories: JSON.stringify(newPackage.repositories) === '[""]' ? [] : newPackage.repositories 
+    }
+
+    const response = await postPackage({ list, newPackage: completePackage, token })
+    if (response.status === 409) {
+        setError(response.error!)
+        return
+    }
+    if (response.status === 500) {
+        setError(`Failed to add package. API error. ${response.error!}`)
         return
     }
 
