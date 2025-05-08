@@ -89,7 +89,7 @@ function Log({ log, url }: LogProps) {
             <div className='flex gap-2 w-[15vw]'>
                 <div className='relative w-[3.5vh] h-[3.5vh] self-center cursor-pointer rounded-full overflow-hidden'>
                     {imageExists ? <Image
-                        src={`${IMAGE_URL}/${log.author.id}/${log.author.avatar}.png?size=64`}
+                        src={`${url}/${log.author.id}/${log.author.avatar}.png?size=64`}
                         alt='Profile Icon'
                         fill={true}
                     /> : <ProfileIcon />}

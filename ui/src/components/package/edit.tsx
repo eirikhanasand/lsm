@@ -198,7 +198,7 @@ function Change({ change, url }: ChangeProps) {
             <h1 className='min-w-[14px] max-w-[14px]'>{change.id}</h1>
             <div className='relative min-w-[35px] max-w-[35px] h-[35px] self-center cursor-pointer rounded-full overflow-hidden'>
                 {imageExists ? <Image
-                    src={`${IMAGE_URL}/${change.author.id}/${change.author.avatar}.png?size=64`}
+                    src={`${url}/${change.author.id}/${change.author.avatar}.png?size=64`}
                     alt='Profile Icon'
                     fill={true}
                 /> : <ProfileIcon />}
