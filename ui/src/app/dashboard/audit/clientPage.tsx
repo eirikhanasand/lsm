@@ -13,13 +13,15 @@ const { IMAGE_URL, DEFAULT_RESULTS_PER_PAGE } = config
 type PageProps = {
     logs: AuditResult[]
     pages: number
+    url: string | undefined
 }
 
 type LogProps = {
     log: AuditResult
+    url: string | undefined
 }
 
-export default function Page({ logs, pages: serverPages }: PageProps) {
+export default function Page({ logs, pages: serverPages, url }: PageProps) {
     const searchParams = useSearchParams()
     const initialSearch = searchParams.get('search') || ''
     const initialPage = Number(searchParams.get('page')) || 1
@@ -72,16 +74,16 @@ export default function Page({ logs, pages: serverPages }: PageProps) {
             </div>
             <div className='h-full w-full overflow-auto grid gap-2'>
                 {items.map((log: AuditResult) =>
-                    <Log key={log.id} log={log} />
+                    <Log key={log.id} log={log} url={url} />
                 )}
             </div>
         </main>
     )
 }
 
-function Log({ log }: LogProps) {
+function Log({ log, url }: LogProps) {
     const date = new Date(log.timestamp).toLocaleString('en-GB').replaceAll('/', '.')
-    const imageExists = IMAGE_URL && log.author.avatar !== 'null'
+    const imageExists = url && log.author.avatar !== 'null'
     return (
         <div className='flex w-full bg-dark rounded-lg px-4 min-h-[40px]'>
             <div className='flex gap-2 w-[15vw]'>

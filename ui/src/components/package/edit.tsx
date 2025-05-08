@@ -20,6 +20,12 @@ type EditProps = {
     setPackages: Dispatch<SetStateAction<Package[]>>
     author: Author
     repositories: Repository[]
+    url: string | undefined
+}
+
+type ChangeProps = { 
+    change: ChangeLog
+    url: string | undefined
 }
 
 export default function Edit({
@@ -29,7 +35,8 @@ export default function Edit({
     packages,
     list,
     author,
-    repositories: serverRepositories
+    repositories: serverRepositories,
+    url
 }: EditProps) {
     const [versions, setVersions] = useState(pkg.versions)
     const [ecosystems, setEcosystems] = useState(pkg.ecosystems)
@@ -157,7 +164,11 @@ export default function Edit({
                 <div className='text-xs text-shallow-dark w-full min-h-[4vh] max-h-[80vh] outline-none space-y-2 overflow-auto'>
                     {pkg.changeLog
                         .sort((a, b) => Number(b.id) - Number(a.id))
-                        .map((change) => <Change key={change.id} change={change} />)
+                        .map((change) => <Change 
+                            key={change.id}
+                            change={change} 
+                            url={url}
+                        />)
                     }
                 </div>
                 <div className='grid gap-[2px]'>
@@ -180,8 +191,8 @@ export default function Edit({
     )
 }
 
-function Change({ change }: { change: ChangeLog }) {
-    const imageExists = IMAGE_URL && change.author.avatar !== 'null'
+function Change({ change, url }: ChangeProps) {
+    const imageExists = url && change.author.avatar !== 'null'
     return (
         <div className='flex items-center gap-2 p-1 px-2 bg-light rounded-lg'>
             <h1 className='min-w-[14px] max-w-[14px]'>{change.id}</h1>

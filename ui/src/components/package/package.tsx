@@ -6,6 +6,7 @@ import removePackage from '@/utils/filtering/removePackage'
 import Trash from '../svg/trash'
 import { useRouter } from 'next/navigation'
 import { getCookie } from '@/utils/cookies'
+import config from '@parent/constants'
 
 type PackageProps = {
     pkg: Package
@@ -15,6 +16,8 @@ type PackageProps = {
     author: Author
     repositories: Repository[]
 }
+
+const { IMAGE_URL } = config
 
 export default function Package({ pkg, setPackages, packages, list, author, repositories }: PackageProps) {
     const [editing, setEditing] = useState(false)
@@ -57,6 +60,7 @@ export default function Package({ pkg, setPackages, packages, list, author, repo
                 setPackages={setPackages}
                 repositories={repositories}
                 author={author}
+                url={IMAGE_URL}
             />}
             <div className='flex col-span-4'>
                 <h1 className='text-sm text-foreground font-semibold text-wrap break-all w-full'>
