@@ -50,6 +50,7 @@ type ClientPageProps = {
     packages: APIPackage[]
     repositories: Repository[]
     serverShowGlobalOnly: boolean
+    url: string | undefined
 }
 
 type RepoAllowItem = {

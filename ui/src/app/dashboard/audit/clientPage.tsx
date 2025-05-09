@@ -8,7 +8,7 @@ import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
-const { IMAGE_URL, DEFAULT_RESULTS_PER_PAGE } = config
+const { DEFAULT_RESULTS_PER_PAGE } = config
 
 type PageProps = {
     logs: AuditResult[]

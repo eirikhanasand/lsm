@@ -12,7 +12,8 @@ export default function AddPackage({
     pages,
     packages: serverPackages,
     repositories,
-    serverShowGlobalOnly
+    serverShowGlobalOnly,
+    url
 }: ClientPageProps) {
     const [packages, setPackages] = useState<Package[]>([...serverPackages])
     const [selectedEcosystem, setSelectedEcosystem] = useState<string>('')
@@ -120,6 +121,7 @@ export default function AddPackage({
                             packages={packages}
                             author={author}
                             repositories={repositories}
+                            url={url}
                         />
                     </div>
                 )}

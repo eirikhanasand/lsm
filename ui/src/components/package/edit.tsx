@@ -7,10 +7,7 @@ import { getCookie } from '@/utils/cookies'
 import { useRouter } from 'next/navigation'
 import ProfileIcon from '../svg/profileIcon'
 
-const {
-    ECOSYSTEMS,
-    IMAGE_URL
-} = config
+const { ECOSYSTEMS } = config
 
 type EditProps = {
     pkg: Package

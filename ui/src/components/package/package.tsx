@@ -6,7 +6,6 @@ import removePackage from '@/utils/filtering/removePackage'
 import Trash from '../svg/trash'
 import { useRouter } from 'next/navigation'
 import { getCookie } from '@/utils/cookies'
-import config from '@parent/constants'
 
 type PackageProps = {
     pkg: Package
@@ -15,11 +14,18 @@ type PackageProps = {
     packages: Package[]
     author: Author
     repositories: Repository[]
+    url: string | undefined
 }
 
-const { IMAGE_URL } = config
-
-export default function Package({ pkg, setPackages, packages, list, author, repositories }: PackageProps) {
+export default function Package({
+    pkg,
+    setPackages,
+    packages,
+    list,
+    author,
+    repositories,
+    url
+}: PackageProps) {
     const [editing, setEditing] = useState(false)
     const [createdDate, setCreatedDate] = useState('')
     const [updatedDate, setUpdatedDate] = useState('')
@@ -28,9 +34,9 @@ export default function Package({ pkg, setPackages, packages, list, author, repo
     function handleDelete() {
         const token = getCookie('token')
         if (
-            !token 
-            && (process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true' 
-            && process.env.NEXT_PUBLIC_DISABLE_AUTH !== 'true')
+            !token
+            && (process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK !== 'true'
+                && process.env.NEXT_PUBLIC_DISABLE_AUTH !== 'true')
         ) {
             alert('Missing token, redirecting to login.')
             return router.push('/logout')
@@ -60,7 +66,7 @@ export default function Package({ pkg, setPackages, packages, list, author, repo
                 setPackages={setPackages}
                 repositories={repositories}
                 author={author}
-                url={IMAGE_URL}
+                url={url}
             />}
             <div className='flex col-span-4'>
                 <h1 className='text-sm text-foreground font-semibold text-wrap break-all w-full'>
