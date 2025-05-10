@@ -1,3 +1,6 @@
+// Constants used throughout the API. Static ones are defined here, while
+// dynamic ones are fetched from the environment variables.
+
 import dotenv from 'dotenv'
 
 type ENV = {

@@ -19,6 +19,26 @@ type FetchListProps = {
     search?: string
 }
 
+/**
+ * Fetches details from the allowlist or blocklist using paging. Several 
+ * parameters can be passed to filter the results. All parameters are optional
+ * except `list`.
+ * 
+ * @param list List to fetch (`allow`/`block`)
+ * @param ecosystem Ecosystem filter
+ * @param name Name filter
+ * @param version Version filter
+ * @param repository Repository filter
+ * @param page Page of the results to return
+ * @param resultsPerPage Amount of results per page
+ * @param startDate Earliest date to include
+ * @param endDate Latest date to include
+ * @param res Fastify Response object
+ * @param search Custom string the results must match
+ * 
+ * @returns Fastify Response or object with `page`, `pages`, `resultsPerPage`,
+ * and `result` parameters, depending on whether the `res` parameter is available.
+ */
 export default async function fetchList({
     ecosystem,
     name,

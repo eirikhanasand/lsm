@@ -15,6 +15,16 @@ type RepositoryQuery = {
     search: string
 }
 
+/**
+ * Fetches repositories from JFrog Artifactory.
+ * 
+ * Optional query parameter: `search`
+ * 
+ * @param req Incoming Fastify Request
+ * @param res Outgoing Fastify Response
+ * 
+ * @returns Fastify Response
+ */
 export default async function repositoryHandler(req: FastifyRequest, res: FastifyReply): Promise<Repositories> {
     const { search } = req.query as RepositoryQuery
     try {
@@ -31,6 +41,7 @@ export default async function repositoryHandler(req: FastifyRequest, res: Fastif
             throw new Error(await response.text())
         }
 
+        // Search filter
         const data: Repository[] = (await response.json()).filter((repository: Repository) => repository.key.includes(search))
         return {
             page: 1,

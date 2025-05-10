@@ -11,6 +11,18 @@ type AuditResponse = {
     author: User
 }
 
+/**
+ * Fetches entries from the audit log. Includes optional parameters which can be
+ * included for filtering.
+ * 
+ * Optional parameters: `author`, `startDate`, `endDate`, `ecosystem`, `name`, 
+ * `page`, `resultsPerPage`, `version`, `list`, `search`
+ * 
+ * @param req Incoming Fastify Request
+ * @param res Outgoing Fastify Response
+ * 
+ * @returns Fastify Response
+ */
 export default async function auditHandler(req: FastifyRequest, res: FastifyReply) {
     const {
         author,
@@ -64,6 +76,8 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
             list || null,
             search || null
         ])
+
+        // Checks if the requested page exists
         const pages = Math.ceil((Number(count.rows[0].count) || 1) / resultsPerPage)
         if (page > pages) {
             console.error(`Page does not exist (${page} / ${pages})`)
@@ -75,6 +89,8 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
                 results: []
             })
         }
+
+        // Appends the author name and id to each audit entry.
         const auditLog: AuditResponse[] = await Promise.all(result.rows.map(async (row) => {
             const details = await getDetails(row.author)
             return {
@@ -101,6 +117,11 @@ export default async function auditHandler(req: FastifyRequest, res: FastifyRepl
     }
 }
 
+/**
+ * Fetches the details for a user based on the `id` parameter.
+ * @param id User `id`
+ * @returns The user details.
+ */
 async function getDetails(id: string): Promise<{ name: string, avatar: string }> {
     const details = await run(`SELECT name, avatar FROM users WHERE id = $1`, [id])
     return details.rows[0]

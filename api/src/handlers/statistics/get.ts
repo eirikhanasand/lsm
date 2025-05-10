@@ -24,6 +24,20 @@ type StatisticResponse = {
     resultsPerPage: number
 }
 
+/**
+ * Fetches package statistics for the application. 
+ * 
+ * Includes data such as `totalScanned`, `vulnerabilitiesFound`, 
+ * `criticalBlocked`, `safeApproved`, `lastScan`, `vulnerabilitiesOverTime`, 
+ * `page`, `pages`, `resultsPerPage`
+ * 
+ * Optional query parameters: `startTime`, `endTime`, `page`, `resultsPerPage`
+ * 
+ * @param req Incoming Fastify Request
+ * @param res Outgoing Fastify Response
+ * 
+ * @returns Fastify Response
+ */
 export default async function packageStatisticsHandler(req: FastifyRequest, res: FastifyReply) {
     const { startTime, endTime, page: Page, resultsPerPage: ResultsPerPage } = req.query as StatisticHandlerParams
     const start = startTime || new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString()
@@ -43,7 +57,7 @@ export default async function packageStatisticsHandler(req: FastifyRequest, res:
         const summaryResult = await run(summaryQuery, [start, end])
         const summary = summaryResult.rows[0]
 
-        // Fetching vulnerability severity over time (vulnerabilities per timestamp)
+        // Fetches vulnerability severity over time (vulnerabilities per timestamp)
         const severityQuery = await loadSQL('statistics.sql')
         const severityResult = await run(severityQuery, [
             start,
@@ -52,6 +66,7 @@ export default async function packageStatisticsHandler(req: FastifyRequest, res:
             resultsPerPage || Number(DEFAULT_RESULTS_PER_PAGE) || 50
         ])
 
+        // Formats the results and adds paging info to the response
         const pages = Math.ceil((Number(summary.total_scanned) || 1) / resultsPerPage)
         const response: StatisticResponse = {
             totalScanned: summary.total_scanned,
@@ -72,6 +87,13 @@ export default async function packageStatisticsHandler(req: FastifyRequest, res:
     }
 }
 
-function isValidDate(date: string) {
+/**
+ * Checks if a date string is valid.
+ * 
+ * @param date `Date` object as a string
+ * 
+ * @returns `true`/`false` depending on whether the date is valid.
+ */
+function isValidDate(date: string): boolean {
     return !isNaN(new Date(date).getTime())
 }

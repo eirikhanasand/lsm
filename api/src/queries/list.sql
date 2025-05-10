@@ -1,3 +1,5 @@
+-- Query to fetch the allowlist or blocklist. See the list handler for further details.
+
 SELECT l.name, l.comment,
 COALESCE((SELECT array_agg(version) FROM {list}_versions WHERE name = l.name), '{}'::TEXT[]) AS versions, 
 COALESCE((SELECT array_agg(ecosystem) FROM {list}_ecosystems WHERE name = l.name), '{}'::TEXT[]) AS ecosystems, 

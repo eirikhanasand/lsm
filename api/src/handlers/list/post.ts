@@ -2,6 +2,23 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import run from '../../db.js'
 import tokenWrapper from '../../utils/tokenWrapper.js'
 
+/**
+ * Posts entries to the allowlist or blocklist. Includes optional parameters
+ * which can be included for filtering.
+ * 
+ * Required header: `token`
+ * 
+ * Required parameter: `list` (`allow`/`block`)
+ * 
+ * Required body parameters: `name`, `comment`, `author`
+ * 
+ * Optional body parameters: `ecosystems`, `versions`, `repositories`, `references`
+ * 
+ * @param req Incoming Fastify Request
+ * @param res Outgoing Fastify Response
+ * 
+ * @returns Fastify Response
+ */
 export default async function listPostHandler(req: FastifyRequest, res: FastifyReply) {
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
@@ -37,6 +54,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             ` author=${author}`
         )
 
+        // Inserts the package entry into the appropriate list.
         await run(
             `INSERT INTO ${list} (name, comment) 
              SELECT $1, $2
@@ -44,6 +62,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             [name, comment]
         )
 
+        // Inserts the package versions (if any).
         if (Array.isArray(versions) && versions.length > 0) {
             for (const version of versions) {
                 await run(
@@ -55,6 +74,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             }
         }
 
+        // Inserts the package ecosystems (if any).
         if (Array.isArray(ecosystems) && ecosystems.length > 0) {
             for (const ecosystem of ecosystems) {
                 await run(
@@ -66,6 +86,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             }
         }
 
+        // Inserts the package repositories (if any).
         if (Array.isArray(repositories) && repositories.length > 0) {
             for (const repository of repositories) {
                 await run(
@@ -77,6 +98,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             }
         }
 
+        // Inserts the package references (if any).
         if (Array.isArray(references) && references.length > 0) {
             for (const reference of references) {
                 await run(
@@ -88,6 +110,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             }
         }
 
+        // Inserts the package authors (if any).
         await run(
             `INSERT INTO ${list}_authors (name, author) 
              SELECT $1, $2 
@@ -95,6 +118,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             [name, author.id]
         )
 
+        // Inserts other package metadata such as created, updated, change log and audit log.
         await run(`INSERT INTO ${list}_created (name, id) VALUES ($1, $2);`, [name, author.id])
         await run(`INSERT INTO ${list}_updated (name, id) VALUES ($1, $2);`, [name, author.id])
         const audit = `Added ${name} ${Array.isArray(versions) && versions.length ? `versions ${versions.join(', ')}` : 'for all versions'} ${Array.isArray(ecosystems) && ecosystems.length ? `${Array.isArray(versions) && versions.length ? 'with' : 'for'} ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the ${list}list for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references}` : ''}.`

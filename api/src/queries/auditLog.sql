@@ -1,3 +1,5 @@
+-- Query to fetch the audit log. See the audit handler for further details.
+
 SELECT id, event, author, timestamp
 FROM audit_log a
 -- author filter

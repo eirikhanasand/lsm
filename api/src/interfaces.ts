@@ -1,3 +1,4 @@
+// JFrog Artifactory Worker Status
 export enum DownloadStatus {
     DOWNLOAD_UNSPECIFIED = 0,
     DOWNLOAD_PROCEED = 1,

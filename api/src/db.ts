@@ -10,6 +10,8 @@ const {
     DB_IDLE_TIMEOUT_MS,
     DB_TIMEOUT_MS
 } = config
+
+// Creates and joins the database pool
 const { Pool } = pg
 const pool = new Pool({
     user: DB_USER || 'osvuser',
@@ -22,6 +24,14 @@ const pool = new Pool({
     connectionTimeoutMillis: Number(DB_TIMEOUT_MS) || 3000
 })
 
+/**
+ * Runs a database query.
+ * 
+ * @param query Query to run
+ * @param parameters Parameters the query needs to run
+ * 
+ * @returns Query results or an error.
+ */
 export default async function run(query: string, params: (string | number | null)[]) {
     const client = await pool.connect()
     try {
@@ -33,6 +43,15 @@ export default async function run(query: string, params: (string | number | null
     }
 }
 
+/**
+ * Runs an atomic database query using `BEGIN` - `COMMMIT`. It either runs 
+ * entirely, or has no effect. If an error returns the query is rolled back.
+ * 
+ * @param query Query to run
+ * @param parameters Parameters the query needs to run
+ * 
+ * @returns Query results or an error. 
+ */
 export async function runInTransaction<T>(
     callback: (client: pg.PoolClient) => Promise<T>
 ): Promise<T> {

@@ -1,3 +1,4 @@
+-- Creates the database
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'osvdb') THEN
@@ -5,8 +6,10 @@ BEGIN
     END IF;
 END $$;
 
+-- Enters the database
 \c osvdb
 
+-- Creates the user 'osvuser'
 DO $$
 DECLARE
     user_password text;

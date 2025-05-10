@@ -49,9 +49,12 @@ processing_s=$(((processing_time - unzip_time) / 1000000000))
 echo "Processing json to csv complete in ${processing_s}s."
 echo "Populating vulnerabilities..."
 
+# Increases internal database working memory, heavy operation
 $PSQL "SET work_mem = '1GB';"
 $PSQL "ALTER TABLE IF EXISTS vulnerabilities DROP CONSTRAINT IF EXISTS unique_name_ecosystem_version;"
 $PSQL "DROP TABLE IF EXISTS vulnerabilities_new CASCADE;"
+
+# Creates unlogged table for faster inserts
 $PSQL "
 CREATE UNLOGGED TABLE vulnerabilities_new (
     name TEXT PRIMARY KEY,
@@ -64,11 +67,15 @@ CONSTRAINT unique_name_ecosystem_version
 UNIQUE (name, package_name, ecosystem, version_introduced, version_fixed)
 );
 "
+
+# Disables all triggers to avoid checks that slow down the data
 $PSQL "ALTER TABLE vulnerabilities_new DISABLE TRIGGER ALL;"
 $PSQL "\COPY vulnerabilities_new (name, package_name, ecosystem, version_introduced, version_fixed, data)
 FROM '$csv'
 WITH (FORMAT csv, DELIMITER ',', QUOTE '\"', ESCAPE '\"');
 "
+
+# Reenables checks before renaming the table, and resets working memory
 $PSQL "ALTER TABLE vulnerabilities_new ENABLE TRIGGER ALL;"
 $PSQL "SET work_mem = '4MB';"
 $PSQL_MULTILINE <<EOF

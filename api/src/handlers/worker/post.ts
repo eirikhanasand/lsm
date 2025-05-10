@@ -15,6 +15,17 @@ type ParseResponse = {
     ecosystem?: string | null
 } | FastifyReply
 
+/**
+ * Endpoint handler for the JFrog Artifactory Worker. Fetches details from OSV,
+ * and formats the response to the Worker return format. 
+ * 
+ * Required body parameter: `data`
+ * 
+ * @param req Incoming Fastify Request
+ * @param res Outgoing Fastify Response
+ * 
+ * @returns Fastify Response as a JFrog Worker compatible object.
+ */
 export default async function workerPostHandler(req: FastifyRequest, res: FastifyReply) {
     const data = req.body as WorkerData
     if (!data) {
@@ -24,7 +35,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
     let ecosystem: string = parseKey(data.repoPath.key)
     const log: string[] = []
 
-    const details = parseNameAndEcosystem({ecosystem, data, res, log})
+    const details = parseData({ ecosystem, data, res, log })
     if (!('name' in details)) {
         return details
     }
@@ -66,7 +77,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
             }
         }
 
-        // Checking allowed packages
+        // Checks allowed packages
         if ('allow' in response) {
             log.push('DOWNLOAD CONTINUED: Vulnerable or malicious but allowed', `Name: ${name}`, `Version: ${version}`, `Ecosystem: ${ecosystem}`)
             return res.send({
@@ -86,7 +97,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
         })
     }
 
-    // Checking blocked packages
+    // Checks blocked packages
     if ('block' in response) {
         log.push(`DOWNLOAD STOPPED: BLOCKED, Name: ${name}, Version: ${version}, Ecosystem: ${ecosystem}`)
         return res.send({
@@ -106,6 +117,14 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
     })
 }
 
+/**
+ * Parses the ecosystem from the worker. If it includes `-` or `_`, only the 
+ * section before `-` or `_` is used, otherwise the input is returned unchanged.
+ * 
+ * @param key Unparsed ecosystem
+ * 
+ * @returns key without `-` or `_`
+ */
 function parseKey(key: string): string {
     if (key.includes('-')) {
         return key.split('-')[0]
@@ -118,11 +137,20 @@ function parseKey(key: string): string {
     return key
 }
 
+/**
+ * Logs details of the vulnerability, such as the severity, versions affected,
+ * references and the origin. 
+ * 
+ * @param vulnerability Vulnerability found in OSV
+ * 
+ * @returns Array of logs
+ */
 function logDetails(vulnerability: WorkerVulnerability): string[] {
     const log: string[] = []
     // Severity
     if ('severity' in vulnerability) {
         log.push(`Severity ${vulnerability.database_specific.severity}`)
+        // Logs severity details
         for (const severity of (vulnerability.severity || [])) {
             if ('type' in severity && 'score' in severity) {
                 log.push(severity.type, severity.score, '-----------------------------')
@@ -148,6 +176,7 @@ function logDetails(vulnerability: WorkerVulnerability): string[] {
     if ('affected' in vulnerability && Array.isArray(vulnerability.affected)) {
         log.push('-----------------------------')
         log.push('Affected versions:')
+        // Logs version details
         for (const affected of vulnerability.affected) {
             if ('versions' in affected && Array.isArray(affected.versions)) {
                 log.push(affected.versions.join(', '))
@@ -162,6 +191,7 @@ function logDetails(vulnerability: WorkerVulnerability): string[] {
     ) {
         log.push('-----------------------------')
         log.push('Specifics')
+        // Logs specifics
         for (const detail of vulnerability.database_specific['malicious-packages-origins']) {
             log.push(
                 `SHA256: ${detail.sha256}`,
@@ -179,6 +209,13 @@ function logDetails(vulnerability: WorkerVulnerability): string[] {
     return log
 }
 
+/**
+ * Formats a date to a custom `dd.mm.yyyy, hh:mm` format.
+ * 
+ * @param date Date to format
+ * 
+ * @returns Date formatted to the `dd.mm.yyyy, hh:mm` format.
+ */
 function formatDate(date: string): string {
     const parsedDate = new Date(date)
     const day = parsedDate.getDate().toLocaleString().padStart(2, '0')
@@ -190,7 +227,18 @@ function formatDate(date: string): string {
     return formattedDate
 }
 
-function parseNameAndEcosystem({
+/**
+ * Extracts the `name`, `version` and `ecosystem` from the worker metadata if
+ * possible. Otherwise returns a `FastifyReply` detailing why it was not possible.
+ * 
+ * @param ecosystem Parsed ecosystem from the metadata
+ * @param data Full worker metadata
+ * @param res Fastify Response Object
+ * @param log String array to be used to store logs
+ * 
+ * @returns `name`, `version` and optionally `ecosystem`, or a `FastifyReply` 
+ */
+function parseData({
     ecosystem,
     data,
     res,
@@ -229,6 +277,7 @@ function parseNameAndEcosystem({
             }
         case 'maven':
         case 'java':
+            // Extracts the name and version from a `java` metadata response
             const javaRegex = /^([^\/]+(?:\/[^\/]+)*)\/([^\/]+)\/([\d.]+)\/\2-[\d.]+(?:-[^\/]+)?\.[^\/]+$/
             const javaDetails = data.repoPath.path.match(javaRegex)
             if (Array.isArray(javaDetails) && javaDetails.length >= 3) {
@@ -237,6 +286,7 @@ function parseNameAndEcosystem({
                     version: javaDetails[3],
                     ecosystem: 'Maven'
                 }
+            // Special case for JFrog internals
             } else if (data.repoPath.path.startsWith('org/jfrog') && data.repoPath.path.endsWith('.xml')) {
                 return res.send({
                     status: DownloadStatus.DOWNLOAD_STOP,
@@ -246,6 +296,7 @@ function parseNameAndEcosystem({
                 })
             }
         case 'ruby':
+            // Two cases since Ruby uses two seperate formats.
             const rubyRegex1 = /^([\w-]+)-(\d+\.\d+\.\d+)/
             const rubyDetails1 = data.name.match(rubyRegex1)
             const rubyRegex2 = /([a-zA-Z0-9_-]+)\.(\d+\.\d+)(?:\.gz)?/
@@ -253,7 +304,7 @@ function parseNameAndEcosystem({
             if (Array.isArray(rubyDetails1)) {
                 return {
                     name: rubyDetails1[1],
-                    version:  rubyDetails1[2],
+                    version: rubyDetails1[2],
                     ecosystem: 'RubyGems'
                 }
             } else if (Array.isArray(rubyDetails2)) {

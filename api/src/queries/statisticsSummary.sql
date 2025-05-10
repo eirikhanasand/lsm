@@ -1,3 +1,5 @@
+-- Query to fetch the statistics summary. See the statistics handler for further details.
+
 SELECT 
     COUNT(*) AS total_scanned,
     COUNT(*) FILTER (WHERE status = 1) AS safe_approved,

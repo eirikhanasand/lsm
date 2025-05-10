@@ -2,6 +2,18 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { runInTransaction } from '../../db.js'
 import tokenWrapper from '../../utils/tokenWrapper.js'
 
+/**
+ * Deletes entries from the allowlist or blocklist.
+ * 
+ * Required header: `token`
+ * 
+ * Requires parameters: `name` and `list` (`allow`/`block`)
+ * 
+ * @param req Incoming Fastify Request
+ * @param res Outgoing Fastify Response
+ * 
+ * @returns Fastify Response
+ */
 export default async function listDeleteHandler(req: FastifyRequest, res: FastifyReply) {
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
@@ -14,6 +26,7 @@ export default async function listDeleteHandler(req: FastifyRequest, res: Fastif
     }
 
     try {
+        // Completely deletes a package from the `allow` or `block` list.
         await runInTransaction(async (client) => {
             await client.query(`DELETE FROM ${list}_versions WHERE name = $1;`, [name])
             await client.query(`DELETE FROM ${list}_ecosystems WHERE name = $1;`, [name])

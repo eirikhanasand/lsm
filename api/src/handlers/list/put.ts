@@ -2,6 +2,23 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { runInTransaction } from '../../db.js'
 import tokenWrapper from '../../utils/tokenWrapper.js'
 
+/**
+ * Updates entries in the allowlist or blocklist. Includes optional parameters
+ * which can be included for filtering.
+ * 
+ * Required header: `token`
+ * 
+ * Required parameter: `list` (`allow`/`block`)
+ * 
+ * Required body parameters: `name`, `comment`, `author`
+ * 
+ * Optional body parameters: `ecosystems`, `versions`, `repositories`, `references`
+ * 
+ * @param req Incoming Fastify Request
+ * @param res Outgoing Fastify Response
+ * 
+ * @returns Fastify Response
+ */
 export default async function listPutHandler(req: FastifyRequest, res: FastifyReply) {
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
@@ -13,7 +30,15 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
         return res.status(400).send({ error: "List must be either 'allow' or 'block'." })
     }
 
-    const { ecosystems, name, versions, comment, repositories, author, references } = req.body as UpdateBody || {}
+    const { 
+        ecosystems, 
+        name, 
+        versions, 
+        comment, 
+        repositories, 
+        author, 
+        references
+    } = req.body as UpdateBody || {}
     if (!name || !comment || !author) {
         return res
             .status(400)
@@ -32,14 +57,18 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
             ` comment=${comment}`
         )
 
+        // Atomicly updates a package entry for the `allow` or `block` list
         await runInTransaction(async (client) => {
+            // Checks if the item exists
             const checkExists = await client.query(`SELECT name FROM ${list} WHERE name = $1;`, [name])
             if (checkExists.rowCount === 0) {
                 throw new Error(`${list} entry not found.`)
             }
 
+            // Updates comment
             await client.query(`UPDATE ${list} SET comment = $2 WHERE name = $1;`, [name, comment])
 
+            // Updates versions
             if (Array.isArray(versions)) {
                 await client.query(`DELETE FROM ${list}_versions WHERE name = $1;`, [name])
                 for (const version of versions) {
@@ -54,6 +83,7 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
                 }
             }
 
+            // Updates ecosystems
             if (Array.isArray(ecosystems)) {
                 await client.query(`DELETE FROM ${list}_ecosystems WHERE name = $1;`, [name])
                 for (const ecosystem of ecosystems) {
@@ -68,6 +98,7 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
                 }
             }
 
+            // Updates references
             if (Array.isArray(references)) {
                 await client.query(`DELETE FROM ${list}_references WHERE name = $1;`, [name])
                 for (const reference of references) {
@@ -82,6 +113,7 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
                 }
             }
 
+            // Updates repositories
             if (Array.isArray(repositories)) {
                 await client.query(`DELETE FROM ${list}_repositories WHERE name = $1;`, [name])
                 for (const repository of repositories) {
@@ -96,8 +128,15 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
                 }
             }
 
+            // Updates other metadata such as updated, change log and audit log.
             await client.query(`UPDATE ${list}_updated SET id = $1, timestamp = $2 WHERE name = $3;`, [author.id, new Date().toISOString(), name])
-            const audit = `Updated ${name} with versions ${versions.join(', ')} ${Array.isArray(ecosystems) && ecosystems.length ? `with ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the ${list}list for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references.join(', ')}` : ''}.`
+            const audit = `Updated ${name} with versions ${versions.join(', ')} `
+                + `${Array.isArray(ecosystems) && ecosystems.length ?
+                    `with ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} `
+                + `to the ${list}list for ${Array.isArray(repositories) &&
+                    repositories.length ? repositories.join(', ') : 'all repositories'} `
+                + `with comment ${comment}${Array.isArray(references) && references.length
+                    ? ` and references ${references.join(', ')}` : ''}.`
             await client.query(`INSERT INTO ${list}_changelog (event, name, author) VALUES ($1, $2, $3);`, [audit, name, author.id])
             await client.query(`INSERT INTO audit_log (event, author) VALUES ($1, $2);`, [audit, author.id])
         })

@@ -1,3 +1,5 @@
+-- Query to fetch the audit log count. See the audit handler for further details.
+
 SELECT COUNT(*)
 FROM audit_log a
 -- author filter

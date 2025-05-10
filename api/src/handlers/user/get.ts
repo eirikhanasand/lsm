@@ -1,6 +1,16 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import run from '../../db.js'
 
+/**
+ * Fetches the `name` and `avatar` for a user based on `id`.
+ * 
+ * Required parameter: `id`
+ * 
+ * @param req Incoming Fastify Request
+ * @param res Outgoing Fastify Response
+ * 
+ * @returns Fastify Response
+ */
 export default async function userHandler(req: FastifyRequest, res: FastifyReply) {
     const { id } = req.params as { id: string }
     if (!id) {

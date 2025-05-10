@@ -8,6 +8,17 @@ type Valid = {
     error?: string
 }
 
+/**
+ * Token wrapper helper function. Used to check whether a `token` is valid 
+ * before allowing API access, for example when updating and deleting packages
+ * from the `allow` or `block` lists.
+ * 
+ * @param req Fastify Request
+ * @param res Fastify Response
+ * 
+ * @returns Object with a `valid` parameter, and optionally an `error` parameter
+ * if an error occured while verifying the token.
+ */
 export default async function tokenWrapper(req: FastifyRequest, res: FastifyReply): Promise<Valid> {
     if (DISABLE_AUTH === 'true') {
         return { valid: true }

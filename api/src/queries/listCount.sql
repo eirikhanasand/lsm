@@ -1,3 +1,5 @@
+-- Query to fetch the allowlist or blocklist count. See the list handler for further details.
+
 SELECT COUNT(*) FROM (
     SELECT l.name
     FROM {list} l
