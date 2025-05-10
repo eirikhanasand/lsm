@@ -2,180 +2,36 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import fetchOSV from '../../utils/fetchOSV.js'
 import { DownloadStatus } from '../../interfaces.js'
 
+type ParseProps = {
+    ecosystem: string
+    data: WorkerData
+    res: FastifyReply
+    log: string[]
+}
+
+type ParseResponse = {
+    name: string | null
+    version: string | null
+    ecosystem?: string | null
+} | FastifyReply
+
 export default async function workerPostHandler(req: FastifyRequest, res: FastifyReply) {
     const data = req.body as WorkerData
     if (!data) {
         return res.status(400).send({ error: 'Missing data.' })
     }
 
-    let name: string | null = null
-    let version: string | null = null
     let ecosystem: string = parseKey(data.repoPath.key)
     const log: string[] = []
 
-    switch (ecosystem) {
-        case 'npm':
-            const npmRegex = /([a-zA-Z+_./@-]+)-([\d.]+)\.tgz/
-            const npmDetails = data.name.match(npmRegex)
-            if (Array.isArray(npmDetails)) {
-                name = npmDetails[1]
-                version = npmDetails[2]
-            }
-            break
-        case 'docker':
-            const dockerDetails = data.repoPath.path.split('/')
-            name = dockerDetails[1]
-            version = dockerDetails[2]
-            ecosystem = dockerDetails[1].includes('ubuntu') ? 'Ubuntu' : 'Debian'
-            break
-        case 'python':
-            const pythonRegex = /\/([\w\-]+)-([\d.]+)-/
-            const pythonDetails = data.repoPath.path.match(pythonRegex)
-            if (Array.isArray(pythonDetails)) {
-                name = pythonDetails[1]
-                version = pythonDetails[2]
-            }
-            ecosystem = 'PyPI'
-            break
-        case 'go':
-            const goRegex = /([^\/]+\/[^\/]+)\/@v\/v?(\d+\.\d+\.\d+(\.\d+)?)\.(mod|info|zip)/
-            const goDetails = data.repoPath.path.match(goRegex)
-            if (Array.isArray(goDetails)) {
-                name = goDetails[1]
-                version = goDetails[2]
-            }
-            ecosystem = 'Go'
-            break
-        case 'maven':
-        case 'java':
-            const javaRegex = /^([^\/]+(?:\/[^\/]+)*)\/([^\/]+)\/([\d.]+)\/\2-[\d.]+(?:-[^\/]+)?\.[^\/]+$/
-            const javaDetails = data.repoPath.path.match(javaRegex)
-            if (Array.isArray(javaDetails) && javaDetails.length >= 3) {
-                name = `${javaDetails[1].replaceAll(/\//g, '.')}:${javaDetails[2]}`
-                version = javaDetails[3]
-                ecosystem = 'Maven'
-            } else if (data.repoPath.path.startsWith('org/jfrog') && data.repoPath.path.endsWith('.xml')) {
-                return res.send({
-                    status: DownloadStatus.DOWNLOAD_STOP,
-                    message: `DOWNLOAD CONTINUED - Unversioned and distributed by JFrog itself.`,
-                    log,
-                    headers: {}
-                })
-            }
-            break
-        case 'ruby':
-            const rubyRegex1 = /^([\w-]+)-(\d+\.\d+\.\d+)/
-            const rubyDetails1 = data.name.match(rubyRegex1)
-            const rubyRegex2 = /([a-zA-Z0-9_-]+)\.(\d+\.\d+)(?:\.gz)?/
-            const rubyDetails2 = data.name.match(rubyRegex2)
-            if (Array.isArray(rubyDetails1)) {
-                name = rubyDetails1[1]
-                version = rubyDetails1[2]
-            } else if (Array.isArray(rubyDetails2)) {
-                name = rubyDetails2[1]
-                version = rubyDetails2[2]
-            } else if (data.name === 'versions') {
-                return res.send({
-                    status: DownloadStatus.DOWNLOAD_STOP,
-                    message: `DOWNLOAD CONTINUED - Ruby cache 'versions'. This has no version and is not vulnerable. Will be accepted.`,
-                    log,
-                    headers: {}
-                })
-            }
-            ecosystem = 'RubyGems'
-            break
-        case 'alpine':
-            const alpineRegex = /v\d.\d+\/main\/x86_64\/(\w+).tar.gz/
-            const alpineDetails = data.repoPath.path.match(alpineRegex)
-            if (Array.isArray(alpineDetails)) {
-                if (alpineDetails[1] === 'APKINDEX') {
-                    name = 'APKINDEX'
-                    version = '1.0.0'
-                } else {
-                    name = alpineDetails[1]
-                    version = alpineDetails[2]
-                }
-            }
-            ecosystem = 'Alpine'
-            break
-        case 'conda':
-            const condaRegex = /([a-zA-Z\-]+)-(\d+.\d+.\d+)/
-            const condaDetails = data.name.match(condaRegex)
-            if (Array.isArray(condaDetails)) {
-                name = condaDetails[1]
-                version = condaDetails[2]
-                ecosystem = 'PyPI'
-            } else {
-                return res.send({
-                    status: DownloadStatus.DOWNLOAD_STOP,
-                    message: `DOWNLOAD STOPPED - Unable to extract package name and version from Conda repository.`,
-                    log,
-                    headers: {}
-                })
-            }
-            break
-        case 'terraform':
-            const terraformRegex = /terraform-provider-(\w+)_([\d.]+)/
-            const terraformDetails = data.name.match(terraformRegex)
-            if (Array.isArray(terraformDetails)) {
-                name = terraformDetails[1]
-                version = terraformDetails[2]
-            }
-            ecosystem = 'GIT'
-            break
-        case 'cargo-remote':
-            const cargoVersionRegex = /\d.+/
-            const cargoDetails = data.repoPath.path.match(cargoVersionRegex)
-            if (Array.isArray(cargoDetails)) {
-                name = data.name
-                version = cargoDetails[0]
-                ecosystem = 'crates.io'
-            } else {
-                return res.send({
-                    status: DownloadStatus.DOWNLOAD_STOP,
-                    message: `DOWNLOAD STOPPED - Unable to extract package name and version for Cargo.`,
-                    log,
-                    headers: {}
-                })
-            }
-            break
-        case 'bower':
-            const bowerVersionRegex = /(\d.\d.\d)/
-            const bowerDetails = data.name.match(bowerVersionRegex)
-            if (Array.isArray(bowerDetails)) {
-                name = parseKey(data.name)
-                version = bowerDetails[0]
-                ecosystem = 'GIT'
-            }
-            break
-        case 'ansible':
-            const ansibleVersionRegex = /(\d.\d.\d)/
-            const ansibleDetails = data.name.match(ansibleVersionRegex)
-            if (Array.isArray(ansibleDetails)) {
-                name = parseKey(data.name)
-                version = ansibleDetails[0]
-                ecosystem = 'GIT'
-            }
-            break
-        case 'chef':
-            const chefVersionRegex = /(\d.\d.\d)/
-            const chefDetails = data.name.match(chefVersionRegex)
-            if (Array.isArray(chefDetails)) {
-                name = parseKey(data.name)
-                version = chefDetails[0]
-                ecosystem = 'GIT'
-            }
-            break
-        default:
-            const genericVersionRegex = /(\d.\d.\d)/
-            const genericDetails = data.name.match(genericVersionRegex)
-            if (Array.isArray(genericDetails)) {
-                name = parseKey(data.name)
-                version = genericDetails[0]
-                ecosystem = 'GIT'
-            }
-            break
+    const details = parseNameAndEcosystem({ecosystem, data, res, log})
+    if (!('name' in details)) {
+        return details
     }
+
+    const name = details.name
+    const version = details.version
+    ecosystem = details.ecosystem || ecosystem
 
     if (!name || !version) {
         console.warn(`DOWNLOAD STOPPED: Unable to extract name and version - ${data.name}`)
@@ -220,7 +76,7 @@ export default async function workerPostHandler(req: FastifyRequest, res: Fastif
                 headers: {}
             })
         }
-        
+
         log.push(`DOWNLOAD STOPPED: Vulnerable or malicious, name: ${name}, version: ${version}, ecosystem: ${ecosystem}\n`)
         return res.send({
             status: DownloadStatus.DOWNLOAD_STOP,
@@ -332,4 +188,195 @@ function formatDate(date: string): string {
     const minute = parsedDate.getMinutes().toLocaleString().padStart(2, '0')
     const formattedDate = `${day}.${month}.${year}, ${hour}:${minute}`
     return formattedDate
+}
+
+function parseNameAndEcosystem({
+    ecosystem,
+    data,
+    res,
+    log
+}: ParseProps): ParseResponse {
+    switch (ecosystem) {
+        case 'npm':
+            const npmRegex = /([a-zA-Z+_./@-]+)-([\d.]+)\.tgz/
+            const npmDetails = data.name.match(npmRegex)
+            if (Array.isArray(npmDetails)) return {
+                name: npmDetails[1],
+                version: npmDetails[2]
+            }
+        case 'docker':
+            const dockerDetails = data.repoPath.path.split('/')
+            return {
+                name: dockerDetails[1],
+                version: dockerDetails[2],
+                ecosystem: dockerDetails[1].includes('ubuntu') ? 'Ubuntu' : 'Debian'
+            }
+        case 'python':
+            const pythonRegex = /\/([\w\-]+)-([\d.]+)-/
+            const pythonDetails = data.repoPath.path.match(pythonRegex)
+            if (Array.isArray(pythonDetails)) return {
+                name: pythonDetails[1],
+                version: pythonDetails[2],
+                ecosystem: 'PyPI'
+            }
+        case 'go':
+            const goRegex = /([^\/]+\/[^\/]+)\/@v\/v?(\d+\.\d+\.\d+(\.\d+)?)\.(mod|info|zip)/
+            const goDetails = data.repoPath.path.match(goRegex)
+            if (Array.isArray(goDetails)) return {
+                name: goDetails[1],
+                version: goDetails[2],
+                ecosystem: 'Go'
+            }
+        case 'maven':
+        case 'java':
+            const javaRegex = /^([^\/]+(?:\/[^\/]+)*)\/([^\/]+)\/([\d.]+)\/\2-[\d.]+(?:-[^\/]+)?\.[^\/]+$/
+            const javaDetails = data.repoPath.path.match(javaRegex)
+            if (Array.isArray(javaDetails) && javaDetails.length >= 3) {
+                return {
+                    name: `${javaDetails[1].replaceAll(/\//g, '.')}:${javaDetails[2]}`,
+                    version: javaDetails[3],
+                    ecosystem: 'Maven'
+                }
+            } else if (data.repoPath.path.startsWith('org/jfrog') && data.repoPath.path.endsWith('.xml')) {
+                return res.send({
+                    status: DownloadStatus.DOWNLOAD_STOP,
+                    message: `DOWNLOAD CONTINUED - Unversioned and distributed by JFrog itself.`,
+                    log,
+                    headers: {}
+                })
+            }
+        case 'ruby':
+            const rubyRegex1 = /^([\w-]+)-(\d+\.\d+\.\d+)/
+            const rubyDetails1 = data.name.match(rubyRegex1)
+            const rubyRegex2 = /([a-zA-Z0-9_-]+)\.(\d+\.\d+)(?:\.gz)?/
+            const rubyDetails2 = data.name.match(rubyRegex2)
+            if (Array.isArray(rubyDetails1)) {
+                return {
+                    name: rubyDetails1[1],
+                    version:  rubyDetails1[2],
+                    ecosystem: 'RubyGems'
+                }
+            } else if (Array.isArray(rubyDetails2)) {
+                return {
+                    name: rubyDetails2[1],
+                    version: rubyDetails2[2],
+                    ecosystem: 'RubyGems'
+                }
+            } else if (data.name === 'versions') {
+                return res.send({
+                    status: DownloadStatus.DOWNLOAD_STOP,
+                    message: `DOWNLOAD CONTINUED - Ruby cache 'versions'. This has no version and is not vulnerable. Will be accepted.`,
+                    log,
+                    headers: {}
+                })
+            }
+        case 'alpine':
+            const alpineRegex = /v\d.\d+\/main\/x86_64\/(\w+).tar.gz/
+            const alpineDetails = data.repoPath.path.match(alpineRegex)
+            if (Array.isArray(alpineDetails)) {
+                if (alpineDetails[1] === 'APKINDEX') {
+                    return {
+                        name: 'APKINDEX',
+                        version: '1.0.0',
+                        ecosystem: 'Alpine'
+                    }
+                } else {
+                    return {
+                        name: alpineDetails[1],
+                        version: alpineDetails[2],
+                        ecosystem: 'Alpine'
+                    }
+                }
+            }
+        case 'conda':
+            const condaRegex = /([a-zA-Z\-]+)-(\d+.\d+.\d+)/
+            const condaDetails = data.name.match(condaRegex)
+            if (Array.isArray(condaDetails)) {
+                return {
+                    name: condaDetails[1],
+                    version: condaDetails[2],
+                    ecosystem: 'PyPI'
+                }
+            } else {
+                return res.send({
+                    status: DownloadStatus.DOWNLOAD_STOP,
+                    message: `DOWNLOAD STOPPED - Unable to extract package name and version from Conda repository.`,
+                    log,
+                    headers: {}
+                })
+            }
+        case 'terraform':
+            const terraformRegex = /terraform-provider-(\w+)_([\d.]+)/
+            const terraformDetails = data.name.match(terraformRegex)
+            if (Array.isArray(terraformDetails)) {
+                return {
+                    name: terraformDetails[1],
+                    version: terraformDetails[2],
+                    ecosystem: 'GIT'
+                }
+            }
+        case 'cargo-remote':
+            const cargoVersionRegex = /\d.+/
+            const cargoDetails = data.repoPath.path.match(cargoVersionRegex)
+            if (Array.isArray(cargoDetails)) {
+                return {
+                    name: data.name,
+                    version: cargoDetails[0],
+                    ecosystem: 'crates.io',
+                }
+            } else {
+                return res.send({
+                    status: DownloadStatus.DOWNLOAD_STOP,
+                    message: `DOWNLOAD STOPPED - Unable to extract package name and version for Cargo.`,
+                    log,
+                    headers: {}
+                })
+            }
+        case 'bower':
+            const bowerVersionRegex = /(\d.\d.\d)/
+            const bowerDetails = data.name.match(bowerVersionRegex)
+            if (Array.isArray(bowerDetails)) {
+                return {
+                    name: parseKey(data.name),
+                    version: bowerDetails[0],
+                    ecosystem: 'GIT'
+                }
+            }
+        case 'ansible':
+            const ansibleVersionRegex = /(\d.\d.\d)/
+            const ansibleDetails = data.name.match(ansibleVersionRegex)
+            if (Array.isArray(ansibleDetails)) {
+                return {
+                    name: parseKey(data.name),
+                    version: ansibleDetails[0],
+                    ecosystem: 'GIT'
+                }
+            }
+        case 'chef':
+            const chefVersionRegex = /(\d.\d.\d)/
+            const chefDetails = data.name.match(chefVersionRegex)
+            if (Array.isArray(chefDetails)) {
+                return {
+                    name: parseKey(data.name),
+                    version: chefDetails[0],
+                    ecosystem: 'GIT'
+                }
+            }
+        default:
+            const genericVersionRegex = /(\d.\d.\d)/
+            const genericDetails = data.name.match(genericVersionRegex)
+            if (Array.isArray(genericDetails)) {
+                return {
+                    name: parseKey(data.name),
+                    version: genericDetails[0],
+                    ecosystem: 'GIT'
+                }
+            }
+    }
+
+    return {
+        name: null,
+        version: null,
+        ecosystem: null
+    }
 }
