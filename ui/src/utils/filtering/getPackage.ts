@@ -18,7 +18,18 @@ type Packages = {
     error?: 500
 }
 
-// Fetches all packages from lsm API
+/**
+ * Fetches packages from the API.
+ * 
+ * @param list List to fetch
+ * @param side Whether the call to this function occurs on the `client` or 
+ * `server` side (used to ensure that the appropriate url is called).
+ * @param search Optional parameter to filter the results by a string
+ * @param page Page of the results to return
+ * @param resultsPerPage The amount of entries each page should contain.
+ * 
+ * @returns The packages from the database that matches the provided input.
+ */
 export default async function getPackages({ 
     list, 
     side,
@@ -49,22 +60,5 @@ export default async function getPackages({
             result: [],
             error: 500
         }
-    }
-}
-
-// Fetches a specific package from lsm API
-export async function getPackage({ list }: GetListProps) {
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/${list}`)
-
-        if (!response.ok) {
-            throw new Error(await response.text())
-        }
-
-        const data = await response.json()
-        return data
-    } catch (error) {
-        console.error(error)
-        return 500
     }
 }
