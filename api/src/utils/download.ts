@@ -2,16 +2,21 @@ import pkg from 'ae-cvss-calculator'
 import run from '../db.js'
 import config from '../constants.js'
 import { DownloadStatus } from '../interfaces.js'
+import { loadSQL } from './loadSQL.js'
+
 const { DEFAULT_MAL_SEVERITY, DEFAULT_CVE_SEVERITY, DEFAULT_SEVERITY } = config
 const { Cvss4P0, Cvss3P1 } = pkg
 
+/**
+ * Inserts a download event into the database.
+ * 
+ * @param event Event to insert into the database
+ * 
+ * @returns The first row of the result, or an error if the operation was
+ * unsuccessful.
+ */
 export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
-    const query = `
-        INSERT INTO download_events (package_name, package_version, ecosystem, client_address, status, reason, severity)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        ON CONFLICT (timestamp, package_name, package_version, client_address) DO NOTHING
-        RETURNING *;
-    `
+    const query = (await loadSQL('download.sql'))
 
     try {
         const result = await run(query, [
@@ -31,6 +36,22 @@ export async function insertDownloadEvent(event: DownloadEvent): Promise<any> {
     }
 }
 
+/**
+ * Processes vulnerabilties to a standard format including `package_name`, 
+ * `package_version`, `ecosystem`, `client_address`, `status`, `reason`, 
+ * `severity` and then inserts it into the database. Logs the error if 
+ * unsuccessful, since the client is only concerned with whether the package
+ * included vulnerabilities, not whether the insert database event to track it 
+ * was successful.
+ * 
+ * @param response Response from OSV
+ * @param name Package name
+ * @param version Package version
+ * @param ecosystem Package ecosystem
+ * @param clientAddress The IP of the client that fetched OSV.
+ * 
+ * @returns void
+ */
 export async function processVulnerabilities({
     response,
     name,
@@ -97,6 +118,16 @@ export async function processVulnerabilities({
     }
 }
 
+/**
+ * Checks whether a package should be stopped or allowed. If it includes an 
+ * `allow` parameter, it will pass, otherwise if the response is not empty that
+ * means vulnerabilties are found, and it will be stopped. If the response was
+ * empty it will also pass.
+ * 
+ * @param response OSV response
+ * 
+ * @returns Status detailing whether the package should be stopped or allowed.
+ */
 async function checkPackage({ response }: { response: OSVResponse }): Promise<number> {
     if (!response || response.vulnerabilities?.length) {
         if ('allow' in response) {

@@ -2,39 +2,37 @@ import run from '../db.js'
 import fetchList from './list/fetchList.js'
 import { processVulnerabilities } from './download.js'
 import config from '../constants.js'
+import { loadSQL } from './loadSQL.js'
 
 const { LOCAL_OSV, OSV_URL } = config
 
-export default async function fetchOSV({ 
+/**
+ * Fetches OSV using the name, version, ecosystem and optionally `clientAddress`
+ * if using the local database. Checks whether to use the local or remote
+ * database based on whether the `LOCAL_OSV` environment variable is `true` or
+ * `false`.
+ * 
+ * @param name Package name
+ * @param version Package version
+ * @param ecosystem Package ecosystem
+ * @param clientAddress Client IP
+ * 
+ * @returns The response from OSV, and how many results were found, as an object
+ * with `response` and `osvLength` parameters. Optionally returns an object with
+ * only the `error` parameter if the request was unsuccessful (OSV down / 
+ * database unavailable).
+ */
+export default async function fetchOSV({
     name,
-    version, 
-    ecosystem, 
+    version,
+    ecosystem,
     clientAddress
 }: FetchOSVProps): Promise<FetchOSVResponse | { error: string }> {
     let response = {} as { vulnerabilities: OSVResponseVulnerability[], allow?: any[], block?: any[] }
     let osvLength = 0
     if (LOCAL_OSV === 'true') {
-        const result = await run(`
-            SELECT * FROM vulnerabilities
-            WHERE package_name = $1
-            AND ecosystem = $2
-            AND (
-                version_introduced = 'unknown' OR
-                (
-                    version_introduced ~ '^[0-9]+(\.[0-9]+)*$'
-                    AND string_to_array(version_introduced, '.')::int[] 
-                    <= string_to_array($3, '.')::int[]
-                )
-            )
-            AND (
-                version_fixed = 'unknown' OR
-                (
-                    version_fixed ~ '^[0-9]+(\.[0-9]+)*$'
-                    AND string_to_array(version_fixed, '.')::int[] 
-                    >= string_to_array($3, '.')::int[]
-                )
-            );
-        `, [name, ecosystem, version])
+        const query = (await loadSQL('fetchOSV.sql'))
+        const result = await run(query, [name, ecosystem, version])
         osvLength = result.rows.length
         response = { vulnerabilities: result.rows.map((row) => row.data) } as OSVResponse
     } else {
@@ -60,9 +58,7 @@ export default async function fetchOSV({
             osvLength = vulnerable ? data.vulns.length : 0
         } catch (error) {
             console.error(`Unable to fetch OSV ${JSON.stringify(error)}`)
-            return {
-                'error': `Unable to fetch OSV ${JSON.stringify(error)}`
-            }
+            return { error: `Unable to fetch OSV ${JSON.stringify(error)}` }
         }
     }
     const allow = await fetchList({ name, ecosystem, version, list: 'allow' })
