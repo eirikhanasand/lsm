@@ -2,6 +2,7 @@ import { PlatformContext, BeforeDownloadRequest, PlatformClients, PlatformHttpCl
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import runWorker from './worker.js'
 
+// Test to check whether the worker functions correctly.
 describe('lsm tests', () => {
     let context: DeepMocked<PlatformContext>
     let request: DeepMocked<BeforeDownloadRequest>

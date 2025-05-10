@@ -1,3 +1,4 @@
+// Array of repositories that must exist for all pipeline tests to pass.
 const repositories = [
     // virtual
     {

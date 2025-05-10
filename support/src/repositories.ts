@@ -24,6 +24,12 @@ if (createRepositoriesResponse.status === 200) {
     console.log(`Failed to create dependant repositories: ${createRepositoriesResponse.error}`)
 }
 
+/**
+ * Creates repositories in Artifactory
+ * 
+ * @returns Returns the status and data from Artifactory. Status 200 if the
+ * repositories are created successfully.
+ */
 async function createRepositories() {
     try {
         console.log('Creating repositories...')
@@ -58,6 +64,13 @@ async function createRepositories() {
     }
 }
 
+/**
+ * Creates dependent repositories in Artifactory. These require some repositories
+ * to already exist in Artifactory. Therefore, they are called as a stage 2 after
+ * the first batch has been successfully created.
+ * 
+ * @returns Result from Artifactory
+ */
 async function createDependantRepositories() {
     try {
         console.log('Creating dependant repositories...')
