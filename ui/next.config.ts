@@ -5,6 +5,7 @@ const { IMAGE_URL_SHORT } = config
 
 const nextConfig: NextConfig = {
     images: {
+        // Conditionally allows the IMAGE_URL to be fetched if defined.
         remotePatterns: IMAGE_URL_SHORT ? [
             {
                 protocol: 'https',

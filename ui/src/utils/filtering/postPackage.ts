@@ -12,6 +12,13 @@ type PostPackageResponse = {
     error?: string
 }
 
+/**
+ * Adds a package to the database `allow` or `block` list.
+ * 
+ * @param list List to post to (`allow` / `block`)
+ * @param newPackage The package object to add
+ * @param token User token 
+ */
 export default async function postPackage({ list, newPackage, token }: PostListProps): Promise<PostPackageResponse> {
     try {
         const headers = {

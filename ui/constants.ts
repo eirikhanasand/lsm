@@ -1,3 +1,7 @@
+// Constants used throughout the user interface. Static ones are defined here,
+// while dynamic ones are fetched from the environment variables. Those used
+// client-side must start with `NEXT_PUBLIC_`.
+
 import dotenv from 'dotenv'
 
 dotenv.config({path: '../.env'})

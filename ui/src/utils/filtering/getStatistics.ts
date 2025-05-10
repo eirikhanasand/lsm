@@ -2,6 +2,16 @@ import config from "@constants"
 
 const { DEFAULT_RESULTS_PER_PAGE } = config
 
+/**
+ * 
+ * @param startTime Earliest date to fetch results from.
+ * @param endTime Last date to fetch results from.
+ * @param page Page of the results to fetch.
+ * @param resultsPerPage Number of results to fetch per page.
+ * @returns Statistics as an object including `totalScanned`, 
+ * `vulnerabilitiesFound`, `criticalBlocked`, `safeApproved`, `lastScan`, 
+ * `repositoryStats`, `vulnerabilitiesOverTime`.
+ */
 export async function getStatistics({
     startTime,
     endTime,

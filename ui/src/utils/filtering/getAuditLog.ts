@@ -9,7 +9,14 @@ type AuditLogProps = {
     search?: string
 }
 
-// Fetches the audit log from lsm API
+/**
+ * Fetches results from the audit log
+ * @param side Whether the call to this function occurs on the `client` or `server` side.
+ * @param page Page of the results to query
+ * @param resultsPerPage Amount of results to include per page
+ * @param search Optional string to filter the results
+ * @returns Returns the audit log entries matching the given input
+ */
 export default async function getAuditLog({side, page, resultsPerPage, search}: AuditLogProps) {
     try {
         console.log(`Fetching audit log: side=${side} page=${page}, resultsPerPage=${resultsPerPage}, search=${search}`)

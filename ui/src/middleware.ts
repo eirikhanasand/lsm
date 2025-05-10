@@ -1,23 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+/**
+ * Middleware function that intercepts all requests before they reach the rest
+ * of the application. Handles authentication if the requested path requires it.
+ * 
+ * @param req Next Request
+ * 
+ * @returns To the rest of the application, or redirects the user if
+ * unauthenticated.
+ */
 export async function middleware(req: NextRequest) {
     const tokenCookie = req.cookies.get('token')
+    // Checks if the path requires authentication, or if authentication is disabled.
     if (!pathIsAllowedWhileUnauthenticated(req.nextUrl.pathname) && process.env.NEXT_PUBLIC_DISABLE_AUTH !== 'true') {
         if (!tokenCookie) {
             return NextResponse.redirect(new URL('/', req.url))
         }
+
+        // Checks if the token is valid, and redirects the user if not.
         const token = tokenCookie.value
         const validToken = await tokenIsValid(req, token as unknown as string)
         if (!validToken && !pathIsAllowedWhileUnauthenticated(req.nextUrl.pathname)) {
             return NextResponse.redirect(new URL('/logout', req.url))
         }
     }
+
+    // Passes the theme to prerender the content for the appropriate theme.
     const theme = req.cookies.get('theme')?.value || 'dark'
     const res = NextResponse.next()
     res.headers.set('x-theme', theme)
     return res
 }
 
+/**
+ * Checks if the requested path requires authentication.
+ * 
+ * @param path Path requested by the user
+ * 
+ * @returns Boolean based on whether authentication is required.
+ */
 function pathIsAllowedWhileUnauthenticated(path: string) {
     if (path === '/' || path === '/favicon.ico') {
         return true
@@ -34,6 +55,14 @@ function pathIsAllowedWhileUnauthenticated(path: string) {
     return false
 }
 
+/**
+ * Checks if the user´s token is valid.
+ * 
+ * @param req Next Request 
+ * @param token Token provided by the user
+ * 
+ * @returns Boolean based on whether the token is valid. 
+ */
 async function tokenIsValid(req: NextRequest, token: string): Promise<boolean> {
     if (process.env.NEXT_PUBLIC_DISABLE_TOKEN_CHECK === 'true') {
         return true
@@ -62,6 +91,16 @@ async function tokenIsValid(req: NextRequest, token: string): Promise<boolean> {
     return true
 }
 
+/**
+ * Checks if additional user properties match the required value. This does not
+ * have any impact on the API, but prevents the user from modifying the values
+ * frontend. Even if modified they will not have any impact on the API, as 
+ * they are not used there.
+ * 
+ * @param req Next request
+ * @param userData User data
+ * @returns Boolean based on whether all values match
+ */
 function valuesMatch(req: NextRequest, userData: User): boolean {
     const avatar = req.cookies.get('avatar')?.value
     const email = req.cookies.get('email')?.value

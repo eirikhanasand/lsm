@@ -16,7 +16,20 @@ type RepositoriesResProps = {
     error?: string
 }
 
-export default async function fetchRepositories({ search, page, resultsPerPage }: RepositoriesProps): Promise<RepositoriesResProps> {
+/**
+ * Fetches repositories from the API.
+ * 
+ * @param search Optional parameter to filter the results
+ * @param page Page of the results (not used, unsuppored by JFrog Artifactory)
+ * @param resultsPerPage Results per page (not used, unsuppored by JFrog Artifactory)
+ * 
+ * @returns Repositories from the API.
+ */
+export default async function fetchRepositories({ 
+    search,
+    page,
+    resultsPerPage
+}: RepositoriesProps): Promise<RepositoriesResProps> {
     try {
         const params = new URLSearchParams({ 
             search: search || '', 

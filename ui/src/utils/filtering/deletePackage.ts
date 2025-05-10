@@ -4,6 +4,15 @@ type DeleteListProps = {
     token: string
 }
 
+/**
+ * Deletes a package from the database.
+ * 
+ * @param list Whether the package should be deleted from the `allow` or `block` list.
+ * @param name The name of the package to delete.
+ * @param token Token used to authenticate the request.
+ * 
+ * @returns The response from the API, or a 500 error code if an error occured.
+ */
 export default async function deletePackage({ list, name, token }: DeleteListProps) {
     try {
         const headers = {

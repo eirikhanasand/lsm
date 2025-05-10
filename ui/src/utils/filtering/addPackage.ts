@@ -14,6 +14,23 @@ type AddPackageProps = {
     token: string
 }
 
+/**
+ * Inserts a package into the database.
+ * 
+ * @param newPackage New package to insert into the database
+ * @param setPackages Helper function to set the packages currently displayed in
+ * the user interface. Used to display the updated package list until the page
+ * is refreshed.
+ * @param setShowForm Helper function determining whether the form should be 
+ * displayed.
+ * @param setNewPackage Helper function to reset the input after the package has
+ * been added.
+ * @param setError Helper function to set the error variable to be displayed to
+ * the user if an error occured.
+ * @param packages Packages currently displayed in the user interface.
+ * @param list Whether the change concerns the `allow` or `block` list.
+ * @param token Token used to authenticate the user
+ */
 export default async function addPackage({
     newPackage,
     setPackages,

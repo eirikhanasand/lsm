@@ -4,6 +4,13 @@ type PutListProps = {
     token: string
 }
 
+/**
+ * Updates a package in the database `allow` or `block` list.
+ * 
+ * @param list List to update (`allow` / `block`)
+ * @param pkg The updated package object
+ * @param token User token 
+ */
 export default async function putPackage({ list, pkg, token }: PutListProps) {
     try {
         const headers = {

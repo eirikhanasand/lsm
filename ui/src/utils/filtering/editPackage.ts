@@ -10,6 +10,17 @@ type RemovePackageProps = {
     token: string
 }
 
+/**
+ * Helper function used when editing a package on the API.
+ * 
+ * @param pkg The package to edit
+ * @param setPackages Helper function to update the packages rendered in the 
+ * user interface to display the updated information till the page is refreshed. 
+ * @param packages Packages currently displayed in the user interface
+ * @param list List to edit (`allow` or `block`)
+ * @param author User performing the change
+ * @param token Token used to authenticate the request 
+ */
 export default async function editPackage({
     pkg,
     setPackages,
@@ -37,5 +48,6 @@ export default async function editPackage({
         return
     }
 
+    // Updates the packages rendered to match the change
     setPackages(packages.map((p) => p.name === pkg.name ? pkg : p))
 }
