@@ -118,7 +118,7 @@ export default async function listPostHandler(req: FastifyRequest, res: FastifyR
             [name, author.id]
         )
 
-        // Inserts other package metadata such as created, updated, change log and audit log.
+        // Inserts other package metadata such as created, updated, changelog and audit log.
         await run(`INSERT INTO ${list}_created (name, id) VALUES ($1, $2);`, [name, author.id])
         await run(`INSERT INTO ${list}_updated (name, id) VALUES ($1, $2);`, [name, author.id])
         const audit = `Added ${name} ${Array.isArray(versions) && versions.length ? `versions ${versions.join(', ')}` : 'for all versions'} ${Array.isArray(ecosystems) && ecosystems.length ? `${Array.isArray(versions) && versions.length ? 'with' : 'for'} ecosystems ${ecosystems.join(', ')}` : 'for all ecosystems'} to the ${list}list for ${Array.isArray(repositories) && repositories.length ? repositories.join(', ') : 'all repositories'} with comment ${comment}${Array.isArray(references) && references.length ? ` and references ${references}` : ''}.`

@@ -128,7 +128,7 @@ export default async function listPutHandler(req: FastifyRequest, res: FastifyRe
                 }
             }
 
-            // Updates other metadata such as updated, change log and audit log.
+            // Updates other metadata such as updated, changelog and audit log.
             await client.query(`UPDATE ${list}_updated SET id = $1, timestamp = $2 WHERE name = $3;`, [author.id, new Date().toISOString(), name])
             const audit = `Updated ${name} with versions ${versions.join(', ')} `
                 + `${Array.isArray(ecosystems) && ecosystems.length ?
