@@ -21,6 +21,16 @@ type LogProps = {
     url: string | undefined
 }
 
+/**
+ * Client side audit log. Prerendered with the most recent changes, and can be
+ * filtered to find specific entries.
+ * 
+ * @param logs Initial logs provided by the server
+ * @param pages Total amount of pages without filters
+ * @param url IMAGE_URL to display the avatar of the author of each change
+ * 
+ * @returns React component 
+ */
 export default function Page({ logs, pages: serverPages, url }: PageProps) {
     const searchParams = useSearchParams()
     const initialSearch = searchParams.get('search') || ''
@@ -81,6 +91,14 @@ export default function Page({ logs, pages: serverPages, url }: PageProps) {
     )
 }
 
+/**
+ * Row in the audit log
+ * 
+ * @param log Object to display in this row
+ * @param url IMAGE_URL to display the author avatar
+ * 
+ * @returns React component 
+ */
 function Log({ log, url }: LogProps) {
     const date = new Date(log.timestamp).toLocaleString('en-GB').replaceAll('/', '.')
     const imageExists = url && log.author.avatar !== 'null'

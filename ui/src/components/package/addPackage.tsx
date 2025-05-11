@@ -1,4 +1,5 @@
 'use client'
+
 import { useEffect, useState } from 'react'
 import { getCookie } from '@/utils/cookies'
 import groupPackagesByEcosystem from '@/utils/filtering/groupPackageByEcosystem'
@@ -7,6 +8,20 @@ import Packages from './packages'
 import Header from './header'
 import './addPackage.css'
 
+/**
+ * Form displayed when adding a new package.
+ * 
+ * @param list Whether the change concerns the `allow` or `block` list
+ * @param pages Number of pages available
+ * @param packages Packages currently displayed in the user interface
+ * @param repositories Repositories available in JFrog Artifactory
+ * @param serverShowGlobalOnly Whether the server only should send global 
+ * packages
+ * @param url IMAGE_URL, used by the nested packages list to conditionally 
+ * display it in the edit page
+ * 
+ * @returns React component
+ */
 export default function AddPackage({
     list,
     pages,
@@ -130,6 +145,11 @@ export default function AddPackage({
     )
 }
 
+/**
+ * Header for the package list.
+ * 
+ * @returns React component
+ */
 function PackageHeader() {
     return (
         <div className='grid grid-cols-12 w-full h-8 rounded-lg px-4 items-center border border-blue-500'>

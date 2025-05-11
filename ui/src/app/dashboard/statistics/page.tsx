@@ -11,6 +11,12 @@ const fallbackServerStats = {
     vulnerabilitiesOverTime: []
 }
 
+/**
+ * Statistics page of the user interface. Prerenders the statistics page with 
+ * fallback content and base statistics for a larger time interval.
+ * 
+ * @returns React component 
+ */
 export default async function page() {
     const startTime = '2020-01-01'
     const endTime = '2030-01-01'

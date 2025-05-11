@@ -1,3 +1,11 @@
+/**
+ * Trash icon displayed in the user interface.
+ * 
+ * @param className `string` of styles to display using Tailwind.
+ * @param fill Custom color for the icon.
+ * 
+ * @returns React component.
+ */
 export default function Trash({ className, fill }: { className?: string, fill: string }) {
     return (
         <div className={className}>

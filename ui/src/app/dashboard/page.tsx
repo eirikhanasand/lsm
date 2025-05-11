@@ -1,5 +1,10 @@
 import Section from '@/components/global/section'
 
+/**
+ * Dashboard page of the user interface. Contains the main navigation options.
+ * 
+ * @returns React component
+ */
 export default function Dashboard() {
     return (
         <main className='flex min-h-full flex-col items-center justify-center p-4'>

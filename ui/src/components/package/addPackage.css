@@ -1,3 +1,4 @@
+/* Custom styles used in the add package component */
 .pencil-icon {
     fill: var(--color-shallow);
     transition: fill 0.2s ease-in-out;

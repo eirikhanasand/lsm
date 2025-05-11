@@ -6,6 +6,17 @@ type DropdownProps = {
     setItems: (value: string[]) => void
 }
 
+/**
+ * Displays a dropdown menu. Used for the dropdown menus in the add and edit 
+ * package components.
+ * 
+ * @param className Custom Tailwind styles to add to the dropdown menu
+ * @param item Title of the dropdown menu
+ * @param items Currently selected items in the dropdown menu
+ * @param allItems All items available in the dropdown menu
+ * @param setItems Helper function to set the selected items 
+ * @returns 
+ */
 export default function Dropdown({
     className,
     item,
@@ -13,8 +24,8 @@ export default function Dropdown({
     allItems,
     setItems
 }: DropdownProps) {
-    const current = items.length 
-        ? JSON.stringify(items) === '[""]' ? `All ${item}` : items.join(', ') 
+    const current = items.length
+        ? JSON.stringify(items) === '[""]' ? `All ${item}` : items.join(', ')
         : `Select ${item}`
 
     function handleAdd(e: React.ChangeEvent<HTMLSelectElement>) {

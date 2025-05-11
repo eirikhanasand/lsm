@@ -23,6 +23,24 @@ type InputButtonsProps = {
     containerRef: RefObject<null>
 }
 
+/**
+ * Helper function to manage paging across all components.
+ * 
+ * @param page Currently active page
+ * @param pages Total amount of pages available
+ * @param setPage Helper function to set the current page
+ * @param resultsPerPage Amount of items to display per page
+ * @param search Optional search filter
+ * @param fetchFunction Helper function to fetch the API. Used since the 
+ * different components require different API parameters.
+ * @param setResultsPerPage Helper function to set the amount of results to
+ * display per page
+ * @param searchParams URL search params. Used to update the URL to reflect the
+ * current paging options
+ * @param customStyle Custom Tailwind style
+ * 
+ * @returns React component
+ */
 export default function Paging({
     page,
     pages,
@@ -95,7 +113,18 @@ export default function Paging({
     )
 }
 
-
+/**
+ * Displays a button in the paging component.
+ * 
+ * @param page Current page
+ * @param setPage Helper function to set the current page
+ * @param buttonStyle Tailwind button style
+ * @param activeButtonStyle Tailwind active button style
+ * @param unClickableButtonStyle Tailwind unclickable button style
+ * @param containerRef Container React ref object
+ * 
+ * @returns React component
+ */
 function InputButtons({
     page,
     setPage,

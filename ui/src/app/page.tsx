@@ -2,6 +2,13 @@ import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+/**
+ * Root user interface path. Displays a login button, and conditionally a 
+ * disclaimer stating that authorization is disabled. If a token already exists
+ * the user is automatically redirected to the dashboard.
+ * 
+ * @returns React component
+ */
 export default async function Home() {
     const Cookies = await cookies()
     const token = Cookies.get('token')?.value

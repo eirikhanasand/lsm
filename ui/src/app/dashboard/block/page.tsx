@@ -6,6 +6,13 @@ import config from '@parent/constants'
 
 const { IMAGE_URL } = config
 
+/**
+ * Server side list of `block` entries to display in the user interface. 
+ * Prerenders the content to ensure that it is available to the user right away.
+ * The user has filters and paging to filter the results.
+ * 
+ * @returns React component
+ */
 export default async function page() {
     const list = 'block'
     const serverPackages = await getPackages({ list, side: 'server' })

@@ -14,6 +14,15 @@ type PageProps = {
     repositories: Repository[]
 }
 
+/**
+ * Client repositories component. Displays the repositories from JFrog 
+ * Artifactory in the user interface.
+ * 
+ * @param repositories Repositories to display
+ * @param pages The number of pages of results
+ * 
+ * @returns React component 
+ */
 export default function Page({ repositories, pages: serverPages }: PageProps) {
     const searchParams = useSearchParams()
     const initialPage = Number(searchParams.get('page')) || 1

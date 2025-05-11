@@ -1,3 +1,8 @@
+/**
+ * Profile icon displayed in the user interface
+ * 
+ * @returns React component
+ */
 export default function ProfileIcon() {
     return (
         <div className="p-1">

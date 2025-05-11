@@ -61,6 +61,15 @@ type PageProps = {
     defaultEndTime: string
 }
 
+/**
+ * Client side statistics page. Includes interactivity.
+ * 
+ * @param serverStats Initial statistics provided by the server
+ * @param defaultStartTime Initial start time
+ * @param defaultEndTime Initial end time
+ * 
+ * @returns React component
+ */
 export default function Page({
     serverStats,
     defaultStartTime,
@@ -263,6 +272,14 @@ export default function Page({
     )
 }
 
+/**
+ * Statistics card
+ * 
+ * @param title Title of the card
+ * @param value Value to display on the card
+ * 
+ * @returns React component
+ */
 function StatCard({ title, value }: StatCardProps) {
     return (
         <div className='rounded-lg p-4 text-center border border-blue-500 text-foreground'>
@@ -272,6 +289,14 @@ function StatCard({ title, value }: StatCardProps) {
     )
 }
 
+/**
+ * Custom converter to ISO format since the string does not match the format the
+ * `Date` library expects.
+ * 
+ * @param timestamp Timestamp to convert
+ * 
+ * @returns Converted timestamp
+ */
 function convertToISOFormat(timestamp: string): string {
     return timestamp.replace(
         /(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})/,

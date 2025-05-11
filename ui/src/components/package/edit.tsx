@@ -25,6 +25,23 @@ type ChangeProps = {
     url: string | undefined
 }
 
+/**
+ * Component to edit packages in the `allow` and `block` lists of the user 
+ * interface.
+ * 
+ * @param pkg Package to edit
+ * @param setEditing Boolean determining whether the Edit component should be 
+ * visible
+ * @param setPackages Helper function to set the currently displayed packages 
+ * (updated on submit) 
+ * @param packages Package scurrently displayed in the user interface 
+ * @param list Whether the change concerns the `allow` or `block` list.
+ * @param author Current user
+ * @param repositories Repositories available. Used for the repository select menu
+ * @param url IMAGE_URL to display the user avatar
+ * 
+ * @returns React component.
+ */
 export default function Edit({
     pkg,
     setEditing,
@@ -188,6 +205,14 @@ export default function Edit({
     )
 }
 
+/**
+ * Displays a entry of the package changelog
+ * 
+ * @param change Changelog object
+ * @param url IMAGE_URL to display the user avatar
+ * 
+ * @returns React component 
+ */
 function Change({ change, url }: ChangeProps) {
     const imageExists = url && change.author.avatar !== 'null'
     return (

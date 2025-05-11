@@ -13,6 +13,14 @@ export const metadata: Metadata = {
 
 const { IMAGE_URL } = config
 
+/**
+ * Main layout component. Every page displayed is rendered after this one 
+ * through the children object.
+ * 
+ * @param children Other components to display (other pages) 
+ * 
+ * @returns React component
+ */
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const Cookies = await cookies()
     const theme = Cookies.get('theme')?.value || 'dark'

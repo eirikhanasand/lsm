@@ -1,5 +1,13 @@
 import Link from 'next/link'
 
+/**
+ * Displays a repository in the repositories list in the user interface.
+ * 
+ * @param repository Repository to display
+ * @param index Index of the item in the parent list (for altering color)
+ * 
+ * @returns React component
+ */
 export default function Repository({ repository, index }: RepositoryProps) {
     const color = index % 2 !== 0 ? 'bg-normal' : ''
     return (

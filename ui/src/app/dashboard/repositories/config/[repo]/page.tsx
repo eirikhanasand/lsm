@@ -9,6 +9,13 @@ type SectionProps = {
     items: RepoListItem[]
 }
 
+/**
+ * Server side details for a given repository. Prefetched on the server. 
+ * Displays an overview of the `allow` and `block` entries for the given 
+ * repository.
+ * 
+ * @returns React component
+ */
 export default async function RepoConfigPage({ params }: RepoConfigPageProps) {
     const repo = (await params).repo
     const { allow, block } = await fetchRepoConfig(repo)
@@ -25,6 +32,15 @@ export default async function RepoConfigPage({ params }: RepoConfigPageProps) {
     )
 }
 
+/**
+ * Displays a section in the repository config page based on the list 
+ * (`allow`/`block`).
+ * 
+ * @param list List in question (`allow`/`block`)
+ * @param items Items to display in the section
+ * 
+ * @returns React component 
+ */
 function Section({ list, items }: SectionProps) {
     const local = items.filter(item => !item.isGlobal)
     const global = items.filter(item => item.isGlobal)

@@ -1,4 +1,17 @@
-export default function Pencil({ className, fill }: { className?: string, fill: string }) {
+type PencilProps = { 
+    className?: string
+    fill: string
+}
+
+/**
+ * Pencil icon displayed in the user interface
+ * 
+ * @param className `string` of styles to display using Tailwind.
+ * @param fill Custom color for the icon.
+ * 
+ * @returns React component
+ */
+export default function Pencil({ className, fill }: PencilProps) {
     return (
         <div className={className}>
             <svg

@@ -25,6 +25,30 @@ type HeaderProps = {
     pages: number
 }
 
+/**
+ * Displays the header for the `allow` and `block` list.
+ * @param list Whether this is the `allow` or `block` list
+ * @param selectedEcosystem Ecosystem filter
+ * @param setSelectedEcosystem Helper function to set the ecosystem filter
+ * @param groupedPackages Packages grouped by ecosystem
+ * @param selectedVersion Version filter
+ * @param setSelectedVersion Helper function to set the selected version to filter by
+ * @param allVersions All versions available in the current results to be used 
+ * for filtering
+ * @param showGlobalOnly Boolean determining whether only global packages should 
+ * be displayed
+ * @param setShowGlobalOnly Helper function to determine whether only global 
+ * packages should be displayed
+ * @param search Search query
+ * @param setSearch Helper function to update the search query
+ * @param showForm Boolean determining whether the add package dialogue should 
+ * be open
+ * @param setShowForm Helper function to set whether the add package dialogue 
+ * should be open
+ * @param setItems Helper function to set the items to display
+ * @param pages The amount of pages of results that exist
+ * @returns React component
+ */
 export default function Header({
     list,
     selectedEcosystem,

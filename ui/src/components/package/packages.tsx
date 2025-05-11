@@ -11,6 +11,19 @@ type PackagesProps = {
     url: string | undefined
 }
 
+/**
+ * Renders the packages by group in the user interface.
+ * 
+ * @param groupedPackages Packages sorted by group
+ * @param list Whether this is the `allow` or `block` list
+ * @param setPackages Helper function to set the packages to display
+ * @param packages Packages to display
+ * @param author User which created the package
+ * @param repositories Repositories available (for autofill when creating new packages)
+ * @param url IMAGE_URL to display the author avatar on the edit page
+ * 
+ * @returns React component
+ */
 export default function Packages({ 
     groupedPackages,
     list,

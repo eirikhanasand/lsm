@@ -6,6 +6,16 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import ProfileIcon from '../svg/profileIcon'
 
+/**
+ * Displays the menu profile icon and the content displayed when the menu button
+ * is clicked.
+ * 
+ * @param token User token
+ * @param url IMAGE_URL, used by the nested packages list to conditionally 
+ * display it in the edit page
+ * 
+ * @returns React component 
+ */
 export default function MenuProfile({ token, url }: { token: string | undefined, url?: string }) {
     const [open, setOpen] = useState(false)
     const [id, setId] = useState<string | null>(null)
@@ -51,6 +61,12 @@ export default function MenuProfile({ token, url }: { token: string | undefined,
     )
 }
 
+/**
+ * Content displayed when the profile icon is clicked. Currently only displays
+ * a logout button.
+ *
+ *  @returns React component 
+ */
 function Content() {
     return (
         <div className='bg-dark absolute h-[4.5vh] w-[15vw] right-2 mt-6 rounded-lg p-2 z-1000'>

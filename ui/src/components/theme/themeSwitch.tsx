@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react'
 import { getCookie, setCookie } from '@/utils/cookies'
 import './toggle.css'
 
+/**
+ * Interactive theme toggle displayed in the user interface.
+ * @returns React component.
+ */
 export default function ThemeSwitch() {
     const [theme, setTheme] = useState<'dark' | 'light'>('dark')
 
@@ -38,6 +42,10 @@ export default function ThemeSwitch() {
     )
 }
 
+/**
+ * Theme toggle icon displayed in the user interface (without interactivity).
+ * @returns React component.
+ */
 function ThemeIcon() {
     return (
         <svg

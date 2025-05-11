@@ -20,6 +20,25 @@ type FormProps = {
     packages: Package[]
 }
 
+/**
+ * Add package form
+ * 
+ * @param showForm Whether the form should be visible
+ * @param newPackage Variable to manage the form package
+ * @param setShowFrom Helper function to determine whether the form should be 
+ * visible
+ * @param setNewPackage Helper function to manage the form package
+ * @param formStyle Tailwind styles for the form
+ * @param repositories Repositories available (used to preview the available 
+ * repository options)
+ * @param setPackages Helper function to set the packages currently displayed in 
+ * the user interface
+ * @param packages Packages currently displayed in the user interface
+ * @param list Whether this is the `allow` or `block` list
+ * @param author Current user
+ * 
+ * @returns React component 
+ */
 export default function Form({
     showForm,
     newPackage,
@@ -30,8 +49,8 @@ export default function Form({
     setPackages,
     packages,
     list,
-    author }: FormProps
-) {
+    author
+}: FormProps) {
     const router = useRouter()
     const [error, setError] = useState('')
     function handleAdd() {
