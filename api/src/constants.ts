@@ -67,7 +67,7 @@ if (!NEXT_PUBLIC_API
     || !JFROG_ID
     || !JFROG_TOKEN
 ) {
-    throw new Error('Missing NEXT_PUBLIC_API, FRONTEND_URL, LOCAL_OSV or DB_PASSWORD.')
+    throw new Error('Missing one or more required environment variables.')
 }
 
 if (
