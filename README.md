@@ -35,7 +35,7 @@ NEXT_PUBLIC_DISABLE_AUTH=true
 5. Follow the "Quick setup worker / JFrog" to setup the worker
 6. Set the `const OSV_URL = 'http://129.241.150.86:8080/api'` variable in `worker/worker.ts` / (the worker you define in Artifactory) to point to your own backend (must be reachable via http / https from the Artifactory instance)
 
-You can now verify in your IDE that packages are being blocked as intended and according to the policies you have defined in the user interface or via API. To set up with auth scroll all
+You can now verify in your IDE that packages are being blocked as intended and according to the policies you have defined in the user interface or via API.
 
 ## Quick setup worker / JFrog
 1. Deploy the worker, see "How to deploy the worker"
