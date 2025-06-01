@@ -34,12 +34,12 @@ export default async function fetchRepoConfig(repository: string): Promise<RepoC
 
         // Maps the results to determine whether they are `global`
         // (ecosystem independant).
-        const allow = allowRaw.map((item: RepoAllowItem) => ({
+        const allow = allowRaw.result.map((item: RepoAllowItem) => ({
             ...item,
             isGlobal: item.repositories.length === 0
         }))
 
-        const block = blockRaw.map((item: RepoBlockItem) => ({
+        const block = blockRaw.result.map((item: RepoBlockItem) => ({
             ...item,
             isGlobal: item.repositories.length === 0
         }))
