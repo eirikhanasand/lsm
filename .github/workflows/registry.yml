@@ -192,11 +192,14 @@ jobs:
     
     - name: test_ruby_dangerous
       run: |
-        OUTPUT=$(gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/ 2>&1 || true)
+        ENCODED_EMAIL=$(python3 -c "import urllib.parse, os; print(urllib.parse.quote(os.environ['JFROG_EMAIL']))")
+        ENCODED_TOKEN=$(python3 -c "import urllib.parse, os; print(urllib.parse.quote(os.environ['JFROG_TOKEN']))")
+        JFROG_GEM_SOURCE="https://${ENCODED_EMAIL}:${ENCODED_TOKEN}@${JFROG_ID}.jfrog.io/artifactory/api/gems/ruby/"
+        OUTPUT=$(gem source -a "$JFROG_GEM_SOURCE" 2>&1 || true)
         echo "$OUTPUT"
 
-        if echo "$OUTPUT" | grep -q "409"; then
-          echo "Expected 409 error, test passed."
+        if echo "$OUTPUT" | grep -q "403"; then
+          echo "Expected 403 error, test passed."
           exit 0
         else
           echo "Unexpected success: Package downloaded successfully"
