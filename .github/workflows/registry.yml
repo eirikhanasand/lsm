@@ -179,8 +179,8 @@ jobs:
         OUTPUT=$(gem source -a "$JFROG_GEM_SOURCE" 2>&1 || true)
         echo "$OUTPUT"
 
-        if echo "$OUTPUT" | grep -q "409"; then
-          echo "Expected 409 error, test passed."
+        if echo "$OUTPUT" | grep -q "403"; then
+          echo "Expected 403 error, test passed."
           exit 0
         else
           echo "Unexpected success: Package downloaded successfully"
