@@ -173,6 +173,9 @@ jobs:
 
     - name: test_ruby
       run: |
+        echo $JFROG_EMAIL
+        echo $JFROG_TOKEN
+        echo $JFROG_ID
         OUTPUT=$(gem source -a https://$JFROG_EMAIL:$JFROG_TOKEN@$JFROG_ID.jfrog.io/artifactory/api/gems/ruby/ 2>&1 || true)
         echo "$OUTPUT"
 
