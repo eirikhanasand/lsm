@@ -246,7 +246,7 @@ function parseData({
 }: ParseProps): ParseResponse {
     switch (ecosystem) {
         case 'npm':
-            const npmRegex = /([a-zA-Z+_./@-]+)-([\d.]+)\.tgz/
+            const npmRegex = /^(.+)-(\d+\.\d+\.\d+)\.tgz$/
             const npmDetails = data.name.match(npmRegex)
             if (Array.isArray(npmDetails)) return {
                 name: npmDetails[1],
